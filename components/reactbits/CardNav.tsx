@@ -1,6 +1,7 @@
 'use client';
 
 import React, { useLayoutEffect, useRef, useState } from 'react';
+import Link from 'next/link';
 import { gsap } from 'gsap';
 import { GoArrowUpRight } from 'react-icons/go';
 import { useTheme } from '@/contexts/ThemeContext';
@@ -212,6 +213,14 @@ const CardNav: React.FC<CardNavProps> = ({
     if (el) cardsRef.current[i] = el;
   };
 
+  const handleLinkClick = () => {
+    setIsHamburgerOpen(false);
+    setIsExpanded(false);
+    if (tlRef.current) {
+      tlRef.current.reverse();
+    }
+  };
+
   const borderColor = theme === 'industrial' 
     ? 'rgba(64, 64, 64, 0.5)' 
     : theme === 'glass' 
@@ -265,13 +274,14 @@ const CardNav: React.FC<CardNavProps> = ({
           </div>
 
           {showCTA && (
-            <a
+            <Link
               href={ctaHref}
+              onClick={handleLinkClick}
               className="card-nav-cta-button hidden md:inline-flex border-0 rounded-[calc(0.75rem-0.2rem)] px-4 items-center h-full font-medium cursor-pointer transition-all duration-300 hover:opacity-80"
               style={{ backgroundColor: buttonBgColor, color: buttonTextColor }}
             >
               {ctaText}
-            </a>
+            </Link>
           )}
         </div>
 
@@ -293,15 +303,16 @@ const CardNav: React.FC<CardNavProps> = ({
               </div>
               <div className="nav-card-links mt-auto flex flex-col gap-[2px]">
                 {item.links?.map((lnk, i) => (
-                  <a
+                  <Link
                     key={`${lnk.label}-${i}`}
                     className="nav-card-link inline-flex items-center gap-[6px] no-underline cursor-pointer transition-opacity duration-300 hover:opacity-75 text-[15px] md:text-[16px]"
                     href={lnk.href}
+                    onClick={handleLinkClick}
                     aria-label={lnk.ariaLabel || lnk.label}
                   >
                     <GoArrowUpRight className="nav-card-link-icon shrink-0" aria-hidden="true" />
                     {lnk.label}
-                  </a>
+                  </Link>
                 ))}
               </div>
             </div>

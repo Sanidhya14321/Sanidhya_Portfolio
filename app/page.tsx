@@ -144,15 +144,15 @@ export default function Home() {
                 delay={80}
                 animateBy="words"
                 direction="bottom"
-                className={`text-3xl sm:text-4xl md:text-5xl lg:text-6xl xl:text-7xl 2xl:text-8xl leading-[0.9] text-[var(--heading)] ${nameClass[theme]}`}
+                className={`text-3xl sm:text-4xl md:text-5xl lg:text-6xl xl:text-7xl 2xl:text-8xl leading-[1.1] text-[var(--heading)] ${nameClass[theme]}`}
               />
             </motion.div>
 
             {/* Subtitle */}
-            <motion.div variants={fadeUp} className="mb-10 h-10 flex items-center justify-center">
+            <motion.div variants={fadeUp} className="mb-10 min-h-12 flex items-center justify-center overflow-hidden py-2">
               <RotatingText
                 texts={rotatingWords[theme]}
-                className={`text-lg md:text-xl font-semibold text-[var(--heading)]`}
+                className={`text-lg md:text-xl font-semibold text-[var(--heading)] leading-normal`}
                 rotationInterval={3000}
                 staggerFrom={'first'}
                 staggerDuration={0.03}
@@ -162,11 +162,11 @@ export default function Home() {
             {/* Bio & Profile Card Container */}
             <div className="flex flex-col lg:flex-row items-center justify-center lg:items-start gap-12 lg:gap-0 w-full">
               <div className="max-w-2xl text-center lg:text-left">
-                <motion.p variants={fadeUp} className="text-sm md:text-base leading-relaxed opacity-60 mb-8 px-4 lg:px-0">
+                <motion.p variants={fadeUp} className="text-sm md:text-2xl text-center leading-relaxed opacity-60 mb-8 pt-14 px-4 lg:px-0">
                   {data.about.narrative}
                 </motion.p>
                 {/* CTA Buttons */}
-                <motion.div variants={fadeUp} className="flex flex-col sm:flex-row justify-center lg:justify-start gap-5 items-center">
+                <motion.div variants={fadeUp} className="flex flex-col md:flex-row items-center gap-4 text-center justify-center lg:justify-start">
                   <ClickSpark sparkColor={ac.primary}>
                     <ThemedButton href="/projects" variant="primary">
                       View Projects
@@ -191,20 +191,20 @@ export default function Home() {
                 }
                 rootMargin="200px"
               >
-                <div className="lg:pl-20 shrink-0 scale-90 sm:scale-100">
+                <div className="lg:pl-20 shrink-0 scale-90 sm:scale-90">
                   <ProfileCard
                     name="Sanidhya Vats"
                     title="Engineer"
                     handle="sanidhyavats"
                     status="Online"
                     contactText="Contact Me"
-                    avatarUrl="/path/to/avatar.jpg"
+                    avatarUrl="/Sanid.png"
                     showUserInfo={false}
                     enableTilt={true}
                     enableMobileTilt={false}
                     theme={theme as 'aurora' | 'industrial' | 'glass' | 'dark-horse'}
                     onContactClick={() => console.log('Contact clicked')}
-                    iconUrl="/assets/demo/iconpattern.png"
+                    iconUrl="https://imgs.search.brave.com/tV7e4_EfkUavEsoByLbDhawqLKYEqZHTxlBIe2H9Oto/rs:fit:860:0:0:0/g:ce/aHR0cHM6Ly9jZG4u/aWNvbnNjb3V0LmNv/bS9pY29uL3ByZW1p/dW0vcG5nLTI1Ni10/aHVtYi9zb3VyY2Ut/Y29kZS1jaXJjbGUt/aWNvbi1zdmctZG93/bmxvYWQtcG5nLTEx/NDIzMDgzLnBuZz9m/PXdlYnAmdz0xMjg"
                     behindGlowEnabled
                   />
                 </div>

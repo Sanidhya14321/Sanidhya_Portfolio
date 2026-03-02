@@ -43,7 +43,7 @@ export default function ExperiencePage() {
     "dark-horse": "rounded-xl",
   };
 
-  const cardClass = `border ${cardRadius[theme]} p-12 md:p-16 transition-all duration-300`;
+  const cardClass = `border ${cardRadius[theme]} p-6 md:p-8 transition-all duration-300`;
   const cardStyle: React.CSSProperties = {
     backgroundColor: cc.bg,
     borderColor: cc.border,
@@ -52,7 +52,7 @@ export default function ExperiencePage() {
 
   return (
     <PageTransition>
-      <section className="mx-auto max-w-[95%] xl:max-w-[1400px] 2xl:max-w-[1600px] px-6 md:px-10 lg:px-12 pb-12">
+      <section className="mx-auto max-w-[95%] xl:max-w-[1000px] 2xl:max-w-[1200px] px-6 md:px-8 lg:px-10 pb-12">
         <SectionHeading label="Career" title="Experience" />
 
         <motion.div
@@ -71,13 +71,13 @@ export default function ExperiencePage() {
                   style={cardStyle}
                 >
               {/* Period at top */}
-              <div className="flex items-center gap-4 mb-7">
+              <div className="flex items-center gap-3 mb-4">
                 <span
-                  className="h-3 w-3 rounded-full flex-shrink-0"
+                  className="h-2.5 w-2.5 rounded-full flex-shrink-0"
                   style={{ backgroundColor: ac.dot }}
                 />
                 <span
-                  className="text-lg md:text-xl font-semibold tracking-wider uppercase"
+                  className="text-xs md:text-sm font-semibold tracking-wider uppercase"
                   style={{ color: ac.primary }}
                 >
                   <ShinyText 
@@ -89,7 +89,7 @@ export default function ExperiencePage() {
               </div>
 
               {/* Title & Company */}
-              <h3 className="text-3xl md:text-4xl font-semibold text-[var(--heading)]">
+              <h3 className="text-base md:text-lg font-semibold text-[var(--heading)]">
                 <GradientText
                   colors={[
                     theme === "aurora" ? "#818CF8" : theme === "industrial" ? "#FFFFFF" : theme === "glass" ? "#FFFFFF" : "#00FFA3",
@@ -101,19 +101,19 @@ export default function ExperiencePage() {
                   {exp.title}
                 </GradientText>
               </h3>
-              <p className="text-2xl md:text-3xl mt-3" style={{ opacity: 0.6 }}>
+              <p className="text-sm md:text-base mt-1.5 mb-3" style={{ opacity: 0.6 }}>
                 {exp.company}
               </p>
 
               {/* Description */}
-              <p className="mt-8 text-xl md:text-2xl" style={{ lineHeight: 1.8, opacity: 0.7 }}>
+              <p className="mt-3 text-xs md:text-sm" style={{ lineHeight: 1.6, opacity: 0.7 }}>
                 {exp.description}
               </p>
 
               {/* Impact */}
               {exp.impact && (
                 <p
-                  className="mt-6 text-xl md:text-2xl font-medium"
+                  className="mt-4 text-xs md:text-sm font-medium"
                   style={{ color: ac.impact }}
                 >
                   {exp.impact}
@@ -121,7 +121,7 @@ export default function ExperiencePage() {
               )}
 
               {/* Tech */}
-              <div className="mt-10 flex flex-wrap gap-4">
+              <div className="mt-5 flex flex-wrap gap-2">
                 {exp.tech.map((t) => (
                   <Badge key={t} text={t} />
                 ))}

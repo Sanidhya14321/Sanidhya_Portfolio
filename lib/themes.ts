@@ -158,22 +158,22 @@ export const sectionStyles: Record<Theme, {
 }> = {
   aurora: {
     labelClass: "text-purple-400 tracking-[0.2em] uppercase text-xs font-semibold",
-    headingClass: "text-4xl md:text-5xl font-bold tracking-tight",
+    headingClass: "text-2xl md:text-3xl font-bold tracking-tight",
     dividerClass: "w-16 h-0.5 bg-gradient-to-r from-indigo-500 via-purple-500 to-cyan-500 mt-4",
   },
   industrial: {
     labelClass: "text-neutral-500 tracking-[0.3em] uppercase text-xs font-mono",
-    headingClass: "text-4xl md:text-5xl font-bold tracking-tighter",
+    headingClass: "text-2xl md:text-3xl font-bold tracking-tighter",
     dividerClass: "w-24 h-[3px] bg-white mt-4",
   },
   glass: {
     labelClass: "text-white/40 tracking-[0.15em] uppercase text-xs font-medium",
-    headingClass: "text-4xl md:text-5xl font-light tracking-tight",
+    headingClass: "text-2xl md:text-3xl font-light tracking-tight",
     dividerClass: "w-12 h-px bg-white/20 mt-4",
   },
   "dark-horse": {
     labelClass: "text-emerald-400 tracking-[0.25em] uppercase text-xs font-mono font-bold",
-    headingClass: "text-4xl md:text-5xl font-black tracking-tight",
+    headingClass: "text-2xl md:text-3xl font-black tracking-tight",
     dividerClass: "w-8 h-1 bg-emerald-400 mt-4",
   },
 };

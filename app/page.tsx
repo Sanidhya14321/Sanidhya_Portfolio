@@ -113,7 +113,7 @@ export default function Home() {
   return (
     <PageTransition>
       {/* ── Hero Section ─────────────────────────────────────────── */}
-      <section className="relative flex min-h-screen items-center justify-center overflow-hidden px-6 py-16 ">
+      <section className="relative flex min-h-screen items-center justify-center overflow-hidden px-6 py-12 ">
         <LazyComponent
           fallback={<div className="absolute inset-0 z-0 animate-pulse bg-gradient-to-br from-transparent via-white/5 to-transparent" />}
         >
@@ -144,15 +144,15 @@ export default function Home() {
                 delay={80}
                 animateBy="words"
                 direction="bottom"
-                className={`text-6xl sm:text-7xl md:text-8xl lg:text-[140px] xl:text-[180px] 2xl:text-[220px] leading-[0.9] text-[var(--heading)] ${nameClass[theme]}`}
+                className={`text-3xl sm:text-4xl md:text-5xl lg:text-6xl xl:text-7xl 2xl:text-8xl leading-[0.9] text-[var(--heading)] ${nameClass[theme]}`}
               />
             </motion.div>
 
             {/* Subtitle */}
-            <motion.div variants={fadeUp} className="mb-10 h-12 flex items-center justify-center">
+            <motion.div variants={fadeUp} className="mb-10 h-10 flex items-center justify-center">
               <RotatingText
                 texts={rotatingWords[theme]}
-                className={`text-2xl md:text-3xl font-semibold text-[var(--heading)]`}
+                className={`text-lg md:text-xl font-semibold text-[var(--heading)]`}
                 rotationInterval={3000}
                 staggerFrom={'first'}
                 staggerDuration={0.03}
@@ -161,8 +161,8 @@ export default function Home() {
 
             {/* Bio & Profile Card Container */}
             <div className="flex flex-col lg:flex-row items-center justify-center lg:items-start gap-12 lg:gap-0 w-full">
-              <div className="max-w-3xl text-center lg:text-left">
-                <motion.p variants={fadeUp} className="text-xl md:text-2xl leading-relaxed opacity-60 mb-12 px-4 lg:px-0">
+              <div className="max-w-2xl text-center lg:text-left">
+                <motion.p variants={fadeUp} className="text-sm md:text-base leading-relaxed opacity-60 mb-8 px-4 lg:px-0">
                   {data.about.narrative}
                 </motion.p>
                 {/* CTA Buttons */}

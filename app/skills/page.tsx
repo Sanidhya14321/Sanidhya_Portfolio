@@ -58,7 +58,7 @@ export default function SkillsPage() {
     "dark-horse": "rounded-lg",
   };
 
-  const cardClass = `border ${cardRadius[theme]} p-12 md:p-16`;
+  const cardClass = `border ${cardRadius[theme]} p-6 md:p-8`;
   const cardStyle: React.CSSProperties = {
     backgroundColor: cc.bg,
     borderColor: cc.border,
@@ -112,83 +112,86 @@ export default function SkillsPage() {
 
   return (
     <PageTransition>
-      <section className="mx-auto max-w-[95%] xl:max-w-[1400px] 2xl:max-w-[1600px] px-6 md:px-10 lg:px-12 py-12">
+      <section className="mx-auto max-w-[95%] xl:max-w-[1000px] 2xl:max-w-[1200px] px-6 md:px-8 lg:px-10 py-12">
         <SectionHeading label="Technical" title="Skills" />
 
         {/* Logo Loop Section */}
         <LazyComponent
           fallback={
-            <div className="mb-20 mt-16">
-              <Skeleton variant="text" width="40%" height={32} className="mb-10 mx-auto" />
-              <div className="flex items-center gap-8 overflow-hidden justify-center">
+            <div className="mb-12 mt-8">
+              <Skeleton variant="text" width="40%" height={24} className="mb-6 mx-auto" />
+              <div className="flex items-center gap-6 overflow-hidden justify-center">
                 {[1, 2, 3, 4, 5, 6].map((i) => (
-                  <Skeleton key={i} variant="rounded" width={80} height={80} />
+                  <Skeleton key={i} variant="rounded" width={60} height={60} />
                 ))}
               </div>
             </div>
           }
         >
-          <div className="mb-20 mt-16">
-            <h3 className="text-2xl md:text-3xl font-semibold text-center mb-10">Technology Stack</h3>
+          <div className="mb-12 mt-8">
+            <h3 className="text-lg md:text-xl font-semibold text-center mb-8">Technology Stack</h3>
             <LogoLoop 
               logos={logoItems}
               speed={80}
               direction="left"
-              logoHeight={60}
-              gap={40}
+              logoHeight={50}
+              gap={30}
               pauseOnHover={true}
               scaleOnHover={true}
               fadeOut={true}
               fadeOutColor={fadeOutColor[theme]}
               ariaLabel="Technology stack logos"
-              className="max-w-[60%] mx-auto"
+              className="max-w-[70%] mx-auto"
             />
           </div>
         </LazyComponent>
 
-        <motion.div
-          variants={stagger}
-          initial="hidden"
-          whileInView="show"
-          viewport={{ once: true }}
-          className="space-y-10"
-        >
-          {Object.entries(data.skills).map(([category, skills]) => (
-            <motion.div key={category} variants={fadeUp}>
-              <ClickSpark sparkColor={ac.primary}>
-                <SpotlightCard 
-                  spotlightColor={spotlightColor[theme]} 
-                  className={`${cardClass} hover:scale-[1.01] transition-transform duration-300`} 
-                  style={cardStyle}
-                >
-              <h3 className="mb-10" style={categoryStyle[theme]}>
-                <DecryptedText 
-                  text={category} 
-                  speed={35} 
-                  maxIterations={10}
-                  className="!text-inherit"
-                />
-              </h3>
-              <div className="flex flex-wrap gap-6">
-                {skills.map((skill) => (
-                  <span
-                    key={skill.name}
-                    className={`inline-flex items-center px-6 py-3 text-lg md:text-xl font-medium border transition-all duration-200 cursor-default ${tagRadius[theme]}`}
-                    style={{
-                      color: "var(--heading)",
-                      opacity: 0.8,
-                      borderColor: cc.border,
-                    }}
+        {/* Redesigned Skills Section */}
+        <div className="mt-12">
+          <h3 className="text-lg md:text-xl font-semibold text-center mb-12">Skills by Category</h3>
+          <motion.div
+            variants={stagger}
+            initial="hidden"
+            whileInView="show"
+            viewport={{ once: true }}
+            className="grid gap-6 md:grid-cols-2 lg:grid-cols-3"
+          >
+            {Object.entries(data.skills).map(([category, skills]) => (
+              <motion.div key={category} variants={fadeUp}>
+                <ClickSpark sparkColor={ac.primary}>
+                  <div 
+                    className={`${cardClass} border hover:scale-[1.02] transition-transform duration-300 h-full`} 
+                    style={cardStyle}
                   >
-                    {skill.name}
-                  </span>
-                ))}
-              </div>
-            </SpotlightCard>
-            </ClickSpark>
-            </motion.div>
-          ))}
-        </motion.div>
+                    <h4 className="mb-4 text-sm md:text-base font-semibold" style={{color: ac.primary}}>
+                      <DecryptedText 
+                        text={category} 
+                        speed={35} 
+                        maxIterations={10}
+                        className="!text-inherit"
+                      />
+                    </h4>
+                    <div className="flex flex-wrap gap-2">
+                      {skills.map((skill) => (
+                        <span
+                          key={skill.name}
+                          className={`inline-flex items-center px-2.5 py-1.5 text-xs md:text-sm font-medium border transition-all duration-200 cursor-default ${tagRadius[theme]}`}
+                          style={{
+                            color: "var(--heading)",
+                            opacity: 0.8,
+                            borderColor: cc.border,
+                          }}
+                        >
+                          {skill.name}
+                        </span>
+                      ))}
+                    </div>
+                  </div>
+                </ClickSpark>
+              </motion.div>
+            ))}
+          </motion.div>
+        </div>
       </section>
     </PageTransition>
   );

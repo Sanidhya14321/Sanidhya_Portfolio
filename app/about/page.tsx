@@ -44,7 +44,7 @@ export default function AboutPage() {
     "dark-horse": "rounded-xl",
   };
 
-  const cardClass = `border ${cardRadius[theme]} p-12 md:p-16 transition-all duration-300`;
+  const cardClass = `border ${cardRadius[theme]} p-6 md:p-8 transition-all duration-300`;
   const cardStyle: React.CSSProperties = {
     backgroundColor: cc.bg,
     borderColor: cc.border,
@@ -53,7 +53,7 @@ export default function AboutPage() {
 
   return (
     <PageTransition>
-      <section className="mx-auto max-w-[95%] xl:max-w-[1400px] 2xl:max-w-[1600px] px-6 md:px-10 lg:px-12 py-12">
+      <section className="mx-auto max-w-[95%] xl:max-w-[1000px] 2xl:max-w-[1200px] px-6 md:px-8 lg:px-10 py-12">
         <SectionHeading label="Background" title="About Me" />
 
         <motion.div variants={stagger} initial="hidden" whileInView="show" viewport={{ once: true }} className="space-y-10">
@@ -66,7 +66,7 @@ export default function AboutPage() {
                 delay={30}
                 animateBy="words"
                 direction="top"
-                className="text-2xl md:text-3xl leading-relaxed opacity-75"
+                className="text-base md:text-lg leading-relaxed opacity-75"
               />
             </SpotlightCard>
             </ClickSpark>
@@ -82,7 +82,7 @@ export default function AboutPage() {
                   theme === "aurora" ? "#A78BFA" : theme === "industrial" ? "#A3A3A3" : theme === "glass" ? "#9CA3AF" : "#00D9FF"
                 ]}
                 animationSpeed={6}
-                className="text-2xl md:text-3xl font-semibold"
+                className="text-lg md:text-xl font-semibold"
               >
                 <ShinyText 
                   text="Core Focus Areas" 
@@ -90,13 +90,13 @@ export default function AboutPage() {
                   className="!text-inherit"
                 />
               </GradientText>
-              <div className="mt-10 grid gap-8 sm:grid-cols-2">
+              <div className="mt-8 grid gap-6 sm:grid-cols-2">
               {data.about.highlights.map((h, i) => (
-                <div key={i} className="flex items-start gap-5">
-                  <span className="mt-2" style={{ color: ac.primary }}>
-                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5"><polyline points="20 6 9 17 4 12" /></svg>
+                <div key={i} className="flex items-start gap-3">
+                  <span className="mt-1 flex-shrink-0" style={{ color: ac.primary }}>
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5"><polyline points="20 6 9 17 4 12" /></svg>
                   </span>
-                  <p className="text-xl md:text-2xl leading-relaxed" style={{ opacity: 0.7 }}>{h}</p>
+                  <p className="text-sm md:text-base leading-relaxed" style={{ opacity: 0.7 }}>{h}</p>
                 </div>
               ))}
             </div>
@@ -112,16 +112,16 @@ export default function AboutPage() {
               text="Education" 
               speed={35} 
               maxIterations={10}
-              className={`${sectionStyles[theme].labelClass} mb-8 !text-inherit text-2xl md:text-3xl`}
+              className={`${sectionStyles[theme].labelClass} mb-6 !text-inherit text-sm md:text-base`}
             />
-            <p className="text-2xl md:text-3xl font-medium text-[var(--heading)]">{data.education.degree}</p>
-            <p className="mt-4 text-xl md:text-2xl" style={{ opacity: 0.6 }}>{data.education.institution}</p>
-            <p className="mt-2.5 text-lg md:text-xl" style={{ opacity: 0.4 }}>{data.education.period}</p>
+            <p className="text-lg md:text-xl font-medium text-[var(--heading)]">{data.education.degree}</p>
+            <p className="mt-2 text-base md:text-lg" style={{ opacity: 0.6 }}>{data.education.institution}</p>
+            <p className="mt-1.5 text-sm md:text-base" style={{ opacity: 0.4 }}>{data.education.period}</p>
             {data.education.achievements.length > 0 && (
-              <ul className="mt-8 space-y-4">
+              <ul className="mt-6 space-y-3">
                 {data.education.achievements.map((a, i) => (
-                  <li key={i} className="flex items-start gap-3.5 text-lg md:text-xl" style={{ opacity: 0.6 }}>
-                    <span className="mt-2 h-1.5 w-1.5 rounded-full bg-current flex-shrink-0" />
+                  <li key={i} className="flex items-start gap-2.5 text-xs md:text-sm" style={{ opacity: 0.6 }}>
+                    <span className="mt-1.5 h-1 w-1 rounded-full bg-current flex-shrink-0" />
                     {a}
                   </li>
                 ))}
@@ -139,13 +139,13 @@ export default function AboutPage() {
               <ShinyText 
                 text="Achievements" 
                 speed={5} 
-                className={`${sectionStyles[theme].labelClass} mb-8 !text-inherit text-2xl md:text-3xl`} 
+                className={`${sectionStyles[theme].labelClass} mb-6 !text-inherit text-sm md:text-base`} 
               />
-              <ul className="space-y-5">
+              <ul className="space-y-3">
                 {data.achievements.map((a, i) => (
-                  <li key={i} className="flex items-start gap-4 text-lg md:text-xl" style={{ opacity: 0.7 }}>
-                    <span className="mt-1.5" style={{ color: ac.primary }}>
-                      <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z" /></svg>
+                  <li key={i} className="flex items-start gap-3 text-xs md:text-sm" style={{ opacity: 0.7 }}>
+                    <span className="mt-1" style={{ color: ac.primary }}>
+                      <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z" /></svg>
                     </span>
                     {a}
                   </li>
@@ -160,3 +160,4 @@ export default function AboutPage() {
     </PageTransition>
   );
 }
+

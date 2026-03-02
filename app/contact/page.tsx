@@ -86,7 +86,7 @@ export default function ContactPage() {
     "dark-horse": "rounded-xl",
   };
 
-  const cardClass = `border ${cardRadius[theme]} p-10 md:p-12 transition-all duration-300 group`;
+  const cardClass = `border ${cardRadius[theme]} p-6 md:p-8 transition-all duration-300 group`;
   const cardStyle: React.CSSProperties = {
     backgroundColor: cc.bg,
     borderColor: cc.border,
@@ -95,7 +95,7 @@ export default function ContactPage() {
 
   return (
     <PageTransition>
-      <section className="mx-auto max-w-[95%] xl:max-w-[1400px] 2xl:max-w-[1600px] px-6 md:px-10 lg:px-12 py-24 md:py-32">
+      <section className="mx-auto max-w-[95%] xl:max-w-[1000px] 2xl:max-w-[1200px] px-6 md:px-8 lg:px-10 py-16 md:py-20">
         <SectionHeading label="Connect" title="Get in Touch"/>
 
         {/* 2x2 grid for contact items */}
@@ -111,7 +111,7 @@ export default function ContactPage() {
                 <a href={item.href} target={item.href.startsWith("mailto") ? undefined : "_blank"} rel="noopener noreferrer" className="block h-full">
                   <SpotlightCard spotlightColor={spotlightColor[theme]} className={`${cardClass} hover:scale-[1.02]`} style={cardStyle}>
                 <div
-                  className="flex h-20 w-20 items-center justify-center flex-shrink-0 mb-8 text-2xl"
+                  className="flex h-16 w-16 items-center justify-center flex-shrink-0 mb-6 text-lg"
                   style={{
                     backgroundColor: ac.iconBg,
                     color: ac.primary,
@@ -126,11 +126,11 @@ export default function ContactPage() {
                 <ShinyText 
                   text={item.label}
                   speed={4}
-                  className={`text-lg md:text-xl font-semibold ${sectionStyles[theme].labelClass} !text-inherit`}
+                  className={`text-base md:text-lg font-semibold ${sectionStyles[theme].labelClass} !text-inherit`}
                 />
-                <p className="text-2xl md:text-3xl text-[var(--heading)] mt-4 font-medium">{item.value}</p>
+                <p className="text-lg md:text-xl text-[var(--heading)] mt-3 font-medium">{item.value}</p>
                 <p
-                  className="mt-6 text-lg md:text-xl font-medium opacity-0 group-hover:opacity-100 transition-opacity"
+                  className="mt-4 text-xs md:text-sm font-medium opacity-0 group-hover:opacity-100 transition-opacity"
                   style={{ color: ac.primary }}
                 >
                   Open &rarr;

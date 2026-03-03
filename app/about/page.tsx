@@ -13,6 +13,8 @@ import ShinyText from "@/components/reactbits/ShinyText";
 import DecryptedText from "@/components/reactbits/DecryptedText";
 import GradientText from "@/components/reactbits/GradientText";
 import ClickSpark from "@/components/reactbits/ClickSpark";
+import GitHubContributionWrapper from "@/components/GitHubContributionWrapper";
+import ThemedButton from "@/components/ui/ThemedButton";
 
 const reveal = {
   hidden: { opacity: 0, y: 40, filter: "blur(8px)" },
@@ -29,6 +31,35 @@ export default function AboutPage() {
   const data = portfolioData;
   const cc = cardCSS[theme];
   const ac = accentCSS[theme];
+
+  /* ── GitHub Section Theme Definitions ───────────────────────────────── */
+  const gradientColorsGitHub: Record<string, string[]> = {
+    aurora: ["#818CF8", "#A78BFA", "#22D3EE"],
+    industrial: ["#FAFAFA", "#A3A3A3", "#D4D4D4"],
+    glass: ["#FFFFFF", "#9CA3AF", "#D1D5DB"],
+    "dark-horse": ["#00FFA3", "#00D9FF", "#34D399"],
+  };
+
+  const labelClass: Record<string, string> = {
+    aurora: "text-purple-400/80 tracking-widest uppercase text-xs md:text-sm font-semibold",
+    industrial: "text-neutral-500 tracking-[0.3em] uppercase text-xs md:text-sm font-mono",
+    glass: "text-white/30 tracking-[0.15em] uppercase text-xs md:text-sm font-medium",
+    "dark-horse": "text-emerald-400/80 tracking-[0.25em] uppercase text-xs md:text-sm font-mono font-bold",
+  };
+
+  const contributionBrandColors: Record<string, string> = {
+    aurora: "#A78BFA",
+    industrial: "#FAFAFA",
+    glass: "#22D3EE",
+    "dark-horse": "#34D399",
+  };
+
+  const contributionPrimaryColors: Record<string, string> = {
+    aurora: "rgba(124, 58, 237, 0.08)",
+    industrial: "rgba(255, 255, 255, 0.08)",
+    glass: "rgba(34, 211, 238, 0.06)",
+    "dark-horse": "rgba(52, 211, 153, 0.08)",
+  };
   const containerRef = useRef<HTMLDivElement>(null);
 
   const { scrollYProgress } = useScroll({
@@ -357,6 +388,126 @@ export default function AboutPage() {
             </div>
           )}
 
+        {/* ── GitHub Stats Section ─────────────────────────────────── */}
+        <div className="relative py-16">
+          <motion.div
+            variants={reveal}
+            custom={0}
+            initial="hidden"
+            whileInView="show"
+            viewport={{ once: true }}
+            className="hidden md:flex absolute -left-[3.6rem] top-18 w-3 h-3 rounded-full border-2 items-center justify-center"
+            style={{ borderColor: ac.primary, backgroundColor: cc.bg }}
+          >
+            <span className="w-1.5 h-1.5 rounded-full" style={{ backgroundColor: ac.primary }} />
+          </motion.div>
+
+          <motion.div
+            variants={reveal}
+            custom={0}
+            initial="hidden"
+            whileInView="show"
+            viewport={{ once: true }}
+            className="flex items-center gap-4 mb-10"
+          >
+            <GradientText colors={gradientColors} animationSpeed={5} className="text-xl md:text-2xl font-bold">
+              <ShinyText text="05 - GitHub Activity" speed={4} className="!text-inherit" />
+            </GradientText>
+          </motion.div>
+
+          <div className="w-full mx-auto px-6 md:px-0">
+            <motion.div
+              initial={{ opacity: 0, y: 30 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              transition={{ delay: 0.2 }}
+              className="w-full max-w-[95%] lg:max-w-[85%] 2xl:max-w-[70%] mx-auto"
+            >
+              <ClickSpark sparkColor={ac.primary}>
+                <div className="flex flex-col items-center gap-8">
+                  <a
+                    href="https://github.com/Sanidhya14321"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="group"
+                  >
+                    <p className={`${labelClass[theme]} mb-6 group-hover:opacity-100 transition-opacity`}>
+                      @Sanidhya14321
+                    </p>
+                  </a>
+
+                  {/* GitHub Streak Stats with theme-specific colors */}
+                  <div className="w-full flex justify-center">
+                    <img
+                      src={`https://github-readme-streak-stats.herokuapp.com/?user=Sanidhya14321&theme=${theme === 'aurora' ? 'radical'
+                          : theme === 'industrial' ? 'dark'
+                            : theme === 'glass' ? 'transparent'
+                              : 'algolia'
+                        }&hide_border=true&background=${theme === 'aurora' ? '0B0D17'
+                          : theme === 'industrial' ? '1C1C1C'
+                            : theme === 'glass' ? '12121A00'
+                              : '0A0A0A'
+                        }&ring=${theme === 'aurora' ? '7C3AED'
+                          : theme === 'industrial' ? 'E5E5E5'
+                            : theme === 'glass' ? 'FFFFFF'
+                              : '00FFA3'
+                        }&fire=${theme === 'aurora' ? '818CF8'
+                          : theme === 'industrial' ? 'FAFAFA'
+                            : theme === 'glass' ? 'FFFFFF'
+                              : '00D9FF'
+                        }&currStreakLabel=${theme === 'aurora' ? 'A78BFA'
+                          : theme === 'industrial' ? 'D4D4D4'
+                            : theme === 'glass' ? 'E5E7EB'
+                              : '34D399'
+                        }&sideLabels=${theme === 'aurora' ? 'CBD5E1'
+                          : theme === 'industrial' ? 'A3A3A3'
+                            : theme === 'glass' ? 'D1D5DB'
+                              : 'A3A3A3'
+                        }&currStreakNum=${theme === 'aurora' ? 'E2E8F0'
+                          : theme === 'industrial' ? 'FAFAFA'
+                            : theme === 'glass' ? 'FFFFFF'
+                              : 'FFFFFF'
+                        }&sideNums=${theme === 'aurora' ? 'E2E8F0'
+                          : theme === 'industrial' ? 'FAFAFA'
+                            : theme === 'glass' ? 'FFFFFF'
+                              : 'FFFFFF'
+                        }&dates=${theme === 'aurora' ? '8892B0'
+                          : theme === 'industrial' ? '737373'
+                            : theme === 'glass' ? '9CA3AF'
+                              : '737373'
+                        }`}
+                      alt="GitHub Streak Stats"
+                      className="w-full max-w-2xl h-auto"
+                    />
+                  </div>
+
+                  {/* GitHub Contribution Heatmap */}
+                  <div className="w-[66%] flex flex-col items-center gap-6">
+                    <p className={`${labelClass[theme]} text-center`}>Contribution Activity</p>
+                    <div className="w-full flex justify-center">
+                      <GitHubContributionWrapper
+                        username="Sanidhya14321"
+                        days={365}
+                        brandColor={contributionBrandColors[theme]}
+                        primaryColor={contributionPrimaryColors[theme]}
+                        showLegend={true}
+                        showTooltips={true}
+                        className="w-full"
+                      />
+                    </div>
+                  </div>
+
+                  <ThemedButton href="https://github.com/Sanidhya14321" variant="secondary" external>
+                    View GitHub Profile
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" className="ml-2">
+                      <path d="M18 13v6a2 2 0 01-2 2H5a2 2 0 01-2-2V8a2 2 0 012-2h6M15 3h6v6M10 14L21 3" />
+                    </svg>
+                  </ThemedButton>
+                </div>
+              </ClickSpark>
+            </motion.div>
+          </div>
+        </div>
         </div>
       </div>
     </PageTransition>

@@ -6,11 +6,11 @@ import { portfolioData } from "@/data/portfolio";
 import { buttonStyles, cardCSS, accentCSS } from "@/lib/themes";
 import { motion } from "framer-motion";
 import { Suspense } from "react";
+import { useRouter } from "next/navigation";
 import PageTransition from "@/components/ui/PageTransition";
 import BlurText from "@/components/reactbits/BlurText";
 import GradientText from "@/components/reactbits/GradientText";
 import SpotlightCard from "@/components/reactbits/SpotlightCard";
-import StarBorder from "@/components/reactbits/StarBorder";
 import Particles from "@/components/reactbits/Particles";
 import DecryptedText from "@/components/reactbits/DecryptedText";
 import RotatingText from "@/components/reactbits/RotatingText";
@@ -32,6 +32,7 @@ const fadeUp = {
 };
 
 export default function Home() {
+  const router = useRouter();
   const { theme } = useTheme();
   const data = portfolioData;
   const ac = accentCSS[theme];
@@ -110,6 +111,10 @@ export default function Home() {
     "dark-horse": "rgba(52, 211, 153, 0.08)",
   };
 
+  const handleContactClick = () => {
+    router.push("/contact");
+  };
+
   return (
     <PageTransition>
       {/* ── Hero Section ─────────────────────────────────────────── */}
@@ -119,10 +124,9 @@ export default function Home() {
         >
           <div className="absolute inset-0 z-0 opacity-40">
             <Particles
-              particleCount={100}
-              speed={0.05}
+              particleCount={200}
+              speed={0.1}
               particleColors={particleColors[theme]}
-              moveParticlesOnHover
               alphaParticles
               className="w-full h-full"
             />
@@ -144,7 +148,7 @@ export default function Home() {
                 delay={80}
                 animateBy="words"
                 direction="bottom"
-                className={`text-3xl sm:text-4xl md:text-5xl lg:text-6xl xl:text-7xl 2xl:text-8xl leading-[1.1] text-[var(--heading)] ${nameClass[theme]}`}
+                className={`text-3xl sm:text-4xl md:text-5xl lg:text-6xl xl:text-7xl 2xl:text-9xl leading-[1.1] text-[var(--heading)] ${nameClass[theme]}`}
               />
             </motion.div>
 
@@ -173,12 +177,6 @@ export default function Home() {
                       <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" className="ml-2"><path d="M5 12h14M12 5l7 7-7 7" /></svg>
                     </ThemedButton>
                   </ClickSpark>
-
-                  <ClickSpark sparkColor={ac.primary}>
-                    <ThemedButton href="/contact" variant="secondary">
-                      Get in Touch
-                    </ThemedButton>
-                  </ClickSpark>
                 </motion.div>
               </div>
 
@@ -193,19 +191,18 @@ export default function Home() {
               >
                 <div className="lg:pl-20 shrink-0 scale-90 sm:scale-90">
                   <ProfileCard
-                    name="Sanidhya Vats"
-                    title="Engineer"
+                    name=""
+                    title=""
                     handle="sanidhyavats"
                     status="Online"
                     contactText="Contact Me"
                     avatarUrl="/Sanid.png"
-                    showUserInfo={false}
+                    showUserInfo={true}
                     enableTilt={true}
                     enableMobileTilt={false}
                     theme={theme as 'aurora' | 'industrial' | 'glass' | 'dark-horse'}
-                    onContactClick={() => console.log('Contact clicked')}
-                    iconUrl="https://imgs.search.brave.com/tV7e4_EfkUavEsoByLbDhawqLKYEqZHTxlBIe2H9Oto/rs:fit:860:0:0:0/g:ce/aHR0cHM6Ly9jZG4u/aWNvbnNjb3V0LmNv/bS9pY29uL3ByZW1p/dW0vcG5nLTI1Ni10/aHVtYi9zb3VyY2Ut/Y29kZS1jaXJjbGUt/aWNvbi1zdmctZG93/bmxvYWQtcG5nLTEx/NDIzMDgzLnBuZz9m/PXdlYnAmdz0xMjg"
-                    behindGlowEnabled
+                    onContactClick={() => handleContactClick()}
+                    innerGradient="linear-gradient(145deg,#60496e8c 0%,#71C4FF44 100%)"
                   />
                 </div>
               </LazyComponent>

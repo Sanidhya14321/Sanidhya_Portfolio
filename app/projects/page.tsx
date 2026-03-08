@@ -15,6 +15,7 @@ import DecryptedText from "@/components/reactbits/DecryptedText";
 import GradientText from "@/components/reactbits/GradientText";
 import ClickSpark from "@/components/reactbits/ClickSpark";
 import LazyComponent from "@/components/ui/LazyComponent";
+import ThemedButton from "@/components/ui/ThemedButton";
 
 const stagger = {
   hidden: {},
@@ -102,10 +103,8 @@ export default function ProjectsPage() {
             </motion.div>
           ))}
         </motion.div>
-
-
-        {/* Other projects */}
-        {data.otherProjects.length > 0 && (
+        
+        {data.allprojects.length > 0 && (
           <div className="mt-16">
             <GradientText
               colors={[
@@ -125,12 +124,16 @@ export default function ProjectsPage() {
                 viewport={{ once: true }}
                 className="grid gap-6 sm:grid-cols-2"
               >
-                {data.otherProjects.map((proj, i) => (
+                {data.allprojects.map((proj, i) => (
                   <motion.div key={i} variants={fadeUp}>
                     <ClickSpark sparkColor={ac.primary}>
                     <SpotlightCard spotlightColor={spotlightColor[theme]} className={`${smallCardClass} hover:scale-[1.02]`} style={cardStyle}>
                       <h4 className="text-base md:text-lg font-medium text-[var(--heading)]">{proj.title}</h4>
                       <p className="mt-3 text-xs md:text-sm leading-relaxed" style={{ opacity: 0.6 }}>{proj.description}</p>
+                      <p className="mt-3 text-xs md:text-sm leading-relaxed" style={{ opacity: 0.6 }}>{proj.detailedDescription}</p>
+                        {proj.image && (
+                          <img src={proj.image} alt={proj.title} className="mt-4 rounded-lg" />
+                        )}
                       <div className="mt-6 flex flex-wrap gap-2">
                         {proj.tech.map((t) => (
                           <Badge key={t} text={t} />
@@ -139,12 +142,12 @@ export default function ProjectsPage() {
                       <div className="mt-4 flex gap-3">
                         {proj.github && (
                           <a href={proj.github} target="_blank" rel="noopener noreferrer" className="text-xs md:text-sm transition-colors" style={{ color: ac.primary }}>
-                            Source
+                            <ThemedButton >Source</ThemedButton>
                           </a>
                         )}
                         {proj.demo && (
                           <a href={proj.demo} target="_blank" rel="noopener noreferrer" className="text-xs md:text-sm transition-colors" style={{ color: ac.primary }}>
-                            Demo
+                             <ThemedButton >Demo</ThemedButton>
                           </a>
                         )}
                       </div>

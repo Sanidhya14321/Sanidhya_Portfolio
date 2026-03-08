@@ -4,7 +4,7 @@ export const portfolioData = {
   email: "sanidhya@example.com", // Update with actual email
   github: "https://github.com/sanidhyavats",
   linkedin: "https://linkedin.com/in/sanidhyavats",
-  
+
   about: {
     narrative: `A Computer Science student at Maharaja Surajmal Institute of Technology with a strong foundation in full-stack development and machine learning engineering. My journey spans from architecting scalable web applications with modern frameworks to implementing sophisticated AI solutions. As the Founder of Geek Room and GDG Lead, I've driven technical communities forward, orchestrating events that have reached over 15,000 participants and fostered innovation across the developer ecosystem.`,
     highlights: [
@@ -156,25 +156,81 @@ export const portfolioData = {
     }
   ],
 
-  otherProjects: [
+  allprojects : [
     {
-      title: "Resume Builder",
-      description: "Dynamic resume generation tool with multiple templates and real-time preview. Export to PDF with customizable styling.",
-      tech: ["React", "TypeScript", "Tailwind CSS"],
-      github: "",
+      title: "CS-ASSESSMENT",
+      description: "An online assessment platform for computer science students",
+      image: "/project7.png",
+      tech: ["Next", "Nextauth", "MongoDB", "Tailwind CSS", "Typescript", "Bcrypt.js", "Framer Motion"],
+      detailedDescription: "CS-ASSESSMENT is an online assessment platform designed for computer science students...",
+      features: ["User authentication", "Quiz creation and management", "Progress tracking", "Feedback system", "Leaderboard"],
+      github: "https://github.com/Sanidhya14321/assessment-2",
       demo: ""
     },
     {
-      title: "Algorithm Visualizer",
-      description: "Interactive tool for visualizing sorting and pathfinding algorithms including Dijkstra's algorithm implementation.",
-      tech: ["JavaScript", "D3.js", "React"],
-      github: "",
+      title: "SPARK",
+      description: "A platform for students to stay updated with hackathons and events",
+      image: "/project8.png",
+      tech: ["React.js", "Node.js", "Express.js", "JWT", "MongoDB", "Tailwind", "Redux.js", "RTK-Query"],
+      detailedDescription: "SPARK is a platform designed to keep students updated with the latest hackathons...",
+      features: ["Secure login", "Community engagement", "Open-source practice", "Feedback system"],
+      github: "https://github.com/Sanidhya14321/SPARK",
       demo: ""
-    }
+    },
+    {
+      title: "CareerCompass",
+      description: "AI-Powered Career Guidance Platform",
+      image: "/project9.png",
+      tech: ["React.js", "Vite", "Framer Motion", "Three.js", "Tailwind CSS", "Node.js", "MongoDB", "Firebase", "OpenAI API"],
+      detailedDescription: "CareerCompass is an AI-powered platform designed to guide students...",
+      features: ["AI-Powered Guidance", "Career Comparisons", "Interactive Chatbot"],
+      demo: "https://careercompass-xi.vercel.app/",
+      github: "https://github.com/Sanidhya14321/CareerCompass",
+    },
+    {
+      title: "HairRevive",
+      description: "Hair regrowth solutions powered by science",
+      image: "/Project3.jpg",
+      tech: ["React", "Node.js", "Express", "MongoDB"],
+      detailedDescription: "HairRevive provides scientifically backed hair regrowth solutions...",
+      features: ["AI analysis", "Treatment plans", "Product recommendations"],
+      github: "https://github.com/Sanidhya14321/HairRevive",
+      demo: ""
+    },
+    {
+      title: "DevDeck",
+      description: "Track coding activity with an interactive dashboard",
+      image: "/Project4.jpg",
+      tech: ["React", "Node.js", "Express", "MongoDB"],
+      detailedDescription: "DevDeck tracks and analyzes your coding productivity...",
+      features: ["GitHub integration", "Analytics", "Custom widgets"],
+      github: "https://github.com/Sanidhya14321/devdeck",
+      demo: ""
+    },
+    {
+      title: "FitConnect",
+      description: "Connect athletes and trainers via social fitness",
+      image: "",
+      tech: ["React", "Node.js", "MongoDB", "GraphQL"],
+      detailedDescription: "FitConnect helps athletes and trainers share progress and workouts...",
+      features: ["Tracking", "Connections", "Challenges"],
+      github: "https://github.com/Sanidhya14321/SocialFitness",
+      demo: ""
+    },
+    {
+      title: "WellNest",
+      description: "Mental & physical wellness improvement app",
+      image: "",
+      tech: ["React", "Firebase", "Tailwind CSS"],
+      detailedDescription: "WellNest provides daily meditation and wellness plans...",
+      features: ["Meditation", "Wellness plans", "Analytics"],
+      github: "https://github.com/Sanidhya14321/Wellness-App",
+      demo: ""
+    },
   ],
 
   achievements: [
-    "Founded Geek Room - Technical community with 15,000+ registrations",
+    "Head of Development @Geek Room - Technical community with 15,000+ registrations",
     "Led multiple successful hackathons and technical workshops",
     "Contributed to open-source projects in ML and web development",
     "Built production applications serving thousands of users"

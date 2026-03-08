@@ -17,7 +17,6 @@ import RotatingText from "@/components/reactbits/RotatingText";
 import ShinyText from "@/components/reactbits/ShinyText";
 import ClickSpark from "@/components/reactbits/ClickSpark";
 import ThemedButton from "@/components/ui/ThemedButton";
-import ProfileCard from "@/components/reactbits/ProfileCard";
 import LazyComponent from "@/components/ui/LazyComponent";
 import Skeleton from "@/components/ui/Skeleton";
 import GitHubContributionWrapper from "@/components/GitHubContributionWrapper";
@@ -166,7 +165,7 @@ export default function Home() {
             {/* Bio & Profile Card Container */}
             <div className="flex flex-col lg:flex-row items-center justify-center lg:items-start gap-12 lg:gap-0 w-full">
               <div className="max-w-2xl text-center lg:text-left">
-                <motion.p variants={fadeUp} className="text-sm md:text-2xl text-center leading-relaxed opacity-60 mb-8 pt-14 px-4 lg:px-0">
+                <motion.p variants={fadeUp} className="text-sm md:text-2xl text-justify leading-relaxed opacity-60 mb-8 pt-14 px-4 lg:px-0">
                   {data.about.narrative}
                 </motion.p>
                 {/* CTA Buttons */}
@@ -189,21 +188,8 @@ export default function Home() {
                 }
                 rootMargin="200px"
               >
-                <div className="lg:pl-20 shrink-0 scale-90 sm:scale-90">
-                  <ProfileCard
-                    name=""
-                    title=""
-                    handle="sanidhyavats"
-                    status="Online"
-                    contactText="Contact Me"
-                    avatarUrl="/Sanid.png"
-                    showUserInfo={true}
-                    enableTilt={true}
-                    enableMobileTilt={false}
-                    theme={theme as 'aurora' | 'industrial' | 'glass' | 'dark-horse'}
-                    onContactClick={() => handleContactClick()}
-                    innerGradient="linear-gradient(145deg,#60496e8c 0%,#71C4FF44 100%)"
-                  />
+                <div className="ml-20 my-5 overflow-hidden">
+                  <img src="DSC02945.JPG" alt="sanidhya" className="object-cover lg:h-[52vh] w-[70vw] lg:w-[30vw] ml-[-50px]" />
                 </div>
               </LazyComponent>
             </div>
@@ -237,7 +223,13 @@ export default function Home() {
           <motion.div variants={fadeUp}>
             <Link href="/about" className="group block h-full">
               <SpotlightCard spotlightColor={spotlightColor[theme]} className={`h-full border ${cardRadius[theme]} p-8 transition-transform hover:scale-[1.02]`} style={previewCardStyle}>
-                <p className={`${labelClass[theme]} mb-4`}>About</p>
+                <div className="flex">
+                  <p className={`${labelClass[theme]} mb-4`}>About</p>
+                  <svg
+                    width="18"
+                    height="18"
+                    viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" className="ml-2"><path d="M5 12h14M12 5l7 7-7 7" /></svg>
+                </div>
                 <p className="text-xl opacity-60 line-clamp-4">{data.about.narrative}</p>
               </SpotlightCard>
             </Link>
@@ -247,7 +239,11 @@ export default function Home() {
           <motion.div variants={fadeUp}>
             <Link href="/experience" className="group block h-full">
               <SpotlightCard spotlightColor={spotlightColor[theme]} className={`h-full border ${cardRadius[theme]} p-8 transition-transform hover:scale-[1.02]`} style={previewCardStyle}>
-                <p className={`${labelClass[theme]} mb-6`}>Recent Experience</p>
+                <div className="flex">
+                  <p className={`${labelClass[theme]} mb-6`}>Recent Experience</p>
+                  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" className="ml-2"><path d="M5 12h14M12 5l7 7-7 7" /></svg>
+
+                </div>
                 <div className="space-y-6">
                   {data.experience.slice(0, 2).map((exp) => (
                     <div key={exp.company} className="border-l-2 border-white/10 pl-4">
@@ -264,7 +260,10 @@ export default function Home() {
           <motion.div variants={fadeUp}>
             <Link href="/skills" className="h-full group block">
               <SpotlightCard spotlightColor={spotlightColor[theme]} className={`h-full border ${cardRadius[theme]} p-8 transition-transform hover:scale-[1.02]`} style={previewCardStyle}>
-                <p className={`${labelClass[theme]} mb-6`}>Tech Stack</p>
+                <div className="flex ">
+                  <p className={`${labelClass[theme]} mb-6`}>Tech Stack</p>
+                  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" className="ml-2"><path d="M5 12h14M12 5l7 7-7 7" /></svg>
+                </div>
                 <div className="flex flex-wrap gap-2">
                   {topSkills.map((s) => (
                     <span key={s.name} className="px-3 py-1 text-sm border rounded-full border-white/10 opacity-70">

@@ -14,7 +14,10 @@ import ThemedButton from "@/components/ui/ThemedButton";
 
 type ProjectModalItem = PortfolioProject & {
   key: string;
+  group: "featured" | "other";
   statusLabel: string;
+  deploymentState: "Deployed" | "Not Deployed";
+  fieldLabel: string;
   fullDescription: string;
   featureList: string[];
   imageList: string[];
@@ -65,25 +68,37 @@ const modalGlassByTheme: Record<string, CSSProperties> = {
 };
 
 function normalizeProjects(): ProjectModalItem[] {
-  const featured = portfolioData.featuredProjects.map((project, index) => ({
-    ...project,
-    key: `featured-${project.id || index}`,
-    statusLabel: project.status || "Featured",
-    fullDescription: project.detailedDescription || project.description,
-    featureList: project.features || project.highlights || [],
-    imageList: project.images && project.images.length > 0 ? project.images : project.image ? [project.image] : [],
-  }));
+  const featured = portfolioData.featuredProjects.map((project, index) => {
+    const imageList = project.images && project.images.length > 0 ? project.images : project.image ? [project.image] : [];
+    return {
+      ...project,
+      key: `featured-${project.id || index}`,
+      group: "featured" as const,
+      statusLabel: project.status || "Featured",
+      deploymentState: (project.demo ? "Deployed" : "Not Deployed") as "Deployed" | "Not Deployed",
+      fieldLabel: project.field || "General",
+      fullDescription: project.detailedDescription || project.description,
+      featureList: project.features || project.highlights || [],
+      imageList,
+    };
+  });
 
-  const fromAll = (portfolioData.allProjects || portfolioData.allprojects || []).map((project, index) => ({
-    ...project,
-    key: `all-${project.title}-${index}`,
-    statusLabel: "Project",
-    fullDescription: project.detailedDescription || project.description,
-    featureList: project.features || project.highlights || [],
-    imageList: project.images && project.images.length > 0 ? project.images : project.image ? [project.image] : [],
-  }));
+  const all = (portfolioData.allProjects || portfolioData.allprojects || []).map((project, index) => {
+    const imageList = project.images && project.images.length > 0 ? project.images : project.image ? [project.image] : [];
+    return {
+      ...project,
+      key: `all-${project.id || project.title}-${index}`,
+      group: "other" as const,
+      statusLabel: project.status || "Project",
+      deploymentState: (project.demo ? "Deployed" : "Not Deployed") as "Deployed" | "Not Deployed",
+      fieldLabel: project.field || "General",
+      fullDescription: project.detailedDescription || project.description,
+      featureList: project.features || project.highlights || [],
+      imageList,
+    };
+  });
 
-  return [...featured, ...fromAll];
+  return [...featured, ...all];
 }
 
 export default function ProjectsPage() {
@@ -94,6 +109,41 @@ export default function ProjectsPage() {
   const projects = useMemo(() => normalizeProjects(), []);
   const [activeProject, setActiveProject] = useState<ProjectModalItem | null>(null);
   const [currentImage, setCurrentImage] = useState(0);
+
+  const [selectedTech, setSelectedTech] = useState("All");
+  const [selectedDeployment, setSelectedDeployment] = useState("All");
+  const [selectedField, setSelectedField] = useState("All");
+
+  const techOptions = useMemo(() => {
+    const unique = Array.from(new Set(projects.flatMap((project) => project.tech))).sort((a, b) => a.localeCompare(b));
+    return ["All", ...unique];
+  }, [projects]);
+
+  const fieldOptions = useMemo(() => {
+    const unique = Array.from(new Set(projects.map((project) => project.fieldLabel))).sort((a, b) => a.localeCompare(b));
+    return ["All", ...unique];
+  }, [projects]);
+
+  const cardRadius: Record<string, string> = {
+    aurora: "rounded-2xl",
+    industrial: "rounded-none",
+    glass: "rounded-3xl",
+    "dark-horse": "rounded-xl",
+  };
+
+  const cardClass = `border ${cardRadius[theme]} p-5 md:p-6 h-full transition-all duration-300 cursor-pointer`;
+  const cardStyle: CSSProperties = {
+    backgroundColor: cc.bg,
+    borderColor: cc.border,
+    backdropFilter: cc.backdropFilter,
+  };
+
+  const filterControlStyle: CSSProperties = {
+    backgroundColor: cc.bg,
+    borderColor: cc.border,
+    color: "var(--heading)",
+    backdropFilter: cc.backdropFilter,
+  };
 
   useEffect(() => {
     const onEscape = (event: KeyboardEvent) => {
@@ -135,86 +185,222 @@ export default function ProjectsPage() {
     };
   }, [activeProject]);
 
-  const cardRadius: Record<string, string> = {
-    aurora: "rounded-2xl",
-    industrial: "rounded-none",
-    glass: "rounded-3xl",
-    "dark-horse": "rounded-xl",
+  const matchesFilter = (project: ProjectModalItem) => {
+    const techMatch = selectedTech === "All" || project.tech.includes(selectedTech);
+    const deploymentMatch = selectedDeployment === "All" || project.deploymentState === selectedDeployment;
+    const fieldMatch = selectedField === "All" || project.fieldLabel === selectedField;
+    return techMatch && deploymentMatch && fieldMatch;
   };
 
-  const cardClass = `border ${cardRadius[theme]} p-5 md:p-6 h-full transition-all duration-300 cursor-pointer`;
-  const cardStyle: CSSProperties = {
-    backgroundColor: cc.bg,
-    borderColor: cc.border,
-    backdropFilter: cc.backdropFilter,
-  };
+  const filteredFeatured = projects.filter((project) => project.group === "featured" && matchesFilter(project));
+  const filteredOthers = projects.filter((project) => project.group === "other" && matchesFilter(project));
 
   return (
     <PageTransition>
       <section className="mx-auto max-w-[95%] xl:max-w-[1100px] 2xl:max-w-[1260px] px-6 md:px-8 lg:px-10 pb-12">
         <SectionHeading label="Work" title="Projects" />
 
-        <motion.div
-          variants={stagger}
-          initial="hidden"
-          whileInView="show"
-          viewport={{ once: true }}
-          className="grid gap-6 md:grid-cols-2 xl:grid-cols-3"
-        >
-          {projects.map((project) => (
-            <motion.button
-              key={project.key}
-              variants={fadeUp}
-              type="button"
-              className="group text-left"
-              onClick={() => setActiveProject(project)}
+        <div className="mb-8 grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
+          <label className="text-xs tracking-wide uppercase" style={{ opacity: 0.8 }}>
+            Tech Stack
+            <select
+              value={selectedTech}
+              onChange={(event) => setSelectedTech(event.target.value)}
+              className="mt-2 w-full border rounded-lg px-3 py-2 text-sm outline-none"
+              style={filterControlStyle}
             >
-              <ClickSpark sparkColor={ac.primary}>
-                <SpotlightCard
-                  spotlightColor={spotlightColorByTheme[theme]}
-                  className={`${cardClass} hover:scale-[1.02]`}
-                  style={cardStyle}
-                >
-                  <div className="relative overflow-hidden rounded-xl border border-white/10 mb-4 bg-black/20">
-                    {project.imageList.length > 0 ? (
-                      <img
-                        src={project.imageList[0]}
-                        alt={`${project.title} preview`}
-                        className="h-44 w-full object-cover transition-transform duration-500 group-hover:scale-[1.03]"
-                      />
-                    ) : (
-                      <div className="h-44 w-full flex items-center justify-center text-xs tracking-wide uppercase" style={{ opacity: 0.65 }}>
-                        Preview unavailable
-                      </div>
-                    )}
-                    <div className="pointer-events-none absolute inset-0 bg-gradient-to-t from-black/35 via-transparent to-transparent" />
-                  </div>
+              {techOptions.map((tech) => (
+                <option key={tech} value={tech}>
+                  {tech}
+                </option>
+              ))}
+            </select>
+          </label>
 
-                  <div className="flex items-start justify-between gap-4">
-                    <h3 className="text-base md:text-lg font-semibold text-[var(--heading)]">{project.title}</h3>
-                    <span className="text-[10px] uppercase tracking-wider px-2 py-1 rounded-full border border-current/30" style={{ color: ac.primary }}>
-                      {project.statusLabel}
-                    </span>
-                  </div>
+          <label className="text-xs tracking-wide uppercase" style={{ opacity: 0.8 }}>
+            Deployment
+            <select
+              value={selectedDeployment}
+              onChange={(event) => setSelectedDeployment(event.target.value)}
+              className="mt-2 w-full border rounded-lg px-3 py-2 text-sm outline-none"
+              style={filterControlStyle}
+            >
+              <option value="All">All</option>
+              <option value="Deployed">Deployed</option>
+              <option value="Not Deployed">Not Deployed</option>
+            </select>
+          </label>
 
-                  <p className="mt-3 text-sm leading-relaxed" style={{ opacity: 0.72 }}>
-                    {project.description}
-                  </p>
+          <label className="text-xs tracking-wide uppercase" style={{ opacity: 0.8 }}>
+            Field
+            <select
+              value={selectedField}
+              onChange={(event) => setSelectedField(event.target.value)}
+              className="mt-2 w-full border rounded-lg px-3 py-2 text-sm outline-none"
+              style={filterControlStyle}
+            >
+              {fieldOptions.map((field) => (
+                <option key={field} value={field}>
+                  {field}
+                </option>
+              ))}
+            </select>
+          </label>
+        </div>
 
-                  <div className="mt-4 flex flex-wrap gap-2">
-                    {project.tech.slice(0, 4).map((tech) => (
-                      <Badge key={`${project.key}-${tech}`} text={tech} />
-                    ))}
-                  </div>
+        <div className="mb-4">
+          <h3 className="text-lg md:text-xl font-semibold text-[var(--heading)]">Featured Projects</h3>
+        </div>
 
-                  <p className="mt-4 text-xs" style={{ color: ac.primary }}>
-                    Click to open project details
-                  </p>
-                </SpotlightCard>
-              </ClickSpark>
-            </motion.button>
-          ))}
-        </motion.div>
+        {filteredFeatured.length > 0 ? (
+          <motion.div
+            variants={stagger}
+            initial="hidden"
+            whileInView="show"
+            viewport={{ once: true }}
+            className="grid gap-6 md:grid-cols-2"
+          >
+            {filteredFeatured.map((project) => (
+              <motion.button
+                key={project.key}
+                variants={fadeUp}
+                type="button"
+                className="group text-left"
+                onClick={() => setActiveProject(project)}
+              >
+                <ClickSpark sparkColor={ac.primary}>
+                  <SpotlightCard
+                    spotlightColor={spotlightColorByTheme[theme]}
+                    className={`${cardClass} hover:scale-[1.02]`}
+                    style={cardStyle}
+                  >
+                    <div className="relative overflow-hidden rounded-xl border border-white/10 mb-4 bg-black/20">
+                      {project.imageList.length > 0 ? (
+                        <img
+                          src={project.imageList[0]}
+                          alt={`${project.title} preview`}
+                          className="w-full aspect-[4/3] sm:aspect-[16/10] lg:aspect-[16/9] object-cover transition-transform duration-500 group-hover:scale-[1.03]"
+                        />
+                      ) : (
+                        <div className="w-full aspect-[4/3] sm:aspect-[16/10] lg:aspect-[16/9] flex items-center justify-center text-xs tracking-wide uppercase" style={{ opacity: 0.65 }}>
+                          Preview unavailable
+                        </div>
+                      )}
+                      <div className="pointer-events-none absolute inset-0 bg-gradient-to-t from-black/35 via-transparent to-transparent" />
+                    </div>
+
+                    <div className="flex items-start justify-between gap-4">
+                      <h3 className="text-base md:text-lg font-semibold text-[var(--heading)]">{project.title}</h3>
+                      <span className="text-[10px] uppercase tracking-wider px-2 py-1 rounded-full border border-current/30" style={{ color: ac.primary }}>
+                        {project.statusLabel}
+                      </span>
+                    </div>
+
+                    <p className="mt-3 text-sm leading-relaxed" style={{ opacity: 0.72 }}>
+                      {project.description}
+                    </p>
+
+                    <div className="mt-3 flex items-center justify-between gap-3 text-xs" style={{ opacity: 0.75 }}>
+                      <span>{project.fieldLabel}</span>
+                      <span>{project.deploymentState}</span>
+                    </div>
+
+                    <div className="mt-4 flex flex-wrap gap-2">
+                      {project.tech.slice(0, 4).map((tech) => (
+                        <Badge key={`${project.key}-${tech}`} text={tech} />
+                      ))}
+                    </div>
+
+                    <p className="mt-4 text-xs" style={{ color: ac.primary }}>
+                      Click to open project details
+                    </p>
+                  </SpotlightCard>
+                </ClickSpark>
+              </motion.button>
+            ))}
+          </motion.div>
+        ) : (
+          <p className="text-sm" style={{ opacity: 0.7 }}>
+            No featured projects match the selected filters.
+          </p>
+        )}
+
+        <div className="mt-12 mb-4">
+          <h3 className="text-lg md:text-xl font-semibold text-[var(--heading)]">Other Projects</h3>
+        </div>
+
+        {filteredOthers.length > 0 ? (
+          <motion.div
+            variants={stagger}
+            initial="hidden"
+            whileInView="show"
+            viewport={{ once: true }}
+            className="grid gap-6 md:grid-cols-2 xl:grid-cols-3"
+          >
+            {filteredOthers.map((project) => (
+              <motion.button
+                key={project.key}
+                variants={fadeUp}
+                type="button"
+                className="group text-left"
+                onClick={() => setActiveProject(project)}
+              >
+                <ClickSpark sparkColor={ac.primary}>
+                  <SpotlightCard
+                    spotlightColor={spotlightColorByTheme[theme]}
+                    className={`${cardClass} hover:scale-[1.02]`}
+                    style={cardStyle}
+                  >
+                    <div className="relative overflow-hidden rounded-xl border border-white/10 mb-4 bg-black/20">
+                      {project.imageList.length > 0 ? (
+                        <img
+                          src={project.imageList[0]}
+                          alt={`${project.title} preview`}
+                          className="w-full aspect-[4/3] sm:aspect-[16/10] lg:aspect-[16/9] object-cover transition-transform duration-500 group-hover:scale-[1.03]"
+                        />
+                      ) : (
+                        <div className="w-full aspect-[4/3] sm:aspect-[16/10] lg:aspect-[16/9] flex items-center justify-center text-xs tracking-wide uppercase" style={{ opacity: 0.65 }}>
+                          Preview unavailable
+                        </div>
+                      )}
+                      <div className="pointer-events-none absolute inset-0 bg-gradient-to-t from-black/35 via-transparent to-transparent" />
+                    </div>
+
+                    <div className="flex items-start justify-between gap-4">
+                      <h3 className="text-base md:text-lg font-semibold text-[var(--heading)]">{project.title}</h3>
+                      <span className="text-[10px] uppercase tracking-wider px-2 py-1 rounded-full border border-current/30" style={{ color: ac.primary }}>
+                        {project.statusLabel}
+                      </span>
+                    </div>
+
+                    <p className="mt-3 text-sm leading-relaxed" style={{ opacity: 0.72 }}>
+                      {project.description}
+                    </p>
+
+                    <div className="mt-3 flex items-center justify-between gap-3 text-xs" style={{ opacity: 0.75 }}>
+                      <span>{project.fieldLabel}</span>
+                      <span>{project.deploymentState}</span>
+                    </div>
+
+                    <div className="mt-4 flex flex-wrap gap-2">
+                      {project.tech.slice(0, 4).map((tech) => (
+                        <Badge key={`${project.key}-${tech}`} text={tech} />
+                      ))}
+                    </div>
+
+                    <p className="mt-4 text-xs" style={{ color: ac.primary }}>
+                      Click to open project details
+                    </p>
+                  </SpotlightCard>
+                </ClickSpark>
+              </motion.button>
+            ))}
+          </motion.div>
+        ) : (
+          <p className="text-sm" style={{ opacity: 0.7 }}>
+            No other projects match the selected filters.
+          </p>
+        )}
       </section>
 
       {activeProject && (
@@ -261,7 +447,7 @@ export default function ProjectsPage() {
                     <img
                       src={activeProject.imageList[currentImage]}
                       alt={`${activeProject.title} screenshot ${currentImage + 1}`}
-                      className="w-full h-[220px] md:h-[360px] object-cover"
+                      className="w-full h-[220px] sm:h-[280px] md:h-[360px] object-cover"
                     />
                     {activeProject.imageList.length > 1 && (
                       <>
@@ -344,8 +530,8 @@ export default function ProjectsPage() {
             </div>
 
             <div className="mt-7 flex flex-wrap gap-3">
-              {activeProject.demo ? (
-                <ThemedButton href={activeProject.demo} external>
+              {(activeProject.demo || activeProject.github) ? (
+                <ThemedButton href={activeProject.demo || activeProject.github} external>
                   Deployed Link
                 </ThemedButton>
               ) : (
@@ -354,15 +540,11 @@ export default function ProjectsPage() {
                 </span>
               )}
 
-              {activeProject.github ? (
+              {activeProject.github && activeProject.demo ? (
                 <ThemedButton href={activeProject.github} external variant="secondary">
                   GitHub Link
                 </ThemedButton>
-              ) : (
-                <span className="text-sm px-4 py-2 border rounded-xl border-white/25" style={{ opacity: 0.65 }}>
-                  GitHub link unavailable
-                </span>
-              )}
+              ) : null}
             </div>
           </motion.div>
         </div>

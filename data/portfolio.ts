@@ -2,6 +2,7 @@ export type PortfolioProject = {
   id?: string;
   title: string;
   description: string;
+  field?: string;
   image: string;
   images?: string[];
   tech: string[];
@@ -17,6 +18,7 @@ export const featuredProjects: PortfolioProject[] = [
   {
     id: "debate-app",
     title: "Debate App",
+    field: "Web Development",
     description:
       "Real-time debate platform with advanced moderation and scoring system. Features include live audience participation, AI-powered argument analysis, and comprehensive analytics dashboard.",
     tech: ["Next.js", "Socket.IO", "MongoDB", "Redis", "TensorFlow"],
@@ -34,6 +36,7 @@ export const featuredProjects: PortfolioProject[] = [
   {
     id: "career-compass",
     title: "CareerCompass",
+    field: "Agentic AI",
     description:
       "AI-driven career guidance platform utilizing machine learning to provide personalized career path recommendations based on skills, interests, and market trends.",
     tech: ["React", "FastAPI", "PyTorch", "PostgreSQL", "Docker"],
@@ -51,6 +54,7 @@ export const featuredProjects: PortfolioProject[] = [
   {
     id: "QuestionFlow",
     title: "QuestionFlow",
+    field: "Agentic AI",
     description:
       "An AI-powered Q&A platform that provides real-time answers to user queries using a combination of LLMs and knowledge graph technologies.",
     tech: ["Next.js", "LangChain", "LangGraph", "Groq API", "Prisma ORM", "PostgreSQL"],
@@ -71,6 +75,7 @@ export const allProjects: PortfolioProject[] = [
   {
     id: "cs-assessment",
     title: "CS-ASSESSMENT",
+    field: "Web Development",
     description: "An online assessment platform for computer science students",
     image: "/project7.png",
     images: ["/project7.png"],
@@ -85,6 +90,7 @@ export const allProjects: PortfolioProject[] = [
   {
     id: "hairrevive",
     title: "HairRevive",
+    field: "ML Core",
     description: "Hair regrowth solutions powered by science",
     image: "/Project3.jpg",
     images: ["/Project3.jpg"],
@@ -99,6 +105,7 @@ export const allProjects: PortfolioProject[] = [
   {
     id: "devdeck",
     title: "DevDeck",
+    field: "Web Development",
     description: "Track coding activity with an interactive dashboard",
     image: "/Project4.jpg",
     images: ["/Project4.jpg"],
@@ -113,6 +120,7 @@ export const allProjects: PortfolioProject[] = [
   {
     id: "spark",
     title: "SPARK",
+    field: "Web Development",
     description: "Event management and community engagement platform designed for technical communities. Handles registrations, speaker management, and post-event analytics.",
     image: "/project8.png",
     images: ["/project8.png"],

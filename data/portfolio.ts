@@ -140,6 +140,21 @@ export const portfolioData = {
       ]
     },
     {
+      id:"QuestionFlow",
+      title: "QuestionFlow",
+      description: "An AI-powered Q&A platform that provides real-time answers to user queries using a combination of LLMs and knowledge graph technologies.",
+      tech: ["Next.js", "LangChain", "LangGraph", "Groq API", "Prisma ORM", "PostgreSQL"],
+      status: "In Development",
+      image: "/QuestionFlow/1.png",
+      github: "",
+      demo: "",
+      highlights: [
+        "Real-time assessment of user queries with LLMs",
+        "Integration with knowledge graph technologies",
+        "AI based assessment of query quality and relevance"
+      ]
+    },
+    {
       id: "spark",
       title: "SPARK",
       description: "Event management and community engagement platform designed for technical communities. Handles registrations, speaker management, and post-event analytics.",
@@ -205,26 +220,6 @@ export const portfolioData = {
       detailedDescription: "DevDeck tracks and analyzes your coding productivity...",
       features: ["GitHub integration", "Analytics", "Custom widgets"],
       github: "https://github.com/Sanidhya14321/devdeck",
-      demo: ""
-    },
-    {
-      title: "FitConnect",
-      description: "Connect athletes and trainers via social fitness",
-      image: "",
-      tech: ["React", "Node.js", "MongoDB", "GraphQL"],
-      detailedDescription: "FitConnect helps athletes and trainers share progress and workouts...",
-      features: ["Tracking", "Connections", "Challenges"],
-      github: "https://github.com/Sanidhya14321/SocialFitness",
-      demo: ""
-    },
-    {
-      title: "WellNest",
-      description: "Mental & physical wellness improvement app",
-      image: "",
-      tech: ["React", "Firebase", "Tailwind CSS"],
-      detailedDescription: "WellNest provides daily meditation and wellness plans...",
-      features: ["Meditation", "Wellness plans", "Analytics"],
-      github: "https://github.com/Sanidhya14321/Wellness-App",
       demo: ""
     },
   ],

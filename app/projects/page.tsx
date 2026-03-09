@@ -1,69 +1,139 @@
 "use client";
 
-import { useTheme } from "@/contexts/ThemeContext";
-import { portfolioData } from "@/data/portfolio";
-import { sectionStyles, cardCSS, accentCSS } from "@/lib/themes";
+import { CSSProperties, useEffect, useMemo, useState } from "react";
 import { motion } from "framer-motion";
-import { Suspense } from "react";
+import { useTheme } from "@/contexts/ThemeContext";
+import { portfolioData, PortfolioProject } from "@/data/portfolio";
+import { cardCSS, accentCSS } from "@/lib/themes";
 import PageTransition from "@/components/ui/PageTransition";
 import SectionHeading from "@/components/ui/SectionHeading";
 import SpotlightCard from "@/components/reactbits/SpotlightCard";
-import StarBorder from "@/components/reactbits/StarBorder";
-import Badge from "@/components/ui/Badge";
-import ShinyText from "@/components/reactbits/ShinyText";
-import DecryptedText from "@/components/reactbits/DecryptedText";
-import GradientText from "@/components/reactbits/GradientText";
 import ClickSpark from "@/components/reactbits/ClickSpark";
-import LazyComponent from "@/components/ui/LazyComponent";
+import Badge from "@/components/ui/Badge";
 import ThemedButton from "@/components/ui/ThemedButton";
+
+type ProjectModalItem = PortfolioProject & {
+  key: string;
+  statusLabel: string;
+  fullDescription: string;
+  featureList: string[];
+  imageList: string[];
+};
 
 const stagger = {
   hidden: {},
-  show: { transition: { staggerChildren: 0.1 } },
+  show: { transition: { staggerChildren: 0.08 } },
 };
+
 const fadeUp = {
-  hidden: { opacity: 0, y: 20 },
-  show: { opacity: 1, y: 0, transition: { duration: 0.5, ease: [0.22, 1, 0.36, 1] as const } },
+  hidden: { opacity: 0, y: 18 },
+  show: { opacity: 1, y: 0, transition: { duration: 0.45, ease: [0.22, 1, 0.36, 1] as const } },
 };
+
+const spotlightColorByTheme: Record<string, string> = {
+  aurora: "rgba(124, 58, 237, 0.22)",
+  industrial: "rgba(255, 255, 255, 0.12)",
+  glass: "rgba(255, 255, 255, 0.15)",
+  "dark-horse": "rgba(0, 255, 163, 0.18)",
+};
+
+const modalGlassByTheme: Record<string, CSSProperties> = {
+  aurora: {
+    background: "linear-gradient(150deg, rgba(76, 29, 149, 0.32), rgba(17, 24, 39, 0.74))",
+    border: "1px solid rgba(168, 85, 247, 0.35)",
+    boxShadow: "0 20px 80px rgba(15, 23, 42, 0.5)",
+    backdropFilter: "blur(16px)",
+  },
+  industrial: {
+    background: "linear-gradient(145deg, rgba(38, 38, 38, 0.84), rgba(10, 10, 10, 0.9))",
+    border: "1px solid rgba(255, 255, 255, 0.14)",
+    boxShadow: "0 16px 60px rgba(0, 0, 0, 0.65)",
+    backdropFilter: "blur(8px)",
+  },
+  glass: {
+    background: "linear-gradient(145deg, rgba(255, 255, 255, 0.12), rgba(255, 255, 255, 0.04))",
+    border: "1px solid rgba(255, 255, 255, 0.2)",
+    boxShadow: "0 24px 80px rgba(0, 0, 0, 0.45)",
+    backdropFilter: "blur(20px)",
+  },
+  "dark-horse": {
+    background: "linear-gradient(145deg, rgba(2, 44, 34, 0.62), rgba(0, 0, 0, 0.9))",
+    border: "1px solid rgba(16, 185, 129, 0.34)",
+    boxShadow: "0 24px 72px rgba(0, 0, 0, 0.72)",
+    backdropFilter: "blur(14px)",
+  },
+};
+
+function normalizeProjects(): ProjectModalItem[] {
+  const featured = portfolioData.featuredProjects.map((project, index) => ({
+    ...project,
+    key: `featured-${project.id || index}`,
+    statusLabel: project.status || "Featured",
+    fullDescription: project.detailedDescription || project.description,
+    featureList: project.features || project.highlights || [],
+    imageList: project.images && project.images.length > 0 ? project.images : project.image ? [project.image] : [],
+  }));
+
+  const fromAll = (portfolioData.allProjects || portfolioData.allprojects || []).map((project, index) => ({
+    ...project,
+    key: `all-${project.title}-${index}`,
+    statusLabel: "Project",
+    fullDescription: project.detailedDescription || project.description,
+    featureList: project.features || project.highlights || [],
+    imageList: project.images && project.images.length > 0 ? project.images : project.image ? [project.image] : [],
+  }));
+
+  return [...featured, ...fromAll];
+}
 
 export default function ProjectsPage() {
   const { theme } = useTheme();
-  const data = portfolioData;
   const cc = cardCSS[theme];
   const ac = accentCSS[theme];
 
-  const spotlightColor: Record<string, string> = {
-    aurora: "rgba(124, 58, 237, 0.25)",
-    industrial: "rgba(255, 255, 255, 0.12)",
-    glass: "rgba(255, 255, 255, 0.15)",
-    "dark-horse": "rgba(0, 255, 163, 0.18)",
-  };
+  const projects = useMemo(() => normalizeProjects(), []);
+  const [activeProject, setActiveProject] = useState<ProjectModalItem | null>(null);
+  const [currentImage, setCurrentImage] = useState(0);
 
-  const starColor: Record<string, string> = {
-    aurora: "#7c3aed",
-    industrial: "#ffffff",
-    glass: "#ffffff",
-    "dark-horse": "#00ffa3",
-  };
+  useEffect(() => {
+    const onEscape = (event: KeyboardEvent) => {
+      if (event.key === "Escape") {
+        setActiveProject(null);
+      }
+      if (!activeProject) {
+        return;
+      }
+      if (event.key === "ArrowRight") {
+        setCurrentImage((prev) => {
+          const length = activeProject.imageList.length || 1;
+          return (prev + 1) % length;
+        });
+      }
+      if (event.key === "ArrowLeft") {
+        setCurrentImage((prev) => {
+          const length = activeProject.imageList.length || 1;
+          return (prev - 1 + length) % length;
+        });
+      }
+    };
 
-  const statusColors: Record<string, Record<string, React.CSSProperties>> = {
-    aurora: {
-      Live: { backgroundColor: "rgba(34, 211, 238, 0.15)", color: "#22D3EE", borderWidth: "1px", borderStyle: "solid", borderColor: "rgba(34, 211, 238, 0.20)" },
-      "In Development": { backgroundColor: "rgba(168, 85, 247, 0.15)", color: "#C084FC", borderWidth: "1px", borderStyle: "solid", borderColor: "rgba(168, 85, 247, 0.20)" },
-    },
-    industrial: {
-      Live: { backgroundColor: "rgba(255, 255, 255, 0.10)", color: "#FFFFFF", borderWidth: "2px", borderStyle: "solid", borderColor: "rgb(82, 82, 82)" },
-      "In Development": { backgroundColor: "rgb(38, 38, 38)", color: "#A3A3A3", borderWidth: "2px", borderStyle: "solid", borderColor: "rgb(64, 64, 64)" },
-    },
-    glass: {
-      Live: { backgroundColor: "rgba(255, 255, 255, 0.06)", color: "rgba(255, 255, 255, 0.70)", borderWidth: "1px", borderStyle: "solid", borderColor: "rgba(255, 255, 255, 0.10)" },
-      "In Development": { backgroundColor: "rgba(255, 255, 255, 0.04)", color: "rgba(255, 255, 255, 0.40)", borderWidth: "1px", borderStyle: "solid", borderColor: "rgba(255, 255, 255, 0.06)" },
-    },
-    "dark-horse": {
-      Live: { backgroundColor: "rgba(52, 211, 153, 0.10)", color: "#34D399", borderWidth: "1px", borderStyle: "solid", borderColor: "rgba(52, 211, 153, 0.20)" },
-      "In Development": { backgroundColor: "rgba(34, 211, 238, 0.10)", color: "#22D3EE", borderWidth: "1px", borderStyle: "solid", borderColor: "rgba(34, 211, 238, 0.20)" },
-    },
-  };
+    window.addEventListener("keydown", onEscape);
+    return () => window.removeEventListener("keydown", onEscape);
+  }, [activeProject]);
+
+  useEffect(() => {
+    if (!activeProject) {
+      document.body.style.overflow = "";
+      return;
+    }
+
+    document.body.style.overflow = "hidden";
+    setCurrentImage(0);
+
+    return () => {
+      document.body.style.overflow = "";
+    };
+  }, [activeProject]);
 
   const cardRadius: Record<string, string> = {
     aurora: "rounded-2xl",
@@ -72,9 +142,8 @@ export default function ProjectsPage() {
     "dark-horse": "rounded-xl",
   };
 
-  const cardClass = `border ${cardRadius[theme]} p-6 md:p-8 transition-all duration-300`;
-  const smallCardClass = `border ${cardRadius[theme]} p-5 md:p-6 h-full transition-all duration-300`;
-  const cardStyle: React.CSSProperties = {
+  const cardClass = `border ${cardRadius[theme]} p-5 md:p-6 h-full transition-all duration-300 cursor-pointer`;
+  const cardStyle: CSSProperties = {
     backgroundColor: cc.bg,
     borderColor: cc.border,
     backdropFilter: cc.backdropFilter,
@@ -82,143 +151,222 @@ export default function ProjectsPage() {
 
   return (
     <PageTransition>
-      <section className="mx-auto max-w-[95%] xl:max-w-[1000px] 2xl:max-w-[1200px] px-6 md:px-8 lg:px-10 pb-12">
+      <section className="mx-auto max-w-[95%] xl:max-w-[1100px] 2xl:max-w-[1260px] px-6 md:px-8 lg:px-10 pb-12">
         <SectionHeading label="Work" title="Projects" />
 
-        {/* Featured */}
         <motion.div
           variants={stagger}
           initial="hidden"
           whileInView="show"
           viewport={{ once: true }}
-          className="space-y-10"
+          className="grid gap-6 md:grid-cols-2 xl:grid-cols-3"
         >
-          {data.featuredProjects.map((proj, i) => (
-            <motion.div key={proj.id} variants={fadeUp}>
+          {projects.map((project) => (
+            <motion.button
+              key={project.key}
+              variants={fadeUp}
+              type="button"
+              className="group text-left"
+              onClick={() => setActiveProject(project)}
+            >
               <ClickSpark sparkColor={ac.primary}>
-                  <SpotlightCard spotlightColor={spotlightColor[theme]} className={`${cardClass} hover:scale-[1.01]`} style={cardStyle}>
-                    <ProjectCardContent proj={proj} theme={theme} statusColors={statusColors} ac={ac} cc={cc} />
-                  </SpotlightCard>
+                <SpotlightCard
+                  spotlightColor={spotlightColorByTheme[theme]}
+                  className={`${cardClass} hover:scale-[1.02]`}
+                  style={cardStyle}
+                >
+                  <div className="relative overflow-hidden rounded-xl border border-white/10 mb-4 bg-black/20">
+                    {project.imageList.length > 0 ? (
+                      <img
+                        src={project.imageList[0]}
+                        alt={`${project.title} preview`}
+                        className="h-44 w-full object-cover transition-transform duration-500 group-hover:scale-[1.03]"
+                      />
+                    ) : (
+                      <div className="h-44 w-full flex items-center justify-center text-xs tracking-wide uppercase" style={{ opacity: 0.65 }}>
+                        Preview unavailable
+                      </div>
+                    )}
+                    <div className="pointer-events-none absolute inset-0 bg-gradient-to-t from-black/35 via-transparent to-transparent" />
+                  </div>
+
+                  <div className="flex items-start justify-between gap-4">
+                    <h3 className="text-base md:text-lg font-semibold text-[var(--heading)]">{project.title}</h3>
+                    <span className="text-[10px] uppercase tracking-wider px-2 py-1 rounded-full border border-current/30" style={{ color: ac.primary }}>
+                      {project.statusLabel}
+                    </span>
+                  </div>
+
+                  <p className="mt-3 text-sm leading-relaxed" style={{ opacity: 0.72 }}>
+                    {project.description}
+                  </p>
+
+                  <div className="mt-4 flex flex-wrap gap-2">
+                    {project.tech.slice(0, 4).map((tech) => (
+                      <Badge key={`${project.key}-${tech}`} text={tech} />
+                    ))}
+                  </div>
+
+                  <p className="mt-4 text-xs" style={{ color: ac.primary }}>
+                    Click to open project details
+                  </p>
+                </SpotlightCard>
               </ClickSpark>
-            </motion.div>
+            </motion.button>
           ))}
         </motion.div>
-        
-        {data.allprojects.length > 0 && (
-          <div className="mt-16">
-            <GradientText
-              colors={[
-                theme === "aurora" ? "#818CF8" : theme === "industrial" ? "#FAFAFA" : theme === "glass" ? "#FFFFFF" : "#00FFA3",
-                theme === "aurora" ? "#A78BFA" : theme === "industrial" ? "#A3A3A3" : theme === "glass" ? "#9CA3AF" : "#00D9FF"
-              ]}
-              animationSpeed={6}
-              className="text-xl md:text-2xl font-bold"
-            >
-              <ShinyText text="Other Projects" speed={5} className="!text-inherit" />
-            </GradientText>
-            <div className="mt-8">
-              <motion.div
-                variants={stagger}
-                initial="hidden"
-                whileInView="show"
-                viewport={{ once: true }}
-                className="grid gap-6 sm:grid-cols-2"
-              >
-                {data.allprojects.map((proj, i) => (
-                  <motion.div key={i} variants={fadeUp}>
-                    <ClickSpark sparkColor={ac.primary}>
-                    <SpotlightCard spotlightColor={spotlightColor[theme]} className={`${smallCardClass} hover:scale-[1.02]`} style={cardStyle}>
-                      <h4 className="text-base md:text-lg font-medium text-[var(--heading)]">{proj.title}</h4>
-                      <p className="mt-3 text-xs md:text-sm leading-relaxed" style={{ opacity: 0.6 }}>{proj.description}</p>
-                      <p className="mt-3 text-xs md:text-sm leading-relaxed" style={{ opacity: 0.6 }}>{proj.detailedDescription}</p>
-                        {proj.image && (
-                          <img src={proj.image} alt={proj.title} className="mt-4 rounded-lg" />
-                        )}
-                      <div className="mt-6 flex flex-wrap gap-2">
-                        {proj.tech.map((t) => (
-                          <Badge key={t} text={t} />
-                        ))}
-                      </div>
-                      <div className="mt-4 flex gap-3">
-                        {proj.github && (
-                          <a href={proj.github} target="_blank" rel="noopener noreferrer" className="text-xs md:text-sm transition-colors" style={{ color: ac.primary }}>
-                            <ThemedButton >Source</ThemedButton>
-                          </a>
-                        )}
-                        {proj.demo && (
-                          <a href={proj.demo} target="_blank" rel="noopener noreferrer" className="text-xs md:text-sm transition-colors" style={{ color: ac.primary }}>
-                             <ThemedButton >Demo</ThemedButton>
-                          </a>
-                        )}
-                      </div>
-                    </SpotlightCard>
-                    </ClickSpark>
-                  </motion.div>
-                ))}
-              </motion.div>
-            </div>
-          </div>
-        )}
       </section>
-    </PageTransition>
-  );
-}
 
-/* eslint-disable @typescript-eslint/no-explicit-any */
-function ProjectCardContent({ proj, theme, statusColors, ac, cc }: {
-  proj: any;
-  theme: string;
-  statusColors: Record<string, Record<string, React.CSSProperties>>;
-  ac: { primary: string; dot: string; line: string; iconBg: string; impact: string };
-  cc: { bg: string; border: string; hoverBorder: string; backdropFilter?: string };
-}) {
-  return (
-    <div className="flex flex-col gap-6 md:flex-row md:items-start md:justify-between">
-      <div className="flex-1">
-        <div className="flex items-center gap-4 mb-3 flex-wrap">
-          <h3 className="text-lg md:text-xl font-semibold text-[var(--heading)]">{proj.title}</h3>
-          <span
-            className="text-xs md:text-sm font-medium px-3 py-1.5 rounded-full"
-            style={statusColors[theme]?.[proj.status] || {}}
+      {activeProject && (
+        <div className="fixed inset-0 z-[120] flex items-center justify-center p-4 md:p-8">
+          <button
+            type="button"
+            aria-label="Close project modal"
+            className="absolute inset-0 bg-black/70 backdrop-blur-[2px]"
+            onClick={() => setActiveProject(null)}
+          />
+
+          <motion.div
+            role="dialog"
+            aria-modal="true"
+            aria-label={`${activeProject.title} project details`}
+            initial={{ opacity: 0, y: 30, scale: 0.96 }}
+            animate={{ opacity: 1, y: 0, scale: 1 }}
+            exit={{ opacity: 0, y: 30, scale: 0.96 }}
+            transition={{ duration: 0.28, ease: [0.22, 1, 0.36, 1] }}
+            className="relative z-10 w-full max-w-4xl max-h-[90vh] overflow-y-auto rounded-3xl p-5 md:p-8"
+            style={modalGlassByTheme[theme]}
           >
-            {proj.status}
-          </span>
+            <div className="flex items-start justify-between gap-4">
+              <div>
+                <h2 className="text-xl md:text-2xl font-semibold text-[var(--heading)]">{activeProject.title}</h2>
+                <p className="mt-2 text-sm" style={{ opacity: 0.78 }}>
+                  {activeProject.description}
+                </p>
+              </div>
+              <button
+                type="button"
+                onClick={() => setActiveProject(null)}
+                className="h-9 w-9 rounded-full border border-white/30 text-white/90 hover:bg-white/10 transition-colors"
+                aria-label="Close"
+              >
+                x
+              </button>
+            </div>
+
+            <div className="mt-6">
+              {activeProject.imageList.length > 0 ? (
+                <div>
+                  <div className="relative overflow-hidden rounded-2xl border border-white/15">
+                    <img
+                      src={activeProject.imageList[currentImage]}
+                      alt={`${activeProject.title} screenshot ${currentImage + 1}`}
+                      className="w-full h-[220px] md:h-[360px] object-cover"
+                    />
+                    {activeProject.imageList.length > 1 && (
+                      <>
+                        <button
+                          type="button"
+                          className="absolute left-3 top-1/2 -translate-y-1/2 h-9 w-9 rounded-full bg-black/50 text-white border border-white/20"
+                          onClick={() => setCurrentImage((prev) => (prev - 1 + activeProject.imageList.length) % activeProject.imageList.length)}
+                          aria-label="Previous image"
+                        >
+                          {"<"}
+                        </button>
+                        <button
+                          type="button"
+                          className="absolute right-3 top-1/2 -translate-y-1/2 h-9 w-9 rounded-full bg-black/50 text-white border border-white/20"
+                          onClick={() => setCurrentImage((prev) => (prev + 1) % activeProject.imageList.length)}
+                          aria-label="Next image"
+                        >
+                          {">"}
+                        </button>
+                      </>
+                    )}
+                  </div>
+
+                  {activeProject.imageList.length > 1 && (
+                    <div className="mt-3 flex justify-center gap-2">
+                      {activeProject.imageList.map((img, index) => (
+                        <button
+                          key={`${img}-${index}`}
+                          type="button"
+                          onClick={() => setCurrentImage(index)}
+                          className="h-2.5 w-2.5 rounded-full transition-all"
+                          style={{ background: index === currentImage ? ac.primary : "rgba(255,255,255,0.35)" }}
+                          aria-label={`View image ${index + 1}`}
+                        />
+                      ))}
+                    </div>
+                  )}
+                </div>
+              ) : (
+                <div className="h-[220px] md:h-[360px] rounded-2xl border border-dashed border-white/30 flex items-center justify-center text-sm" style={{ opacity: 0.7 }}>
+                  No screenshots available
+                </div>
+              )}
+            </div>
+
+            <div className="mt-6 grid gap-6 md:grid-cols-2">
+              <div>
+                <h3 className="text-base font-semibold text-[var(--heading)]">Description</h3>
+                <p className="mt-2 text-sm leading-relaxed" style={{ opacity: 0.82 }}>
+                  {activeProject.fullDescription}
+                </p>
+              </div>
+
+              <div>
+                <h3 className="text-base font-semibold text-[var(--heading)]">Features</h3>
+                {activeProject.featureList.length > 0 ? (
+                  <ul className="mt-2 space-y-2">
+                    {activeProject.featureList.map((feature) => (
+                      <li key={feature} className="text-sm flex items-start gap-2" style={{ opacity: 0.82 }}>
+                        <span className="mt-2 h-1.5 w-1.5 rounded-full bg-current" />
+                        {feature}
+                      </li>
+                    ))}
+                  </ul>
+                ) : (
+                  <p className="mt-2 text-sm" style={{ opacity: 0.62 }}>
+                    Feature details will be added soon.
+                  </p>
+                )}
+              </div>
+            </div>
+
+            <div className="mt-6">
+              <h3 className="text-base font-semibold text-[var(--heading)]">Tech Stack</h3>
+              <div className="mt-3 flex flex-wrap gap-2">
+                {activeProject.tech.map((tech) => (
+                  <Badge key={`${activeProject.key}-${tech}-modal`} text={tech} />
+                ))}
+              </div>
+            </div>
+
+            <div className="mt-7 flex flex-wrap gap-3">
+              {activeProject.demo ? (
+                <ThemedButton href={activeProject.demo} external>
+                  Deployed Link
+                </ThemedButton>
+              ) : (
+                <span className="text-sm px-4 py-2 border rounded-xl border-white/25" style={{ opacity: 0.65 }}>
+                  Deployed link unavailable
+                </span>
+              )}
+
+              {activeProject.github ? (
+                <ThemedButton href={activeProject.github} external variant="secondary">
+                  GitHub Link
+                </ThemedButton>
+              ) : (
+                <span className="text-sm px-4 py-2 border rounded-xl border-white/25" style={{ opacity: 0.65 }}>
+                  GitHub link unavailable
+                </span>
+              )}
+            </div>
+          </motion.div>
         </div>
-
-        <p className="mt-4 text-sm md:text-base max-w-2xl" style={{ lineHeight: 1.6, opacity: 0.7 }}>
-          {proj.description}
-        </p>
-
-        {proj.highlights && proj.highlights.length > 0 && (
-          <ul className="mt-6 space-y-3">
-            {proj.highlights.map((h: string, j: number) => (
-              <li key={j} className="flex items-start gap-3 text-xs md:text-sm" style={{ opacity: 0.6 }}>
-                <span className="mt-2 h-1 w-1 rounded-full bg-current flex-shrink-0" />
-                {h}
-              </li>
-            ))}
-          </ul>
-        )}
-
-        <div className="mt-6 flex flex-wrap gap-3">
-          {proj.tech.map((t: string) => (
-            <Badge key={t} text={t} />
-          ))}
-        </div>
-      </div>
-
-      <div className="flex gap-4 flex-shrink-0 mt-3 md:mt-0">
-        {proj.github && (
-          <a href={proj.github} target="_blank" rel="noopener noreferrer" className="transition-colors" style={{ color: ac.primary }}>
-            <svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor"><path d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0024 12c0-6.63-5.37-12-12-12z"/></svg>
-          </a>
-        )}
-        {proj.demo && (
-          <a href={proj.demo} target="_blank" rel="noopener noreferrer" className="transition-colors" style={{ color: ac.primary }}>
-            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M18 13v6a2 2 0 01-2 2H5a2 2 0 01-2-2V8a2 2 0 012-2h6M15 3h6v6M10 14L21 3"/></svg>
-          </a>
-        )}
-      </div>
-    </div>
+      )}
+    </PageTransition>
   );
 }

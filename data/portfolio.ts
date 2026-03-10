@@ -174,6 +174,33 @@ export const portfolioData = {
       impact: "Established active developer community with regular technical sessions",
       tech: ["Flutter", "Firebase", "Google Cloud", "TensorFlow"],
     },
+    {
+      title: "Frontend Developer Intern",
+      company: "Studio Grid Labs",
+      period: "Summer 2024",
+      description:
+        "Built reusable component systems and optimized rendering performance for dashboard-heavy user interfaces across desktop and mobile breakpoints.",
+      impact: "Reduced page interaction latency and improved Lighthouse performance across core pages",
+      tech: ["Next.js", "TypeScript", "Tailwind CSS", "Framer Motion"],
+    },
+    {
+      title: "Backend Engineer Intern",
+      company: "CloudOps Systems",
+      period: "Winter 2023",
+      description:
+        "Implemented secure APIs, improved auth flows, and added observability for critical services used by internal operations and partner integrations.",
+      impact: "Shipped stable APIs with improved reliability and lower error rates in staging",
+      tech: ["Node.js", "Express", "PostgreSQL", "Redis", "Docker"],
+    },
+    {
+      title: "Open Source Contributor",
+      company: "Community Projects",
+      period: "2023 - 2024",
+      description:
+        "Contributed fixes and enhancements to UI tooling and developer workflow repositories, focusing on documentation quality and DX improvements.",
+      impact: "Merged contributor PRs and helped improve onboarding for first-time contributors",
+      tech: ["React", "TypeScript", "GitHub Actions", "Jest"],
+    },
   ],
 
   education: {

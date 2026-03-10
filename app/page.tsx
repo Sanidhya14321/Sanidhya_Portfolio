@@ -122,13 +122,7 @@ export default function Home() {
           fallback={<div className="absolute inset-0 z-0 animate-pulse bg-gradient-to-br from-transparent via-white/5 to-transparent" />}
         >
           <div className="absolute inset-0 z-0 opacity-40">
-            <Particles
-              particleCount={200}
-              speed={0.1}
-              particleColors={particleColors[theme]}
-              alphaParticles
-              className="w-full h-full"
-            />
+            
           </div>
         </LazyComponent>
 

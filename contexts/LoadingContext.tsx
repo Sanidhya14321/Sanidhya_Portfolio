@@ -3,6 +3,7 @@
 import React, { createContext, useContext, useState, useEffect } from "react";
 import { useTheme } from "@/contexts/ThemeContext";
 import { colors } from "@/lib/themes";
+import { LumaSpin } from "@/components/ui/luma-spin";
 
 interface LoadingContextType {
   isLoading: boolean;
@@ -77,12 +78,9 @@ export const LoadingProvider: React.FC<LoadingProviderProps> = ({ children }) =>
             pointerEvents: loadingProgress === 100 ? "none" : "auto",
           }}
         >
-          {/* Logo or Brand Name */}
-          <div className="mb-8">
-            <h1
-              className="text-5xl font-bold tracking-tight"
-              style={{ color: themeColors.heading }}
-            >
+          <div className="mb-8 flex flex-col items-center gap-4">
+            <LumaSpin />
+            <h1 className="text-3xl font-bold tracking-tight" style={{ color: themeColors.heading }}>
               SV
             </h1>
           </div>

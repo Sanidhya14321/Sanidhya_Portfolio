@@ -3,7 +3,7 @@
 import { usePathname } from "next/navigation";
 import { useEffect, useState } from "react";
 import { useTheme } from "@/contexts/ThemeContext";
-import { colors } from "@/lib/themes";
+import { LumaSpin } from "@/components/ui/luma-spin";
 
 /**
  * RouteLoadingIndicator - Shows a loading bar at the top during route transitions
@@ -11,7 +11,6 @@ import { colors } from "@/lib/themes";
 export const RouteLoadingIndicator = () => {
   const pathname = usePathname();
   const { theme } = useTheme();
-  const themeColors = colors[theme];
   const [isLoading, setIsLoading] = useState(false);
 
   useEffect(() => {
@@ -21,34 +20,24 @@ export const RouteLoadingIndicator = () => {
     return () => clearTimeout(timer);
   }, [pathname]);
 
-  const barColor: Record<string, string> = {
-    aurora: "#7C3AED",
-    industrial: "#FFFFFF",
-    glass: "rgba(255, 255, 255, 0.7)",
-    "dark-horse": "#00FFA3",
+  const bgColor: Record<string, string> = {
+    aurora: "rgba(15, 18, 32, 0.55)",
+    industrial: "rgba(0, 0, 0, 0.55)",
+    glass: "rgba(10, 10, 20, 0.35)",
+    "dark-horse": "rgba(0, 12, 8, 0.55)",
   };
 
   if (!isLoading) return null;
 
   return (
-    <div className="fixed top-0 left-0 right-0 z-[9998] h-1">
-      <div
-        className="h-full animate-pulse"
-        style={{
-          background: `linear-gradient(90deg, transparent, ${barColor[theme]}, transparent)`,
-          animation: "loading-bar 1s ease-in-out infinite",
-        }}
-      />
-      <style jsx>{`
-        @keyframes loading-bar {
-          0% {
-            transform: translateX(-100%);
-          }
-          100% {
-            transform: translateX(100%);
-          }
-        }
-      `}</style>
+    <div
+      className="fixed inset-0 z-[9998] flex items-center justify-center backdrop-blur-[2px]"
+      style={{ backgroundColor: bgColor[theme] }}
+      aria-live="polite"
+      aria-busy="true"
+      aria-label="Loading"
+    >
+      <LumaSpin />
     </div>
   );
 };

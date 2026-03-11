@@ -1,269 +1,286 @@
 "use client";
 
-import React, {
-  useEffect,
-  useRef,
-  useState,
-  useCallback,
-  CSSProperties,
-  ReactNode,
-  memo,
-} from "react";
-import { motion, useScroll, useTransform } from "framer-motion";
+import { useMemo, useState } from "react";
+import {
+  Boxes,
+  Bot,
+  Brain,
+  ExternalLink,
+  FolderKanban,
+  Github,
+  Globe,
+  Layers,
+  Sparkles,
+} from "lucide-react";
+import InteractiveSelector, {
+  InteractiveSelectorOption,
+  InteractiveSelectorTheme,
+} from "@/components/ui/interactive-selector";
+import {
+  Testimonial,
+  TestimonialCarousel,
+} from "@/components/ui/profile-card-testimonial-carousel";
+import PageTransition from "@/components/ui/PageTransition";
+import SectionHeading from "@/components/ui/SectionHeading";
+import { useTheme } from "@/contexts/ThemeContext";
+import { portfolioData } from "@/data/portfolio";
+import { cardCSS, colors } from "@/lib/themes";
 
-// ─── Types ────────────────────────────────────────────────────────────────────
+const getProjectIcon = (field?: string) => {
+  const normalized = (field || "").toLowerCase();
 
-export interface ZoomParallaxItem {
-  src?: string;
-  alt?: string;
-  content?: ReactNode;
-  className?: string;
-}
+  if (normalized.includes("agent") || normalized.includes("ai")) {
+    return <Bot size={20} />;
+  }
 
-// ─── Original ZoomParallax (exact same effect, no changes to layout) ──────────
+  if (normalized.includes("ml")) {
+    return <Brain size={20} />;
+  }
 
-const SCALES_CFG = [
-  [1, 4],
-  [1, 5],
-  [1, 6],
-  [1, 5],
-  [1, 6],
-  [1, 8],
-  [1, 9],
-] as const;
+  if (normalized.includes("web")) {
+    return <Globe size={20} />;
+  }
 
-// The original positional overrides, kept exactly as-is.
-const SLOT_CLS: Record<number, string> = {
-  1: "[&>div]:!-top-[30vh] [&>div]:!left-[5vw] [&>div]:!h-[30vh] [&>div]:!w-[35vw]",
-  2: "[&>div]:!-top-[10vh] [&>div]:!-left-[25vw] [&>div]:!h-[45vh] [&>div]:!w-[20vw]",
-  3: "[&>div]:!left-[27.5vw] [&>div]:!h-[25vh] [&>div]:!w-[25vw]",
-  4: "[&>div]:!top-[27.5vh] [&>div]:!left-[5vw] [&>div]:!h-[25vh] [&>div]:!w-[20vw]",
-  5: "[&>div]:!top-[27.5vh] [&>div]:!-left-[22.5vw] [&>div]:!h-[25vh] [&>div]:!w-[30vw]",
-  6: "[&>div]:!top-[22.5vh] [&>div]:!left-[25vw] [&>div]:!h-[15vh] [&>div]:!w-[15vw]",
+  if (normalized.includes("core")) {
+    return <Boxes size={20} />;
+  }
+
+  return <FolderKanban size={20} />;
 };
 
-function ZoomParallax({
-  items,
-  containerHeightClass = "h-[300vh]",
-}: {
-  items: ZoomParallaxItem[];
-  containerHeightClass?: string;
-}) {
-  const container = useRef<HTMLDivElement>(null);
-  const { scrollYProgress } = useScroll({
-    target: container,
-    offset: ["start start", "end end"],
-  });
+const getSelectorTheme = (theme: string): InteractiveSelectorTheme => {
+  if (theme === "industrial") {
+    return {
+      containerBackground: "linear-gradient(145deg, rgba(20,20,20,0.9), rgba(10,10,10,0.95))",
+      borderColor: "rgba(255,255,255,0.16)",
+      activeBorderColor: "rgba(255,255,255,0.5)",
+      iconBackground: "rgba(18,18,18,0.75)",
+      titleColor: "#FAFAFA",
+      descriptionColor: "#D4D4D8",
+      chipTextColor: "#FAFAFA",
+      chipBorderColor: "rgba(255,255,255,0.28)",
+      shadowActive: "0 22px 56px rgba(0,0,0,0.5)",
+      shadowIdle: "0 8px 24px rgba(0,0,0,0.22)",
+      mobileImageOverlay: "linear-gradient(to top, rgba(0,0,0,0.72), rgba(0,0,0,0.26), rgba(0,0,0,0.1))",
+      desktopImageOverlay: "linear-gradient(to top, rgba(0,0,0,0.82), rgba(0,0,0,0.28), rgba(0,0,0,0.4))",
+    };
+  }
 
-  // One transform per possible scale level — shared across all tiles
-  const s4 = useTransform(scrollYProgress, [0, 1], [1, 4]);
-  const s5 = useTransform(scrollYProgress, [0, 1], [1, 5]);
-  const s6 = useTransform(scrollYProgress, [0, 1], [1, 6]);
-  const s8 = useTransform(scrollYProgress, [0, 1], [1, 8]);
-  const s9 = useTransform(scrollYProgress, [0, 1], [1, 9]);
-  const scales = [s4, s5, s6, s5, s6, s8, s9];
+  if (theme === "glass") {
+    return {
+      containerBackground: "linear-gradient(145deg, rgba(255,255,255,0.06), rgba(255,255,255,0.03))",
+      borderColor: "rgba(255,255,255,0.16)",
+      activeBorderColor: "rgba(255,255,255,0.4)",
+      iconBackground: "rgba(255,255,255,0.16)",
+      titleColor: "#FFFFFF",
+      descriptionColor: "#E4E4E7",
+      chipTextColor: "#FFFFFF",
+      chipBorderColor: "rgba(255,255,255,0.25)",
+      shadowActive: "0 20px 54px rgba(0,0,0,0.32)",
+      shadowIdle: "0 8px 22px rgba(0,0,0,0.16)",
+      mobileImageOverlay: "linear-gradient(to top, rgba(8,8,12,0.66), rgba(8,8,12,0.24), rgba(8,8,12,0.1))",
+      desktopImageOverlay: "linear-gradient(to top, rgba(8,8,12,0.76), rgba(8,8,12,0.26), rgba(8,8,12,0.36))",
+    };
+  }
 
-  return (
-    <div ref={container} className={`relative ${containerHeightClass}`}>
-      <div className="sticky top-0 h-screen overflow-hidden">
-        {items.map(({ src, alt, content, className }, i) => (
-          <motion.div
-            key={i}
-            style={{ scale: scales[i % scales.length] }}
-            className={[
-              "absolute top-0 flex h-full w-full items-center justify-center",
-              SLOT_CLS[i] ?? "",
-            ].join(" ")}
-          >
-            <div className={`relative h-[25vh] w-[25vw] ${className ?? ""}`}>
-              {content ?? (
-                <img
-                  src={src ?? "/placeholder.svg"}
-                  alt={alt ?? `Parallax image ${i + 1}`}
-                  loading={i === 0 ? "eager" : "lazy"}
-                  decoding="async"
-                  className="h-full w-full object-cover"
-                />
-              )}
-            </div>
-          </motion.div>
-        ))}
-      </div>
-    </div>
+  if (theme === "dark-horse") {
+    return {
+      containerBackground: "linear-gradient(145deg, rgba(2,44,34,0.4), rgba(3,14,12,0.95))",
+      borderColor: "rgba(16,185,129,0.25)",
+      activeBorderColor: "rgba(52,211,153,0.55)",
+      iconBackground: "rgba(6,78,59,0.6)",
+      titleColor: "#ECFDF5",
+      descriptionColor: "#A7F3D0",
+      chipTextColor: "#D1FAE5",
+      chipBorderColor: "rgba(52,211,153,0.35)",
+      shadowActive: "0 22px 56px rgba(0,0,0,0.52)",
+      shadowIdle: "0 8px 24px rgba(0,0,0,0.24)",
+      mobileImageOverlay: "linear-gradient(to top, rgba(2,44,34,0.72), rgba(2,44,34,0.24), rgba(2,44,34,0.1))",
+      desktopImageOverlay: "linear-gradient(to top, rgba(2,44,34,0.82), rgba(2,44,34,0.26), rgba(2,44,34,0.38))",
+    };
+  }
+
+  return {
+    containerBackground: "linear-gradient(145deg, rgba(25,18,45,0.85), rgba(10,11,22,0.94))",
+    borderColor: "rgba(167,139,250,0.24)",
+    activeBorderColor: "rgba(196,181,253,0.6)",
+    iconBackground: "rgba(76,29,149,0.55)",
+    titleColor: "#F5F3FF",
+    descriptionColor: "#E9D5FF",
+    chipTextColor: "#F5F3FF",
+    chipBorderColor: "rgba(216,180,254,0.35)",
+    shadowActive: "0 22px 56px rgba(0,0,0,0.5)",
+    shadowIdle: "0 8px 24px rgba(0,0,0,0.24)",
+    mobileImageOverlay: "linear-gradient(to top, rgba(25,18,45,0.74), rgba(25,18,45,0.26), rgba(25,18,45,0.1))",
+    desktopImageOverlay: "linear-gradient(to top, rgba(25,18,45,0.84), rgba(25,18,45,0.28), rgba(25,18,45,0.4))",
+  };
+};
+
+export default function ProjectsPage() {
+  const { theme } = useTheme();
+  const cc = cardCSS[theme];
+  const palette = colors[theme];
+  const featured = portfolioData.featuredProjects;
+  const all = portfolioData.allProjects;
+
+  const selectorProjects = featured.length > 0 ? featured : all.slice(0, 5);
+
+  const selectorOptions = useMemo<InteractiveSelectorOption[]>(
+    () =>
+      selectorProjects.map((project) => ({
+        title: project.title,
+        description: project.description,
+        image: project.image,
+        icon: getProjectIcon(project.field),
+      })),
+    [selectorProjects]
   );
-}
 
-// ─── Virtualized project list ─────────────────────────────────────────────────
-//
-// Strategy: each project section has a sentinel div of the same height as the
-// ZoomParallax component.  An IntersectionObserver watches every sentinel and
-// tracks which indices are "near the viewport".  We keep a window of
-//   [activeIndex - 1 … activeIndex + 1]
-// so at most 2-3 sections are mounted at any one time; the rest are replaced
-// by cheap placeholder divs that hold the scroll height.
+  const [activeIndex, setActiveIndex] = useState(0);
 
-interface Project {
-  key: string;
-  title: string;
-  items: ZoomParallaxItem[];
-}
-
-interface VirtualSectionProps {
-  project: Project;
-  height: string;         // must match ZoomParallax containerHeightClass
-  isVisible: boolean;
-  onEnter: (key: string) => void;
-  onLeave: (key: string) => void;
-}
-
-const VirtualSection = memo(function VirtualSection({
-  project,
-  height,
-  isVisible,
-  onEnter,
-  onLeave,
-}: VirtualSectionProps) {
-  const sentinelRef = useRef<HTMLDivElement>(null);
-
-  useEffect(() => {
-    const el = sentinelRef.current;
-    if (!el) return;
-
-    const obs = new IntersectionObserver(
-      ([entry]) => {
-        if (entry.isIntersecting) onEnter(project.key);
-        else onLeave(project.key);
-      },
-      // rootMargin extends the trigger zone so the *next* section starts
-      // mounting before the user actually scrolls into it.
-      { rootMargin: "0px 0px 200% 0px", threshold: 0 }
-    );
-
-    obs.observe(el);
-    return () => obs.disconnect();
-  }, [project.key, onEnter, onLeave]);
+  const activeProject = selectorProjects[activeIndex] || selectorProjects[0];
+  const allProjectList = all.length > 0 ? all : featured;
+  const additionalProjectTestimonials = useMemo<Testimonial[]>(
+    () =>
+      allProjectList.map((project) => ({
+        name: project.title,
+        title: `${project.field || "Project"}${project.status ? ` • ${project.status}` : ""}`,
+        description: project.description,
+        imageUrl: project.image || "https://images.unsplash.com/photo-1498050108023-c5249f4df085?auto=format&fit=crop&w=1200&q=80",
+        githubUrl: project.github || undefined,
+        demoUrl: project.demo || undefined,
+      })),
+    [allProjectList]
+  );
 
   return (
-    <section ref={sentinelRef} className={`relative ${height}`}>
-      {isVisible ? (
-        // Absolutely fill the sentinel so the ZoomParallax sticky logic works
-        // against the sentinel's bounding box, not the document root.
-        <div className="absolute inset-0">
-          <ZoomParallax items={project.items} containerHeightClass="h-full" />
+    <PageTransition>
+      <section className="mx-auto max-w-[95%] xl:max-w-[1180px] 2xl:max-w-[1320px] px-6 md:px-8 lg:px-10 pb-12">
+        <SectionHeading label="Builds" title="Projects" />
+
+        <div
+          className="mb-8 rounded-2xl border p-5 md:p-6"
+          style={{
+            backgroundColor: cc.bg,
+            borderColor: cc.border,
+            backdropFilter: cc.backdropFilter,
+          }}
+        >
+          <p className="max-w-3xl text-sm md:text-base" style={{ opacity: 0.8 }}>
+            Featured projects are shown in an interactive layout. Select a card to inspect details,
+            tech stack, impact highlights, and live repository links.
+          </p>
         </div>
-      ) : (
-        // Placeholder: zero paint cost, preserves scroll height exactly.
-        <div className="absolute inset-0" aria-hidden="true" />
-      )}
-    </section>
-  );
-});
 
-// ─── Public API ───────────────────────────────────────────────────────────────
-
-interface ProjectsParallaxListProps {
-  projects: Project[];
-  /** Height class applied to every section. Default: "h-[300vh]" */
-  sectionHeightClass?: string;
-}
-
-export function ProjectsParallaxList({
-  projects,
-  sectionHeightClass = "h-[300vh]",
-}: ProjectsParallaxListProps) {
-  // Set of project keys currently near the viewport
-  const [visibleKeys, setVisibleKeys] = useState<Set<string>>(
-    () => new Set(projects.slice(0, 2).map((p) => p.key))
-  );
-
-  const onEnter = useCallback((key: string) => {
-    setVisibleKeys((prev) => {
-      const next = new Set(prev);
-      next.add(key);
-      return next;
-    });
-  }, []);
-
-  const onLeave = useCallback((key: string) => {
-    setVisibleKeys((prev) => {
-      const next = new Set(prev);
-      next.delete(key);
-      return next;
-    });
-  }, []);
-
-  return (
-    <div>
-      {projects.map((project) => (
-        <VirtualSection
-          key={project.key}
-          project={project}
-          height={sectionHeightClass}
-          isVisible={visibleKeys.has(project.key)}
-          onEnter={onEnter}
-          onLeave={onLeave}
+        <InteractiveSelector
+          options={selectorOptions}
+          title="Featured Work"
+          subtitle="Focused builds from web engineering and AI systems."
+          themeStyles={getSelectorTheme(theme)}
+          onActiveChange={setActiveIndex}
         />
-      ))}
-    </div>
-  );
-}
 
-// ─── Demo / usage example ─────────────────────────────────────────────────────
+        {activeProject ? (
+          <div
+            className="mt-8 rounded-2xl border p-5 md:p-6"
+            style={{
+              backgroundColor: cc.bg,
+              borderColor: cc.border,
+              backdropFilter: cc.backdropFilter,
+            }}
+          >
+            <div className="flex flex-wrap items-start justify-between gap-4">
+              <div>
+                <h3 className="text-2xl font-semibold" style={{ color: palette.heading }}>
+                  {activeProject.title}
+                </h3>
+                <p className="mt-1 text-sm" style={{ color: palette.textSecondary }}>
+                  {activeProject.field || "Project"}
+                  {activeProject.status ? ` • ${activeProject.status}` : ""}
+                </p>
+              </div>
 
-const DEMO_PROJECTS: Project[] = [
-  {
-    key: "arch",
-    title: "Architecture Showcase",
-    items: [
-      { src: "https://images.unsplash.com/photo-1486406146926-c627a92ad1ab?w=1280&h=720&fit=crop&auto=format&q=80", alt: "Architecture" },
-      { src: "https://images.unsplash.com/photo-1449824913935-59a10b8d2000?w=1280&h=720&fit=crop&auto=format&q=80", alt: "City" },
-      { src: "https://images.unsplash.com/photo-1557683316-973673baf926?w=800&h=800&fit=crop&auto=format&q=80", alt: "Pattern" },
-      { src: "https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=1280&h=720&fit=crop&auto=format&q=80", alt: "Mountain" },
-      { src: "https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?w=800&h=800&fit=crop&auto=format&q=80", alt: "Minimal" },
-      { src: "https://images.unsplash.com/photo-1439066615861-d1af74d74000?w=1280&h=720&fit=crop&auto=format&q=80", alt: "Ocean" },
-      { src: "https://images.unsplash.com/photo-1441974231531-c6227db76b6e?w=1280&h=720&fit=crop&auto=format&q=80", alt: "Forest" },
-    ],
-  },
-  {
-    key: "nature",
-    title: "Nature Gallery",
-    items: [
-      { src: "https://images.unsplash.com/photo-1501854140801-50d01698950b?w=1280&h=720&fit=crop&auto=format&q=80", alt: "Nature" },
-      { src: "https://images.unsplash.com/photo-1470071459604-3b5ec3a7fe05?w=1280&h=720&fit=crop&auto=format&q=80", alt: "Fog" },
-      { src: "https://images.unsplash.com/photo-1426604966848-d7adac402bff?w=1280&h=720&fit=crop&auto=format&q=80", alt: "Trees" },
-      { src: "https://images.unsplash.com/photo-1500534314209-a25ddb2bd429?w=1280&h=720&fit=crop&auto=format&q=80", alt: "Road" },
-      { src: "https://images.unsplash.com/photo-1518173946687-a4c8892bbd9f?w=800&h=800&fit=crop&auto=format&q=80", alt: "Leaves" },
-      { src: "https://images.unsplash.com/photo-1504701954957-2010ec3bcec1?w=1280&h=720&fit=crop&auto=format&q=80", alt: "River" },
-      { src: "https://images.unsplash.com/photo-1444464666168-49d633b86797?w=1280&h=720&fit=crop&auto=format&q=80", alt: "Bird" },
-    ],
-  },
-  {
-    key: "urban",
-    title: "Urban Life",
-    items: [
-      { src: "https://images.unsplash.com/photo-1477959858617-67f85cf4f1df?w=1280&h=720&fit=crop&auto=format&q=80", alt: "Skyline" },
-      { src: "https://images.unsplash.com/photo-1480714378408-67cf0d13bc1b?w=1280&h=720&fit=crop&auto=format&q=80", alt: "Street" },
-      { src: "https://images.unsplash.com/photo-1519501025264-65ba15a82390?w=800&h=800&fit=crop&auto=format&q=80", alt: "Lights" },
-      { src: "https://images.unsplash.com/photo-1514565131-fce0801e6785?w=1280&h=720&fit=crop&auto=format&q=80", alt: "Bridge" },
-      { src: "https://images.unsplash.com/photo-1465447142348-e9952c393450?w=800&h=800&fit=crop&auto=format&q=80", alt: "Subway" },
-      { src: "https://images.unsplash.com/photo-1444723121867-7a241cacace9?w=1280&h=720&fit=crop&auto=format&q=80", alt: "Traffic" },
-      { src: "https://images.unsplash.com/photo-1534430480872-3498386e7856?w=1280&h=720&fit=crop&auto=format&q=80", alt: "Night city" },
-    ],
-  },
-];
+              <div className="flex gap-2">
+                {activeProject.github ? (
+                  <a
+                    href={activeProject.github}
+                    target="_blank"
+                    rel="noreferrer"
+                    className="inline-flex items-center gap-2 rounded-lg border px-3 py-2 text-sm"
+                    style={{ borderColor: cc.border, color: palette.text }}
+                  >
+                    <Github size={16} />
+                    GitHub
+                  </a>
+                ) : null}
+                {activeProject.demo ? (
+                  <a
+                    href={activeProject.demo}
+                    target="_blank"
+                    rel="noreferrer"
+                    className="inline-flex items-center gap-2 rounded-lg border px-3 py-2 text-sm"
+                    style={{ borderColor: cc.border, color: palette.text }}
+                  >
+                    <ExternalLink size={16} />
+                    Live Demo
+                  </a>
+                ) : null}
+              </div>
+            </div>
 
-export default function Demo() {
-  return (
-    <main className="bg-black text-white min-h-screen">
-      <div className="flex h-screen items-center justify-center">
-        <h1 className="text-4xl font-bold text-center">Scroll to explore projects</h1>
-      </div>
+            <p className="mt-4 text-sm md:text-base" style={{ color: palette.text }}>
+              {activeProject.detailedDescription || activeProject.description}
+            </p>
 
-      <ProjectsParallaxList projects={DEMO_PROJECTS} sectionHeightClass="h-[300vh]" />
+            <div className="mt-5 flex items-start gap-2">
+              <Layers size={18} className="mt-0.5" style={{ color: palette.accent }} />
+              <div className="flex flex-wrap gap-2">
+                {activeProject.tech.map((t) => (
+                  <span
+                    key={t}
+                    className="rounded-full border px-3 py-1 text-xs md:text-sm"
+                    style={{ borderColor: cc.border, color: palette.textSecondary }}
+                  >
+                    {t}
+                  </span>
+                ))}
+              </div>
+            </div>
 
-      <div className="flex h-[50vh] items-center justify-center">
-        <p className="text-lg opacity-50">End of projects</p>
-      </div>
-    </main>
+            {activeProject.highlights && activeProject.highlights.length > 0 ? (
+              <div className="mt-5">
+                <p className="mb-2 inline-flex items-center gap-2 text-sm font-medium" style={{ color: palette.heading }}>
+                  <Sparkles size={16} /> Highlights
+                </p>
+                <ul className="space-y-2">
+                  {activeProject.highlights.map((point) => (
+                    <li key={point} className="text-sm" style={{ color: palette.text }}>
+                      {point}
+                    </li>
+                  ))}
+                </ul>
+              </div>
+            ) : null}
+          </div>
+        ) : null}
+      </section>
+
+      <section className="mx-auto max-w-[95%] xl:max-w-[1180px] 2xl:max-w-[1320px] px-6 md:px-8 lg:px-10 py-4 pb-14">
+        <div
+          className="rounded-2xl border p-5 md:p-6"
+          style={{
+            backgroundColor: cc.bg,
+            borderColor: cc.border,
+            backdropFilter: cc.backdropFilter,
+          }}
+        >
+          <p className="mb-4 text-sm font-medium" style={{ color: palette.heading }}>
+            Additional Projects
+          </p>
+
+          <TestimonialCarousel testimonials={additionalProjectTestimonials} className="px-0" />
+        </div>
+      </section>
+    </PageTransition>
   );
 }

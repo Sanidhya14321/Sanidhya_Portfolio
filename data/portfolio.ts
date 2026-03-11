@@ -18,15 +18,15 @@ export const featuredProjects: PortfolioProject[] = [
   {
     id: "debate-app",
     title: "Debate App",
-    field: "Web Development",
+    field: "Agentic AI",
     description:
       "Real-time debate platform with advanced moderation and scoring system. Features include live audience participation, AI-powered argument analysis, and comprehensive analytics dashboard.",
     tech: ["Next.js", "Socket.IO", "MongoDB", "Redis", "TensorFlow"],
-    status: "In Development",
-    image: "/project10.png",
-    images: ["/project10.png"],
-    github: "",
-    demo: "",
+    status: "Deployed",
+    image: "/Debate-App/main.png",
+    images: ["/Debate-App/main.png"],
+    github: "https://github.com/Sanidhya14321/Debate-App-1",
+    demo: "https://debate-app-1.vercel.app/",
     highlights: [
       "Real-time communication with Socket.IO",
       "AI-powered argument quality analysis",
@@ -36,7 +36,7 @@ export const featuredProjects: PortfolioProject[] = [
   {
     id: "career-compass",
     title: "CareerCompass",
-    field: "Agentic AI",
+    field: "Full Stack & ML",
     description:
       "AI-driven career guidance platform utilizing machine learning to provide personalized career path recommendations based on skills, interests, and market trends.",
     tech: ["React", "FastAPI", "PyTorch", "PostgreSQL", "Docker"],

@@ -25,6 +25,7 @@ import SectionHeading from "@/components/ui/SectionHeading";
 import { useTheme } from "@/contexts/ThemeContext";
 import { portfolioData } from "@/data/portfolio";
 import { cardCSS, colors } from "@/lib/themes";
+import { ZoomParallax } from "@/components/ui/zoom-parallax";
 
 const getProjectIcon = (field?: string) => {
   const normalized = (field || "").toLowerCase();
@@ -116,6 +117,38 @@ const getSelectorTheme = (theme: string): InteractiveSelectorTheme => {
   };
 };
 
+
+const eventImages = [
+  {
+    src: "/Debate-App/main.png",
+    alt: "Tech meetup crowd",
+  },
+  {
+    src: "/QuestionFLow/main.png",
+    alt: "Stage talk",
+  },
+  {
+    src: "/project9.png",
+    alt: "Workshop collaboration",
+  },
+  {
+    src: "/project8.png",
+    alt: "Audience during keynote",
+  },
+  {
+    src: "https://images.unsplash.com/photo-1515169067868-5387ec356754?w=800&h=800&fit=crop&crop=entropy&auto=format&q=80",
+    alt: "Event networking",
+  },
+  {
+    src: "https://images.unsplash.com/photo-1464375117522-1311d6a5b81f?w=1280&h=720&fit=crop&crop=entropy&auto=format&q=80",
+    alt: "Hackathon moment",
+  },
+  {
+    src: "https://images.unsplash.com/photo-1528605248644-14dd04022da1?w=1280&h=720&fit=crop&crop=entropy&auto=format&q=80",
+    alt: "Team celebration",
+  },
+];
+
 export default function ProjectsPage() {
   const { theme } = useTheme();
   const cc = cardCSS[theme];
@@ -155,9 +188,9 @@ export default function ProjectsPage() {
 
   return (
     <PageTransition>
+      <ZoomParallax images={eventImages} />
       <section className="mx-auto max-w-[95%] xl:max-w-[1180px] 2xl:max-w-[1320px] px-6 md:px-8 lg:px-10 pb-12">
         <SectionHeading label="Builds" title="Projects" />
-
         <div
           className="mb-8 rounded-2xl border p-5 md:p-6"
           style={{

@@ -122,17 +122,12 @@ export default function Home() {
           fallback={<div className="absolute inset-0 z-0 animate-pulse bg-gradient-to-br from-transparent via-white/5 to-transparent" />}
         >
           <div className="absolute inset-0 z-0 opacity-40">
-            
+
           </div>
         </LazyComponent>
 
         <div className="relative z-10 w-full mx-auto">
           <motion.div variants={stagger} initial="hidden" animate="show" className="flex flex-col items-center">
-            {/* Status badge */}
-            <motion.div variants={fadeUp} className="inline-flex items-center gap-2 mb-8 px-4 py-1 rounded-full bg-white/5 border border-white/10">
-              <span className="h-2 w-2 rounded-full animate-pulse" style={{ backgroundColor: ac.dot }} />
-              <ShinyText text="Available for work" speed={4} className={labelClass[theme]} />
-            </motion.div>
 
             {/* Name */}
             <motion.div variants={fadeUp} className="mb-6 text-center">
@@ -145,6 +140,12 @@ export default function Home() {
               />
             </motion.div>
 
+            {/* Status badge */}
+            <motion.div variants={fadeUp} className="inline-flex items-center gap-2 mb-8 px-4 py-1 rounded-full bg-white/5 border border-white/10">
+              <span className="h-2 w-2 rounded-full animate-pulse" style={{ backgroundColor: ac.dot }} />
+              <ShinyText text="Available for work" speed={4} className={labelClass[theme]} />
+            </motion.div>
+            
             {/* Subtitle */}
             <motion.div variants={fadeUp} className="mb-10 min-h-12 flex items-center justify-center overflow-hidden py-2">
               <RotatingText

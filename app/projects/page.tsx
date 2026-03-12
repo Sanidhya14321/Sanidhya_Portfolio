@@ -180,6 +180,7 @@ export default function ProjectsPage() {
         title: `${project.field || "Project"}${project.status ? ` • ${project.status}` : ""}`,
         description: project.description,
         imageUrl: project.image || "https://images.unsplash.com/photo-1498050108023-c5249f4df085?auto=format&fit=crop&w=1200&q=80",
+        techStack: project.tech,
         githubUrl: project.github || undefined,
         demoUrl: project.demo || undefined,
       })),

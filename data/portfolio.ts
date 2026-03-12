@@ -61,8 +61,8 @@ export const featuredProjects: PortfolioProject[] = [
     status: "In Development",
     image: "/QuestionFLow/main.png",
     images: ["/QuestionFLow/main.png","/QuestionFLow/1.png", "/QuestionFLow/2.png", "/QuestionFLow/3.png"],
-    github: "",
-    demo: "",
+    github: "https://github.com/Sanidhya14321/Assessment-3.0",
+    demo: "https://assessment-3-0.vercel.app/",
     highlights: [
       "Real-time assessment of user queries with LLMs",
       "Integration with knowledge graph technologies",

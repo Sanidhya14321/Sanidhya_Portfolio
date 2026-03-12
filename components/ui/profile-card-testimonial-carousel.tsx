@@ -22,6 +22,7 @@ export interface Testimonial {
   title: string;
   description: string;
   imageUrl: string;
+  techStack?: string[];
   githubUrl?: string;
   twitterUrl?: string;
   youtubeUrl?: string;
@@ -120,7 +121,7 @@ export function TestimonialCarousel({ className, testimonials }: TestimonialCaro
                 alt={currentTestimonial.name}
                 width={470}
                 height={470}
-                className="w-full h-full object-cover"
+                className="w-full h-full object-contain"
                 draggable={false}
                 priority
               />
@@ -129,7 +130,7 @@ export function TestimonialCarousel({ className, testimonials }: TestimonialCaro
         </div>
 
         <div
-          className="rounded-3xl shadow-2xl p-8 ml-[-80px] z-10 max-w-xl flex-1 border"
+          className="rounded-3xl shadow-2xl p-8 m-8 ml-[-20px] z-10 max-w-xl flex-1 border"
           style={{
             backgroundColor: cc.bg,
             borderColor: cc.border,
@@ -157,6 +158,23 @@ export function TestimonialCarousel({ className, testimonials }: TestimonialCaro
               <p className="text-base leading-relaxed mb-8" style={{ color: palette.text }}>
                 {currentTestimonial.description}
               </p>
+
+              {currentTestimonial.techStack && currentTestimonial.techStack.length > 0 ? (
+                <div className="mb-6 flex flex-wrap gap-2">
+                  {currentTestimonial.techStack.slice(0, 8).map((tech) => (
+                    <span
+                      key={`${currentTestimonial.name}-${tech}`}
+                      className="rounded-full border px-3 py-1 text-xs"
+                      style={{
+                        borderColor: cc.border,
+                        color: palette.textSecondary,
+                      }}
+                    >
+                      {tech}
+                    </span>
+                  ))}
+                </div>
+              ) : null}
 
               <div className="flex space-x-4">
                 {socialIcons.map(({ icon: IconComponent, url, label }) => (
@@ -231,6 +249,23 @@ export function TestimonialCarousel({ className, testimonials }: TestimonialCaro
               <p className="text-sm leading-relaxed mb-6" style={{ color: palette.text }}>
                 {currentTestimonial.description}
               </p>
+
+              {currentTestimonial.techStack && currentTestimonial.techStack.length > 0 ? (
+                <div className="mb-5 flex flex-wrap justify-center gap-2">
+                  {currentTestimonial.techStack.slice(0, 6).map((tech) => (
+                    <span
+                      key={`${currentTestimonial.name}-mobile-${tech}`}
+                      className="rounded-full border px-2.5 py-1 text-[11px]"
+                      style={{
+                        borderColor: cc.border,
+                        color: palette.textSecondary,
+                      }}
+                    >
+                      {tech}
+                    </span>
+                  ))}
+                </div>
+              ) : null}
 
               <div className="flex justify-center space-x-4">
                 {socialIcons.map(({ icon: IconComponent, url, label }) => (

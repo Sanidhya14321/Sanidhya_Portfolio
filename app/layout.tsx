@@ -33,9 +33,9 @@ export default function RootLayout({
     <html lang="en" suppressHydrationWarning>
       <body className="antialiased min-h-screen" suppressHydrationWarning>
         <ThemeProvider>
-          <LoadingProvider>
+          {/* <LoadingProvider> */}
             <ClientShell>{children}</ClientShell>
-          </LoadingProvider>
+          {/* </LoadingProvider> */}
         </ThemeProvider>
       </body>
     </html>

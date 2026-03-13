@@ -1,9 +1,5 @@
-import { TestimonialCarousel } from "@/components/ui/profile-card-testimonial-carousel";
+import CenteredFeedbackDrawer from "@/components/ui/centered-feedback-drawer";
 
-export default function TestimonialCarouselDemo() {
-  return (
-    <div className="min-h-screen flex items-center justify-center">
-      <TestimonialCarousel />
-    </div>
-  );
+export default function DemoOne() {
+  return <CenteredFeedbackDrawer />;
 }

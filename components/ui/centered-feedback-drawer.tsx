@@ -1,23 +1,15 @@
 "use client";
 
-import {
-  Drawer,
-  DrawerContent,
-  DrawerHeader,
-  DrawerTitle,
-  DrawerDescription,
-  DrawerFooter,
-  DrawerTrigger,
-  DrawerClose,
-} from "@/components/ui/drawer";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
-import { Star } from "lucide-react";
+import { AnimatePresence, motion } from "framer-motion";
+import { Star, X } from "lucide-react";
 import { FormEvent, useMemo, useState } from "react";
 
 export default function CenteredFeedbackDrawer() {
+  const [isOpen, setIsOpen] = useState(false);
   const [rating, setRating] = useState(0);
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
@@ -88,25 +80,62 @@ export default function CenteredFeedbackDrawer() {
     }
   };
 
-  return (
-    <Drawer>
-      <DrawerTrigger asChild>
-        <Button variant="default">Give Feedback</Button>
-      </DrawerTrigger>
+  const closeDrawer = () => {
+    setIsOpen(false);
+    resetStatus();
+  };
 
-      <DrawerContent>
+  return (
+    <>
+      <Button variant="default" onClick={() => setIsOpen(true)}>
+        Give Feedback
+      </Button>
+
+      <AnimatePresence>
+        {isOpen ? (
+          <>
+            <motion.div
+              className="fixed inset-0 z-[10000] bg-black/70"
+              onClick={closeDrawer}
+              aria-hidden="true"
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              transition={{ duration: 0.2, ease: "easeOut" }}
+            />
+            <motion.div
+              className="fixed inset-x-0 bottom-0 z-[10001] mt-24 flex max-h-[90vh] flex-col rounded-t-xl border bg-black/95 md:left-1/2 md:w-full md:max-w-2xl md:-translate-x-1/2"
+              initial={{ y: 80, opacity: 0 }}
+              animate={{ y: 0, opacity: 1 }}
+              exit={{ y: 50, opacity: 0 }}
+              transition={{ duration: 0.28, ease: [0.22, 1, 0.36, 1] }}
+            >
+              <div className="mx-auto mt-3 h-1.5 w-16 rounded-full bg-white/30" />
+              <div className="absolute right-4 top-4">
+                <Button
+                  variant="ghost"
+                  size="icon"
+                  type="button"
+                  aria-label="Close feedback drawer"
+                  onClick={closeDrawer}
+                >
+                  <X className="h-5 w-5" />
+                </Button>
+              </div>
+
+              <div className="overflow-y-auto">
         <form
           onSubmit={handleSubmit}
           className="mx-auto flex w-full max-w-2xl flex-col items-center justify-center px-4 py-8 text-center"
         >
-          <DrawerHeader className="max-w-md space-y-2">
-            <DrawerTitle className="text-xl font-bold">
+          <div className="max-w-md space-y-2 p-4 text-center sm:text-left">
+            <h2 className="text-xl font-bold">
               We Value Your Feedback
-            </DrawerTitle>
-            <DrawerDescription>
+            </h2>
+            <p className="text-sm text-white/70">
               Help us improve by sharing your thoughts.
-            </DrawerDescription>
-          </DrawerHeader>
+            </p>
+          </div>
 
           <div className="mt-4 w-full max-w-md space-y-4">
             <div className="grid gap-2 text-left">
@@ -178,26 +207,29 @@ export default function CenteredFeedbackDrawer() {
             </p>
           ) : null}
 
-          <DrawerFooter className="mt-6 flex w-full max-w-md flex-col gap-3 sm:flex-row">
+          <div className="mt-6 flex w-full max-w-md flex-col gap-3 p-4 sm:flex-row">
             <Button className="w-full" type="submit" disabled={!canSubmit || isSubmitting}>
               {isSubmitting ? "Sending..." : "Submit Feedback"}
             </Button>
-            <DrawerClose asChild>
-              <Button
-                variant="outline"
-                className="w-full"
-                type="button"
-                onClick={() => {
-                  resetForm();
-                  resetStatus();
-                }}
-              >
-                Cancel
-              </Button>
-            </DrawerClose>
-          </DrawerFooter>
+            <Button
+              variant="outline"
+              className="w-full"
+              type="button"
+              onClick={() => {
+                resetForm();
+                resetStatus();
+                setIsOpen(false);
+              }}
+            >
+              Cancel
+            </Button>
+          </div>
         </form>
-      </DrawerContent>
-    </Drawer>
+              </div>
+            </motion.div>
+          </>
+        ) : null}
+      </AnimatePresence>
+    </>
   );
 }

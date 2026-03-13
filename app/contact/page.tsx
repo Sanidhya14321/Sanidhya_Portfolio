@@ -12,7 +12,6 @@ import StarBorder from "@/components/reactbits/StarBorder";
 import ShinyText from "@/components/reactbits/ShinyText";
 import GradientText from "@/components/reactbits/GradientText";
 import ClickSpark from "@/components/reactbits/ClickSpark";
-import LazyComponent from "@/components/ui/LazyComponent";
 import CenteredFeedbackDrawer from "@/components/ui/centered-feedback-drawer";
 
 const fadeUp = {
@@ -170,14 +169,12 @@ export default function ContactPage() {
               <p className="mt-6 text-2xl md:text-3xl max-w-2xl mx-auto leading-relaxed" style={{ opacity: 0.55 }}>
                 Currently interested in full-stack roles, ML engineering positions, and collaborative open-source projects.
               </p>
-              <div className="mt-5 inline-block border border-current rounded-lg px-6 py-3 text-sm font-medium hover:bg-black transition-colors">
-                <LazyComponent>
-                  <CenteredFeedbackDrawer />
-                </LazyComponent>
-              </div>
             </SpotlightCard>
           </ClickSpark>
         </motion.div>
+        <div className="mt-8 mb-12 flex w-full justify-center border py-6 hover:bg-white/10 rounded-xl align-center content-center text-center">
+          <CenteredFeedbackDrawer />
+        </div>
       </section>
     </PageTransition>
   );

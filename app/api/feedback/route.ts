@@ -42,11 +42,11 @@ export async function POST(request: Request) {
     const pass = process.env.SMTP_PASS;
     const from = process.env.FEEDBACK_FROM_EMAIL || user;
 
-    if (!host || !user || !pass || !from) {
+    if (!host || !user || !pass) {
       return NextResponse.json(
         {
           message:
-            "Email service is not configured on the server yet. Set SMTP_HOST, SMTP_PORT, SMTP_USER, SMTP_PASS, and FEEDBACK_FROM_EMAIL.",
+            "Email service is not configured on the server yet. Set SMTP_HOST, SMTP_USER, and SMTP_PASS (SMTP_PORT is optional and defaults to 587).",
         },
         { status: 500 }
       );

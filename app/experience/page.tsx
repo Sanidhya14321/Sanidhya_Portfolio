@@ -51,7 +51,6 @@ export default function ExperiencePage() {
   return (
     <PageTransition>
       <section className="mx-auto max-w-[95%] xl:max-w-[1000px] 2xl:max-w-[1200px] px-6 md:px-8 lg:px-10 pb-12">
-        <SectionHeading label="Career" title="Experience" />
         <Timeline
           data={timelineData}
           heading="Experience Timeline"

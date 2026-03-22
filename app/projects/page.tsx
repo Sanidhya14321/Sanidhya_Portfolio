@@ -136,11 +136,11 @@ const eventImages = [
     alt: "Audience during keynote",
   },
   {
-    src: "https://images.unsplash.com/photo-1515169067868-5387ec356754?w=800&h=800&fit=crop&crop=entropy&auto=format&q=80",
+    src: "/data-pipeline/1.png",
     alt: "Event networking",
   },
   {
-    src: "https://images.unsplash.com/photo-1464375117522-1311d6a5b81f?w=1280&h=720&fit=crop&crop=entropy&auto=format&q=80",
+    src: "/CareerCompass/1.png",
     alt: "Hackathon moment",
   },
   {
@@ -189,7 +189,6 @@ export default function ProjectsPage() {
 
   return (
     <PageTransition>
-      <ZoomParallax images={eventImages} />
       <section className="mx-auto max-w-[95%] xl:max-w-[1180px] 2xl:max-w-[1320px] px-6 md:px-8 lg:px-10 pb-12">
         <SectionHeading label="Builds" title="Projects" />
         <div
@@ -299,7 +298,7 @@ export default function ProjectsPage() {
         ) : null}
       </section>
 
-      <section className="mx-auto max-w-[95%] xl:max-w-[1180px] 2xl:max-w-[1320px] px-6 md:px-8 lg:px-10 py-4 pb-14">
+      <section className="mx-auto max-w-[95%] xl:max-w-[1180px] 2xl:max-w-[1320px] px-6 md:px-8 lg:px-10 py-4 pb-24">
         <div
           className="rounded-2xl border p-5 md:p-6"
           style={{

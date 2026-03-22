@@ -43,41 +43,7 @@ export default function EventsOrganizedPage() {
 
   return (
     <PageTransition>
-      <section className="mx-auto max-w-[95%] xl:max-w-[1180px] 2xl:max-w-[1320px] px-6 md:px-8 lg:px-10 pb-14">
-        <SectionHeading label="Community" title="Events Organized" />
-
-        <div
-          className="mb-8 rounded-2xl border p-5 md:p-6"
-          style={{
-            backgroundColor: cc.bg,
-            borderColor: cc.border,
-            backdropFilter: cc.backdropFilter,
-          }}
-        >
-          <p className="max-w-3xl text-sm md:text-base" style={{ opacity: 0.78 }}>
-            A visual log of communities, workshops, and meetups I have organized. Scroll through the
-            parallax collage to explore snapshots from events focused on engineering, product, and
-            collaboration.
-          </p>
-        </div>
-      </section>
-
-      <ZoomParallax images={eventImages} />
-
-      <section className="mx-auto max-w-[95%] xl:max-w-[1180px] 2xl:max-w-[1320px] px-6 md:px-8 lg:px-10 py-12">
-        <div
-          className="rounded-2xl border p-5 md:p-6"
-          style={{
-            backgroundColor: cc.bg,
-            borderColor: cc.border,
-            backdropFilter: cc.backdropFilter,
-          }}
-        >
-          <p className="text-sm md:text-base" style={{ opacity: 0.75 }}>
-            Interested in collaborating on the next event? Reach out from the contact page.
-          </p>
-        </div>
-      </section>
+      <section></section>
     </PageTransition>
   );
 }

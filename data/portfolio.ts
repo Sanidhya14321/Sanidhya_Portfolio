@@ -41,7 +41,7 @@ export const featuredProjects: PortfolioProject[] = [
       "AI-driven career guidance platform utilizing machine learning to provide personalized career path recommendations based on skills, interests, and market trends.",
     tech: ["React", "FastAPI", "PyTorch", "PostgreSQL", "Docker"],
     status: "Live",
-    image: "/project9.png",
+    image: "/CareerCompass/1.png",
     images: ["/project9.png"],
     github: "https://github.com/Sanidhya14321/CareerCompass",
     demo: "https://careercompass-xi.vercel.app/",
@@ -60,13 +60,48 @@ export const featuredProjects: PortfolioProject[] = [
     tech: ["Next.js", "LangChain", "LangGraph", "Groq API", "Prisma ORM", "PostgreSQL"],
     status: "In Development",
     image: "/QuestionFLow/main.png",
-    images: ["/QuestionFLow/main.png","/QuestionFLow/1.png", "/QuestionFLow/2.png", "/QuestionFLow/3.png"],
+    images: ["/QuestionFLow/main.png", "/QuestionFLow/1.png", "/QuestionFLow/2.png", "/QuestionFLow/3.png"],
     github: "https://github.com/Sanidhya14321/Assessment-3.0",
     demo: "https://assessment-3-0.vercel.app/",
     highlights: [
       "Real-time assessment of user queries with LLMs",
       "Integration with knowledge graph technologies",
       "AI based assessment of query quality and relevance",
+    ],
+  },
+  {
+    id: "DataPipeline",
+    title: "Real-Time Web Data Ingestion Pipeline",
+    field: "Agentic AI",
+    description:
+      "A high-performance financial data pipeline that ingests content from multiple sources, enriches and classifies it with LLM workflows, indexes it for semantic retrieval, and serves real-time search with graceful fallback when vector infrastructure is unavailable.",
+    tech: [
+      "Python",
+      "FastAPI",
+      "Apache Kafka",
+      "PostgreSQL",
+      "Qdrant",
+      "Redis",
+      "Groq API",
+      "Docker",
+      "Kubernetes",
+      "React",
+      "Vite"
+    ],
+    status: "In Development",
+    image: "/data-pipeline/1.png",
+    images: [
+      "/data-pipeline/1.png",
+      "/data-pipeline/2.png",
+      "/data-pipeline/3.png",
+      "/data-pipeline/4.png"
+    ],
+    github: "https://github.com/Sanidhya14321/RAG-Project",
+    demo: "https://data-pipeline-one.vercel.app/",
+    highlights: [
+      "Real-time ingestion from RSS, SEC EDGAR, News APIs, and other web sources into a Kafka-based streaming pipeline",
+      "LLM-powered normalization pipeline for quality gating, classification, entity extraction, and summarization",
+      "Semantic search via Qdrant with resilient Groq + web-scraping fallback when vector search is unavailable"
     ],
   },
 ];
@@ -124,7 +159,7 @@ export const allProjects: PortfolioProject[] = [
     description: "Event management and community engagement platform designed for technical communities. Handles registrations, speaker management, and post-event analytics.",
     image: "/project8.png",
     images: ["/project8.png"],
-    tech: ["Next.js", "Node.js", "MongoDB", "AWS S3", "Vercel","JWT", "Tailwind", "Redux.js", "RTK-Query"],
+    tech: ["Next.js", "Node.js", "MongoDB", "AWS S3", "Vercel", "JWT", "Tailwind", "Redux.js", "RTK-Query"],
     detailedDescription: "",
     features: [],
     github: "https://github.com/Sanidhya14321/SPARK",
@@ -141,12 +176,12 @@ export const allProjects: PortfolioProject[] = [
 export const portfolioData = {
   name: "Sanidhya Vats",
   title: "Full Stack Developer & ML Engineer",
-  email: "sanidhya@example.com", // Update with actual email
-  github: "https://github.com/sanidhyavats",
-  linkedin: "https://linkedin.com/in/sanidhyavats",
+  email: "sanidhya14321@gmail.com",
+  github: "https://github.com/Sanidhya14321",
+  linkedin: "https://www.linkedin.com/in/sanidhya-vats-9344522b7/",
 
   about: {
-    narrative: `A Computer Science student at Maharaja Surajmal Institute of Technology with a strong foundation in full-stack development and machine learning engineering. My journey spans from architecting scalable web applications with modern frameworks to implementing sophisticated AI solutions. As the Founder of Geek Room and GDG Lead, I've driven technical communities forward, orchestrating events that have reached over 15,000 participants and fostered innovation across the developer ecosystem.`,
+    narrative: `A Computer Science student at Maharaja Surajmal Institute of Technology with a strong foundation in full-stack development and machine learning engineering. My journey spans from architecting scalable web applications with modern frameworks to implementing sophisticated AI solutions. As the Deputy Head of Geek Room and Head of Development for GDG-MSIT, I've driven technical communities forward, organizing major hackathons like Codeक्षेत्र 2.0 and Code Cubicle 5.0 that have reached over 15,000 participants and fostered innovation across the developer ecosystem.`,
     highlights: [
       "Full-stack architecture with modern JavaScript/TypeScript ecosystem",
       "Machine learning systems using TensorFlow, PyTorch, and LLM integrations",
@@ -157,49 +192,40 @@ export const portfolioData = {
 
   experience: [
     {
-      title: "Founder & Technical Lead",
+      title: "Head of Development",
       company: "Geek Room",
       period: "2023 - Present",
       description:
-        "Founded and led technical community focusing on modern development practices. Architected and delivered workshops on full-stack development, ML/AI, and DevOps.",
-      impact: "15,000+ community registrations across technical events",
+        "Leading a technical community focusing on modern development practices. Architecting and delivering workshops on full-stack development, ML/AI, and DevOps.",
+      impact: "Helped drive 15,000+ community registrations across major technical events and hackathons",
       tech: ["Next.js", "React", "Node.js", "MongoDB", "AWS"],
     },
     {
-      title: "GDG Lead",
-      company: "Google Developer Groups",
+      title: "Head of Development",
+      company: "GDG-MSIT",
       period: "2024 - Present",
       description:
-        "Leading developer community initiatives, organizing technical workshops and hackathons focused on Google technologies and modern development practices.",
-      impact: "Established active developer community with regular technical sessions",
+        "Leading developer community initiatives, organizing technical workshops and large-scale hackathons focused on Google technologies and modern development practices.",
+      impact: "Established an active developer community with regular technical sessions and major events",
       tech: ["Flutter", "Firebase", "Google Cloud", "TensorFlow"],
     },
     {
-      title: "Frontend Developer Intern",
-      company: "Studio Grid Labs",
-      period: "Summer 2024",
+      title: "Full Stack Developer Intern",
+      company: "Suntora Industries",
+      period: "Recent",
       description:
-        "Built reusable component systems and optimized rendering performance for dashboard-heavy user interfaces across desktop and mobile breakpoints.",
-      impact: "Reduced page interaction latency and improved Lighthouse performance across core pages",
-      tech: ["Next.js", "TypeScript", "Tailwind CSS", "Framer Motion"],
+        "Developed and deployed a production-ready Invoice Manager application. Managed the complete software development lifecycle, integrating robust features for authentication, client and expense management, invoicing, and analytics.",
+      impact: "Shipped a comprehensive internal tool that streamlined invoicing and expense tracking processes",
+      tech: ["Next.js", "Node.js", "MongoDB", "Redux Toolkit", "NextAuth", "JWT", "Bcryptjs"],
     },
     {
-      title: "Backend Engineer Intern",
-      company: "CloudOps Systems",
-      period: "Winter 2023",
+      title: "Hackathon Organizer",
+      company: "Hack GeekRoom, Code Cubicle 5.0 & HackAvensis 2024",
+      period: "2024 - 2026",
       description:
-        "Implemented secure APIs, improved auth flows, and added observability for critical services used by internal operations and partner integrations.",
-      impact: "Shipped stable APIs with improved reliability and lower error rates in staging",
-      tech: ["Node.js", "Express", "PostgreSQL", "Redis", "Docker"],
-    },
-    {
-      title: "Open Source Contributor",
-      company: "Community Projects",
-      period: "2023 - 2024",
-      description:
-        "Contributed fixes and enhancements to UI tooling and developer workflow repositories, focusing on documentation quality and DX improvements.",
-      impact: "Merged contributor PRs and helped improve onboarding for first-time contributors",
-      tech: ["React", "TypeScript", "GitHub Actions", "Jest"],
+        "Orchestrated multiple large-scale technical hackathons, managing technical infrastructure, participant experience, and cross-team coordination.",
+      impact: "Successfully hosted thousands of developers, facilitating networking, mentorship, and project building",
+      tech: ["Event Management", "Technical Operations", "Community Building"],
     },
   ],
 
@@ -282,16 +308,16 @@ export const portfolioData = {
   allProjects,
 
   achievements: [
-    "Head of Development @Geek Room - Technical community with 15,000+ registrations",
-    "Led multiple successful hackathons and technical workshops",
-    "Contributed to open-source projects in ML and web development",
+    "Head of Development @ GDG-MSIT and Deputy Head @ Geek Room",
+    "Organized major hackathons including Codeक्षेत्र 2.0 (15,000+ registrations), Code Cubicle 5.0, and HackAvensis 2024",
+    "Developed a production-grade Invoice Manager application during internship at Suntora Industries",
     "Built production applications serving thousands of users",
   ],
 
   social: {
     github: "https://github.com/Sanidhya14321",
-    linkedin: "https://linkedin.com/in/sanidhyavats",
-    twitter: "https://twitter.com/sanidhyavats",
+    linkedin: "https://www.linkedin.com/in/sanidhya-vats-9344522b7/",
+    twitter: "",
     email: "sanidhya14321@gmail.com",
   },
 };

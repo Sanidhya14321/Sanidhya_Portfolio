@@ -16,16 +16,12 @@ import InteractiveSelector, {
   InteractiveSelectorOption,
   InteractiveSelectorTheme,
 } from "@/components/ui/interactive-selector";
-import {
-  Testimonial,
-  TestimonialCarousel,
-} from "@/components/ui/profile-card-testimonial-carousel";
 import PageTransition from "@/components/ui/PageTransition";
 import SectionHeading from "@/components/ui/SectionHeading";
+import TimeLine_01, { type TimeLine_01Entry } from "@/components/ui/release-time-line";
 import { useTheme } from "@/contexts/ThemeContext";
 import { portfolioData } from "@/data/portfolio";
 import { cardCSS, colors } from "@/lib/themes";
-import { ZoomParallax } from "@/components/ui/zoom-parallax";
 
 const getProjectIcon = (field?: string) => {
   const normalized = (field || "").toLowerCase();
@@ -173,16 +169,22 @@ export default function ProjectsPage() {
 
   const activeProject = selectorProjects[activeIndex] || selectorProjects[0];
   const allProjectList = all.length > 0 ? all : featured;
-  const additionalProjectTestimonials = useMemo<Testimonial[]>(
+  const projectJourneyEntries = useMemo<TimeLine_01Entry[]>(
     () =>
       allProjectList.map((project) => ({
-        name: project.title,
-        title: `${project.field || "Project"}${project.status ? ` • ${project.status}` : ""}`,
-        description: project.description,
-        imageUrl: project.image || "https://images.unsplash.com/photo-1498050108023-c5249f4df085?auto=format&fit=crop&w=1200&q=80",
-        techStack: project.tech,
-        githubUrl: project.github || undefined,
-        demoUrl: project.demo || undefined,
+        icon: getProjectIcon(project.field).type,
+        title: project.title,
+        subtitle: `${project.field || "Project"}${project.status ? ` • ${project.status}` : ""}`,
+        description: project.detailedDescription || project.description,
+        items: project.highlights && project.highlights.length > 0 ? project.highlights : project.tech,
+        image:
+          project.image ||
+          "https://images.unsplash.com/photo-1498050108023-c5249f4df085?auto=format&fit=crop&w=1200&q=80",
+        button: project.demo
+          ? { url: project.demo, text: "Open Live Demo" }
+          : project.github
+            ? { url: project.github, text: "Open Repository" }
+            : undefined,
       })),
     [allProjectList]
   );
@@ -307,11 +309,20 @@ export default function ProjectsPage() {
             backdropFilter: cc.backdropFilter,
           }}
         >
-          <p className="mb-4 text-sm font-medium" style={{ color: palette.heading }}>
-            Additional Projects
+          <p className="mb-2 text-sm font-medium" style={{ color: palette.heading }}>
+            Project Journey Explorer
+          </p>
+          <p className="mb-6 text-sm" style={{ color: palette.textSecondary }}>
+            Scroll through milestones to discover more builds, shipped features, and links to explore each project.
           </p>
 
-          <TestimonialCarousel testimonials={additionalProjectTestimonials} className="px-0" />
+          <div className="rounded-2xl border p-2 md:p-4" style={{ borderColor: cc.border }}>
+            <TimeLine_01
+              title="Project Milestones"
+              description="An interactive timeline of additional projects with highlights and launch links."
+              entries={projectJourneyEntries}
+            />
+          </div>
         </div>
       </section>
     </PageTransition>

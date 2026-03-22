@@ -1,5 +1,5 @@
-import CenteredFeedbackDrawer from "@/components/ui/centered-feedback-drawer";
+import TimeLine_01 from "@/components/ui/release-time-line";
 
 export default function DemoOne() {
-  return <CenteredFeedbackDrawer />;
+  return <TimeLine_01 />;
 }

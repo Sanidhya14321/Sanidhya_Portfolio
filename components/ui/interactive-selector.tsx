@@ -202,7 +202,7 @@ const InteractiveSelector = ({
                 />
               </div>
 
-              <div className="relative z-10 p-4 flex items-end gap-3">
+              <div className="relative z-10 p-4 flex items-end gap-3 bg-gradient-to-t from-black/80 to-transparent">
                 <div
                   className="h-11 w-11 rounded-full border flex items-center justify-center shrink-0"
                   style={{

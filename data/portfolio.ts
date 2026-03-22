@@ -120,7 +120,11 @@ export const allProjects: PortfolioProject[] = [
     github: "https://github.com/Sanidhya14321/assessment-2",
     demo: "",
     status: "",
-    highlights: [],
+    highlights: [
+      "Engineered a scalable assessment platform with secure user authentication via NextAuth and Bcrypt.js",
+      "Developed comprehensive quiz management alongside a competitive, real-time leaderboard",
+      "Designed a highly interactive and responsive UI utilizing Tailwind CSS and Framer Motion",
+    ],
   },
   {
     id: "hairrevive",
@@ -135,7 +139,11 @@ export const allProjects: PortfolioProject[] = [
     github: "https://github.com/Sanidhya14321/HairRevive",
     demo: "",
     status: "",
-    highlights: [],
+    highlights: [
+      "Integrated AI-powered analysis tools to generate personalized, science-backed treatment plans",
+      "Built a full-stack MERN application featuring a smart product recommendation engine",
+      "Designed robust backend architecture to securely manage user analysis and treatment data",
+    ],
   },
   {
     id: "devdeck",
@@ -150,7 +158,11 @@ export const allProjects: PortfolioProject[] = [
     github: "https://github.com/Sanidhya14321/devdeck",
     demo: "",
     status: "",
-    highlights: [],
+    highlights: [
+      "Integrated GitHub APIs to track and visualize real-time developer coding activity",
+      "Developed an interactive, data-driven dashboard equipped with highly customizable widgets",
+      "Engineered scalable analytics infrastructure to process and display long-term productivity metrics",
+    ],
   },
   {
     id: "spark",

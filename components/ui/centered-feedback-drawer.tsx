@@ -87,7 +87,7 @@ export default function CenteredFeedbackDrawer() {
 
   return (
     <>
-      <Button variant="default" onClick={() => setIsOpen(true)}>
+      <Button className="mt-16 flex justify-center border py-6 hover:bg-white/10 rounded-xl align-center content-center text-center" onClick={() => setIsOpen(true)}>
         Give Feedback
       </Button>
 
@@ -207,7 +207,7 @@ export default function CenteredFeedbackDrawer() {
             </p>
           ) : null}
 
-          <div className="mt-6 flex w-full max-w-md flex-col gap-3 p-4 sm:flex-row">
+          <div className="mt-6 flex w-full max-w-md flex-col gap-3 p-4 sm:flex-row ">
             <Button className="w-full" type="submit" disabled={!canSubmit || isSubmitting}>
               {isSubmitting ? "Sending..." : "Submit Feedback"}
             </Button>

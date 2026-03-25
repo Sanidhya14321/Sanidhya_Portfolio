@@ -140,7 +140,9 @@ export default function ContactPage() {
             </motion.div>
           ))}
         </motion.div>
-
+        <div className="flex items-center justify-center">
+          <CenteredFeedbackDrawer />
+        </div>
         <motion.div
           variants={fadeUp}
           initial="hidden"
@@ -172,9 +174,6 @@ export default function ContactPage() {
             </SpotlightCard>
           </ClickSpark>
         </motion.div>
-        <div className="mt-8 mb-12 flex w-full justify-center border py-6 hover:bg-white/10 rounded-xl align-center content-center text-center">
-          <CenteredFeedbackDrawer />
-        </div>
       </section>
     </PageTransition>
   );

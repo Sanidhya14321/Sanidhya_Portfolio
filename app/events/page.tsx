@@ -303,7 +303,7 @@ const EventCard = ({ event, theme, spotlightColor }: { event: Event; theme: stri
 
 type TabType = "organized" | "participated" | "mentored";
 
-export default function EventsOrganizedPage() {
+export default function EventsPage() {
   const { theme } = useTheme();
   const [activeTab, setActiveTab] = useState<TabType>("organized");
   const cc = cardCSS[theme];

@@ -1,5 +1,6 @@
 "use client";
 
+import { useTheme } from "@/contexts/ThemeContext";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -7,8 +8,15 @@ import { Textarea } from "@/components/ui/textarea";
 import { AnimatePresence, motion } from "framer-motion";
 import { Star, X } from "lucide-react";
 import { FormEvent, useMemo, useState } from "react";
+import { colors, cardCSS, accentCSS, buttonStyles } from "@/lib/themes";
 
 export default function CenteredFeedbackDrawer() {
+  const { theme } = useTheme();
+  const cc = cardCSS[theme];
+  const pal = colors[theme];
+  const ac = accentCSS[theme];
+  const bs = buttonStyles[theme];
+
   const [isOpen, setIsOpen] = useState(false);
   const [rating, setRating] = useState(0);
   const [name, setName] = useState("");
@@ -87,7 +95,15 @@ export default function CenteredFeedbackDrawer() {
 
   return (
     <>
-      <Button className="mt-16 flex justify-center border py-6 hover:bg-white/10 rounded-xl align-center content-center text-center" onClick={() => setIsOpen(true)}>
+      <Button 
+        className="mt-16 flex justify-center border py-6 align-center content-center text-center w-full sm:w-auto"
+        style={{
+          backgroundColor: ac.primary,
+          color: theme === "industrial" ? "#000000" : theme === "dark-horse" ? "#000000" : pal.bg,
+          borderColor: ac.primary,
+        }}
+        onClick={() => setIsOpen(true)}
+      >
         Give Feedback
       </Button>
 
@@ -95,22 +111,33 @@ export default function CenteredFeedbackDrawer() {
         {isOpen ? (
           <>
             <motion.div
-              className="fixed inset-0 z-[10000] bg-black/70"
+              className="fixed inset-0 z-[10000]"
               onClick={closeDrawer}
               aria-hidden="true"
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               exit={{ opacity: 0 }}
               transition={{ duration: 0.2, ease: "easeOut" }}
+              style={{
+                backgroundColor: `${pal.bg}cc`,
+              }}
             />
             <motion.div
-              className="fixed inset-x-0 bottom-0 z-[10001] mt-24 flex max-h-[90vh] flex-col rounded-t-xl border bg-black/95 md:left-1/2 md:w-full md:max-w-2xl md:-translate-x-1/2"
+              className="fixed inset-x-0 bottom-0 z-[10001] mt-24 flex max-h-[90vh] flex-col border md:left-1/2 md:w-full md:max-w-2xl md:-translate-x-1/2"
+              style={{
+                backgroundColor: cc.bg,
+                borderColor: cc.border,
+                borderRadius: theme === "industrial" ? 0 : theme === "glass" ? "24px" : "16px",
+              }}
               initial={{ y: 80, opacity: 0 }}
               animate={{ y: 0, opacity: 1 }}
               exit={{ y: 50, opacity: 0 }}
               transition={{ duration: 0.28, ease: [0.22, 1, 0.36, 1] }}
             >
-              <div className="mx-auto mt-3 h-1.5 w-16 rounded-full bg-white/30" />
+              <div 
+                className="mx-auto mt-3 h-1.5 w-16 rounded-full"
+                style={{ backgroundColor: ac.line }}
+              />
               <div className="absolute right-4 top-4">
                 <Button
                   variant="ghost"
@@ -118,6 +145,7 @@ export default function CenteredFeedbackDrawer() {
                   type="button"
                   aria-label="Close feedback drawer"
                   onClick={closeDrawer}
+                  style={{ color: pal.text }}
                 >
                   <X className="h-5 w-5" />
                 </Button>
@@ -129,17 +157,17 @@ export default function CenteredFeedbackDrawer() {
           className="mx-auto flex w-full max-w-2xl flex-col items-center justify-center px-4 py-8 text-center"
         >
           <div className="max-w-md space-y-2 p-4 text-center sm:text-left">
-            <h2 className="text-xl font-bold">
+            <h2 className="text-xl font-bold" style={{ color: pal.heading }}>
               We Value Your Feedback
             </h2>
-            <p className="text-sm text-white/70">
+            <p className="text-sm" style={{ color: pal.textSecondary }}>
               Help us improve by sharing your thoughts.
             </p>
           </div>
 
           <div className="mt-4 w-full max-w-md space-y-4">
             <div className="grid gap-2 text-left">
-              <Label htmlFor="feedback-name">Name</Label>
+              <Label htmlFor="feedback-name" style={{ color: pal.text }}>Name</Label>
               <Input
                 id="feedback-name"
                 type="text"
@@ -147,11 +175,16 @@ export default function CenteredFeedbackDrawer() {
                 value={name}
                 onChange={(event) => setName(event.target.value)}
                 required
+                style={{
+                  backgroundColor: cc.bg,
+                  borderColor: cc.border,
+                  color: pal.text,
+                }}
               />
             </div>
 
             <div className="grid gap-2 text-left">
-              <Label htmlFor="feedback-email">Email</Label>
+              <Label htmlFor="feedback-email" style={{ color: pal.text }}>Email</Label>
               <Input
                 id="feedback-email"
                 type="email"
@@ -159,11 +192,16 @@ export default function CenteredFeedbackDrawer() {
                 value={email}
                 onChange={(event) => setEmail(event.target.value)}
                 required
+                style={{
+                  backgroundColor: cc.bg,
+                  borderColor: cc.border,
+                  color: pal.text,
+                }}
               />
             </div>
 
             <div className="grid gap-2 text-left">
-              <Label>Rate your experience</Label>
+              <Label style={{ color: pal.text }}>Rate your experience</Label>
               <div className="flex justify-center gap-2">
                 {[1, 2, 3, 4, 5].map((star) => (
                   <button
@@ -174,10 +212,11 @@ export default function CenteredFeedbackDrawer() {
                   >
                     <Star
                       className={`h-6 w-6 cursor-pointer ${
-                        rating >= star
-                          ? "fill-yellow-500 text-yellow-500"
-                          : "text-gray-400"
+                        rating >= star ? "fill-current" : ""
                       }`}
+                      style={{
+                        color: rating >= star ? ac.primary : ac.line,
+                      }}
                     />
                   </button>
                 ))}
@@ -185,7 +224,7 @@ export default function CenteredFeedbackDrawer() {
             </div>
 
             <div className="grid gap-2 text-left">
-              <Label htmlFor="feedback-message">Message</Label>
+              <Label htmlFor="feedback-message" style={{ color: pal.text }}>Message</Label>
               <Textarea
                 id="feedback-message"
                 placeholder="Tell us about your experience..."
@@ -193,22 +232,37 @@ export default function CenteredFeedbackDrawer() {
                 value={message}
                 onChange={(event) => setMessage(event.target.value)}
                 required
+                style={{
+                  backgroundColor: cc.bg,
+                  borderColor: cc.border,
+                  color: pal.text,
+                }}
               />
             </div>
           </div>
 
           {statusMessage ? (
             <p
-              className={`mt-4 w-full max-w-md text-left text-sm ${
-                statusType === "error" ? "text-red-500" : "text-green-500"
-              }`}
+              className={`mt-4 w-full max-w-md text-left text-sm`}
+              style={{
+                color: statusType === "error" ? "#EF4444" : "#10B981",
+              }}
             >
               {statusMessage}
             </p>
           ) : null}
 
           <div className="mt-6 flex w-full max-w-md flex-col gap-3 p-4 sm:flex-row ">
-            <Button className="w-full" type="submit" disabled={!canSubmit || isSubmitting}>
+            <Button 
+              className="w-full"
+              type="submit" 
+              disabled={!canSubmit || isSubmitting}
+              style={{
+                backgroundColor: ac.primary,
+                color: theme === "industrial" ? "#000000" : theme === "dark-horse" ? "#000000" : pal.bg,
+                borderColor: ac.primary,
+              }}
+            >
               {isSubmitting ? "Sending..." : "Submit Feedback"}
             </Button>
             <Button
@@ -219,6 +273,11 @@ export default function CenteredFeedbackDrawer() {
                 resetForm();
                 resetStatus();
                 setIsOpen(false);
+              }}
+              style={{
+                borderColor: cc.border,
+                color: pal.text,
+                backgroundColor: "transparent",
               }}
             >
               Cancel

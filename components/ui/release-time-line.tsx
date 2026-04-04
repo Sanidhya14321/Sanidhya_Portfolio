@@ -3,6 +3,8 @@
 import React, { useEffect, useRef, useState } from "react";
 import { ArrowUpRight, Package, Calendar, Sparkles, Zap } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { useTheme } from "@/contexts/ThemeContext";
+import { cardCSS, accentCSS, colors } from "@/lib/themes";
 
 export type TimeLine_01Entry = {
   icon: React.ComponentType<{ className?: string }>;
@@ -106,6 +108,11 @@ export default function TimeLine_01({
   entries = defaultEntries,
   className,
 }: TimeLine_01Props) {
+  const { theme } = useTheme();
+  const cc = cardCSS[theme];
+  const ac = accentCSS[theme];
+  const palette = colors[theme];
+  
   const [activeIndex, setActiveIndex] = useState(0);
   const sentinelRefs = useRef<(HTMLDivElement | null)[]>([]);
 
@@ -147,8 +154,12 @@ export default function TimeLine_01({
     <section className={"py-32 " + (className || "") }>
       <div className="container">
         <div className="mx-auto max-w-3xl">
-          <h1 className="mb-4 text-3xl font-bold tracking-tight md:text-5xl">{title}</h1>
-          <p className="mb-6 text-base text-muted-foreground md:text-lg">{description}</p>
+          <h1 className="mb-4 text-3xl font-bold tracking-tight md:text-5xl" style={{ color: palette.heading }}>
+            {title}
+          </h1>
+          <p className="mb-6 text-base md:text-lg" style={{ color: palette.textSecondary }}>
+            {description}
+          </p>
         </div>
 
         <div className="mx-auto mt-16 max-w-3xl space-y-16 md:mt-24 md:space-y-24">
@@ -164,17 +175,27 @@ export default function TimeLine_01({
                 <div className="top-8 flex h-min w-64 shrink-0 items-center gap-4 md:sticky">
                   <div className="flex items-center gap-3">
                     <div
-                      className={`rounded-lg p-2 ${
-                        isActive
-                          ? "bg-primary text-primary-foreground"
-                          : "bg-muted text-muted-foreground"
-                      }`}
+                      className="rounded-lg p-2 transition-all duration-300"
+                      style={{
+                        backgroundColor: isActive ? ac.primary : ac.iconBg,
+                        color: isActive ? palette.bg : ac.primary,
+                      }}
                     >
                       <entry.icon className="h-4 w-4" />
                     </div>
                     <div className="flex flex-col">
-                      <span className="text-sm font-medium">{entry.title}</span>
-                      <span className="text-xs text-muted-foreground">{entry.subtitle}</span>
+                      <span
+                        className="text-sm font-medium transition-colors duration-300"
+                        style={{ color: isActive ? palette.heading : palette.text }}
+                      >
+                        {entry.title}
+                      </span>
+                      <span
+                        className="text-xs transition-colors duration-300"
+                        style={{ color: palette.textSecondary }}
+                      >
+                        {entry.subtitle}
+                      </span>
                     </div>
                   </div>
                 </div>
@@ -186,12 +207,13 @@ export default function TimeLine_01({
                 />
 
                 <article
-                  className={
-                    "flex flex-col rounded-2xl border p-3 transition-all duration-300 " +
-                    (isActive
-                      ? "border-gray-50 bg-gray-50 shadow-lg dark:border-gray-800 dark:bg-black"
-                      : "border-gray-200 bg-gray-50 dark:border-gray-800 dark:bg-black")
-                  }
+                  className="flex flex-col rounded-2xl border p-3 transition-all duration-300"
+                  style={{
+                    backgroundColor: isActive ? cc.bg : `${palette.bg}80`,
+                    borderColor: isActive ? ac.primary : cc.border,
+                    backdropFilter: cc.backdropFilter,
+                    boxShadow: isActive ? `0 20px 40px ${ac.primary}15` : "none",
+                  }}
                 >
                   {entry.image && (
                     <img
@@ -204,10 +226,8 @@ export default function TimeLine_01({
                   <div className="space-y-4">
                     <div className="space-y-2">
                       <h2
-                        className={
-                          "text-md font-medium leading-tight tracking-tight transition-colors duration-200 md:text-lg " +
-                          (isActive ? "text-foreground" : "text-foreground/70")
-                        }
+                        className="text-md font-medium leading-tight tracking-tight transition-colors duration-200 md:text-lg"
+                        style={{ color: isActive ? palette.heading : palette.text }}
                       >
                         {entry.title}
                       </h2>
@@ -215,10 +235,9 @@ export default function TimeLine_01({
                       <p
                         className={
                           "text-xs leading-relaxed transition-all duration-300 md:text-sm " +
-                          (isActive
-                            ? "line-clamp-none text-muted-foreground"
-                            : "line-clamp-2 text-muted-foreground/80")
+                          (isActive ? "line-clamp-none" : "line-clamp-2")
                         }
+                        style={{ color: palette.textSecondary }}
                       >
                         {entry.description}
                       </p>
@@ -234,14 +253,24 @@ export default function TimeLine_01({
                       <div className="overflow-hidden">
                         <div className="space-y-4 pt-2">
                           {entry.items && entry.items.length > 0 && (
-                            <div className="rounded-lg border border-gray-200 bg-gray-50 p-4 dark:border-gray-800 dark:bg-black">
+                            <div
+                              className="rounded-lg border p-4"
+                              style={{
+                                backgroundColor: `${ac.primary}10`,
+                                borderColor: cc.border,
+                              }}
+                            >
                               <ul className="space-y-2">
                                 {entry.items.map((item, itemIndex) => (
                                   <li
                                     key={itemIndex}
-                                    className="flex items-start gap-2 text-sm text-muted-foreground"
+                                    className="flex items-start gap-2 text-sm"
+                                    style={{ color: palette.text }}
                                   >
-                                    <div className="mt-1.5 h-1.5 w-1.5 flex-shrink-0 rounded-full bg-primary/60" />
+                                    <div
+                                      className="mt-1.5 h-1.5 w-1.5 flex-shrink-0 rounded-full"
+                                      style={{ backgroundColor: ac.primary }}
+                                    />
                                     <span className="leading-relaxed">{item}</span>
                                   </li>
                                 ))}
@@ -254,7 +283,11 @@ export default function TimeLine_01({
                               <Button
                                 variant="default"
                                 size="sm"
-                                className="group font-normal transition-all duration-200 hover:bg-primary hover:text-primary-foreground"
+                                className="group font-normal transition-all duration-200"
+                                style={{
+                                  backgroundColor: ac.primary,
+                                  color: palette.bg,
+                                }}
                                 asChild
                               >
                                 <a href={entry.button.url} target="_blank" rel="noreferrer">

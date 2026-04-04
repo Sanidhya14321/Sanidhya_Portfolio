@@ -1,21 +1,19 @@
 "use client";
 
-import { useTheme } from "@/contexts/ThemeContext";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
+import { useTheme } from "@/contexts/ThemeContext";
+import { cardCSS, colors } from "@/lib/themes";
 import { AnimatePresence, motion } from "framer-motion";
 import { Star, X } from "lucide-react";
 import { FormEvent, useMemo, useState } from "react";
-import { colors, cardCSS, accentCSS, buttonStyles } from "@/lib/themes";
 
 export default function CenteredFeedbackDrawer() {
   const { theme } = useTheme();
   const cc = cardCSS[theme];
-  const pal = colors[theme];
-  const ac = accentCSS[theme];
-  const bs = buttonStyles[theme];
+  const palette = colors[theme];
 
   const [isOpen, setIsOpen] = useState(false);
   const [rating, setRating] = useState(0);
@@ -96,11 +94,11 @@ export default function CenteredFeedbackDrawer() {
   return (
     <>
       <Button 
-        className="mt-16 flex justify-center border py-6 align-center content-center text-center w-full sm:w-auto"
+        className="mt-16 flex justify-center border py-6 rounded-xl align-center content-center text-center"
         style={{
-          backgroundColor: ac.primary,
-          color: theme === "industrial" ? "#000000" : theme === "dark-horse" ? "#000000" : pal.bg,
-          borderColor: ac.primary,
+          backgroundColor: `${palette.accent}20`,
+          borderColor: palette.accent,
+          color: palette.text,
         }}
         onClick={() => setIsOpen(true)}
       >
@@ -118,26 +116,22 @@ export default function CenteredFeedbackDrawer() {
               animate={{ opacity: 1 }}
               exit={{ opacity: 0 }}
               transition={{ duration: 0.2, ease: "easeOut" }}
-              style={{
-                backgroundColor: `${pal.bg}cc`,
-              }}
+              style={{ backgroundColor: "rgba(0, 0, 0, 0.7)" }}
             />
             <motion.div
-              className="fixed inset-x-0 bottom-0 z-[10001] mt-24 flex max-h-[90vh] flex-col border md:left-1/2 md:w-full md:max-w-2xl md:-translate-x-1/2"
-              style={{
-                backgroundColor: cc.bg,
-                borderColor: cc.border,
-                borderRadius: theme === "industrial" ? 0 : theme === "glass" ? "24px" : "16px",
-              }}
+              className="fixed inset-x-0 bottom-0 z-[10001] mt-24 flex max-h-[90vh] flex-col md:left-1/2 md:w-full md:max-w-2xl md:-translate-x-1/2"
               initial={{ y: 80, opacity: 0 }}
               animate={{ y: 0, opacity: 1 }}
               exit={{ y: 50, opacity: 0 }}
               transition={{ duration: 0.28, ease: [0.22, 1, 0.36, 1] }}
+              style={{
+                backgroundColor: cc.bg,
+                borderColor: cc.border,
+                borderWidth: "1px",
+                borderRadius: theme === "industrial" ? 0 : theme === "glass" ? 24 : 16,
+              }}
             >
-              <div 
-                className="mx-auto mt-3 h-1.5 w-16 rounded-full"
-                style={{ backgroundColor: ac.line }}
-              />
+              <div className="mx-auto mt-3 h-1.5 w-16 rounded-full" style={{ backgroundColor: `${palette.text}30` }} />
               <div className="absolute right-4 top-4">
                 <Button
                   variant="ghost"
@@ -145,145 +139,143 @@ export default function CenteredFeedbackDrawer() {
                   type="button"
                   aria-label="Close feedback drawer"
                   onClick={closeDrawer}
-                  style={{ color: pal.text }}
+                  style={{ color: palette.text }}
                 >
                   <X className="h-5 w-5" />
                 </Button>
               </div>
 
               <div className="overflow-y-auto">
-        <form
-          onSubmit={handleSubmit}
-          className="mx-auto flex w-full max-w-2xl flex-col items-center justify-center px-4 py-8 text-center"
-        >
-          <div className="max-w-md space-y-2 p-4 text-center sm:text-left">
-            <h2 className="text-xl font-bold" style={{ color: pal.heading }}>
-              We Value Your Feedback
-            </h2>
-            <p className="text-sm" style={{ color: pal.textSecondary }}>
-              Help us improve by sharing your thoughts.
-            </p>
-          </div>
+                <form
+                  onSubmit={handleSubmit}
+                  className="mx-auto flex w-full max-w-2xl flex-col items-center justify-center px-4 py-8 text-center"
+                >
+                  <div className="max-w-md space-y-2 p-4 text-center sm:text-left">
+                    <h2 className="text-xl font-bold" style={{ color: palette.heading }}>
+                      We Value Your Feedback
+                    </h2>
+                    <p className="text-sm" style={{ color: palette.textSecondary }}>
+                      Help us improve by sharing your thoughts.
+                    </p>
+                  </div>
 
-          <div className="mt-4 w-full max-w-md space-y-4">
-            <div className="grid gap-2 text-left">
-              <Label htmlFor="feedback-name" style={{ color: pal.text }}>Name</Label>
-              <Input
-                id="feedback-name"
-                type="text"
-                placeholder="Your name"
-                value={name}
-                onChange={(event) => setName(event.target.value)}
-                required
-                style={{
-                  backgroundColor: cc.bg,
-                  borderColor: cc.border,
-                  color: pal.text,
-                }}
-              />
-            </div>
+                  <div className="mt-4 w-full max-w-md space-y-4">
+                    <div className="grid gap-2 text-left">
+                      <Label htmlFor="feedback-name" style={{ color: palette.text }}>Name</Label>
+                      <Input
+                        id="feedback-name"
+                        type="text"
+                        placeholder="Your name"
+                        value={name}
+                        onChange={(event) => setName(event.target.value)}
+                        required
+                        style={{
+                          backgroundColor: `${palette.accent}10`,
+                          borderColor: cc.border,
+                          color: palette.text,
+                        }}
+                      />
+                    </div>
 
-            <div className="grid gap-2 text-left">
-              <Label htmlFor="feedback-email" style={{ color: pal.text }}>Email</Label>
-              <Input
-                id="feedback-email"
-                type="email"
-                placeholder="you@example.com"
-                value={email}
-                onChange={(event) => setEmail(event.target.value)}
-                required
-                style={{
-                  backgroundColor: cc.bg,
-                  borderColor: cc.border,
-                  color: pal.text,
-                }}
-              />
-            </div>
+                    <div className="grid gap-2 text-left">
+                      <Label htmlFor="feedback-email" style={{ color: palette.text }}>Email</Label>
+                      <Input
+                        id="feedback-email"
+                        type="email"
+                        placeholder="you@example.com"
+                        value={email}
+                        onChange={(event) => setEmail(event.target.value)}
+                        required
+                        style={{
+                          backgroundColor: `${palette.accent}10`,
+                          borderColor: cc.border,
+                          color: palette.text,
+                        }}
+                      />
+                    </div>
 
-            <div className="grid gap-2 text-left">
-              <Label style={{ color: pal.text }}>Rate your experience</Label>
-              <div className="flex justify-center gap-2">
-                {[1, 2, 3, 4, 5].map((star) => (
-                  <button
-                    key={star}
-                    type="button"
-                    onClick={() => setRating(star)}
-                    aria-label={`Rate ${star} star${star > 1 ? "s" : ""}`}
-                  >
-                    <Star
-                      className={`h-6 w-6 cursor-pointer ${
-                        rating >= star ? "fill-current" : ""
-                      }`}
+                    <div className="grid gap-2 text-left">
+                      <Label style={{ color: palette.text }}>Rate your experience</Label>
+                      <div className="flex justify-center gap-2">
+                        {[1, 2, 3, 4, 5].map((star) => (
+                          <button
+                            key={star}
+                            type="button"
+                            onClick={() => setRating(star)}
+                            aria-label={`Rate ${star} star${star > 1 ? "s" : ""}`}
+                          >
+                            <Star
+                              className="h-6 w-6 cursor-pointer transition-colors"
+                              style={{
+                                fill: rating >= star ? palette.accent : "none",
+                                color: rating >= star ? palette.accent : palette.textSecondary,
+                              }}
+                            />
+                          </button>
+                        ))}
+                      </div>
+                    </div>
+
+                    <div className="grid gap-2 text-left">
+                      <Label htmlFor="feedback-message" style={{ color: palette.text }}>Message</Label>
+                      <Textarea
+                        id="feedback-message"
+                        placeholder="Tell us about your experience..."
+                        className="min-h-[100px]"
+                        value={message}
+                        onChange={(event) => setMessage(event.target.value)}
+                        required
+                        style={{
+                          backgroundColor: `${palette.accent}10`,
+                          borderColor: cc.border,
+                          color: palette.text,
+                        }}
+                      />
+                    </div>
+                  </div>
+
+                  {statusMessage ? (
+                    <p
+                      className="mt-4 w-full max-w-md text-left text-sm"
                       style={{
-                        color: rating >= star ? ac.primary : ac.line,
+                        color: statusType === "error" ? "#ef4444" : "#22c55e",
                       }}
-                    />
-                  </button>
-                ))}
-              </div>
-            </div>
+                    >
+                      {statusMessage}
+                    </p>
+                  ) : null}
 
-            <div className="grid gap-2 text-left">
-              <Label htmlFor="feedback-message" style={{ color: pal.text }}>Message</Label>
-              <Textarea
-                id="feedback-message"
-                placeholder="Tell us about your experience..."
-                className="min-h-[100px]"
-                value={message}
-                onChange={(event) => setMessage(event.target.value)}
-                required
-                style={{
-                  backgroundColor: cc.bg,
-                  borderColor: cc.border,
-                  color: pal.text,
-                }}
-              />
-            </div>
-          </div>
-
-          {statusMessage ? (
-            <p
-              className={`mt-4 w-full max-w-md text-left text-sm`}
-              style={{
-                color: statusType === "error" ? "#EF4444" : "#10B981",
-              }}
-            >
-              {statusMessage}
-            </p>
-          ) : null}
-
-          <div className="mt-6 flex w-full max-w-md flex-col gap-3 p-4 sm:flex-row ">
-            <Button 
-              className="w-full"
-              type="submit" 
-              disabled={!canSubmit || isSubmitting}
-              style={{
-                backgroundColor: ac.primary,
-                color: theme === "industrial" ? "#000000" : theme === "dark-horse" ? "#000000" : pal.bg,
-                borderColor: ac.primary,
-              }}
-            >
-              {isSubmitting ? "Sending..." : "Submit Feedback"}
-            </Button>
-            <Button
-              variant="outline"
-              className="w-full"
-              type="button"
-              onClick={() => {
-                resetForm();
-                resetStatus();
-                setIsOpen(false);
-              }}
-              style={{
-                borderColor: cc.border,
-                color: pal.text,
-                backgroundColor: "transparent",
-              }}
-            >
-              Cancel
-            </Button>
-          </div>
-        </form>
+                  <div className="mt-6 flex w-full max-w-md flex-col gap-3 p-4 sm:flex-row">
+                    <Button
+                      className="w-full"
+                      type="submit"
+                      disabled={!canSubmit || isSubmitting}
+                      style={{
+                        backgroundColor: palette.accent,
+                        color: palette.bg,
+                        borderColor: palette.accent,
+                      }}
+                    >
+                      {isSubmitting ? "Sending..." : "Submit Feedback"}
+                    </Button>
+                    <Button
+                      variant="outline"
+                      className="w-full"
+                      type="button"
+                      onClick={() => {
+                        resetForm();
+                        resetStatus();
+                        setIsOpen(false);
+                      }}
+                      style={{
+                        borderColor: cc.border,
+                        color: palette.text,
+                      }}
+                    >
+                      Cancel
+                    </Button>
+                  </div>
+                </form>
               </div>
             </motion.div>
           </>

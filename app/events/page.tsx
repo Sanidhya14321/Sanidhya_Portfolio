@@ -206,98 +206,150 @@ interface EventCardProps {
   palette: any;
 }
 
-function EventSection({ title, events, icon, theme, cc, ac, palette }: EventSectionProps) {
+function EventCard({ event, index, cc, ac, palette }: EventCardProps) {
   return (
-    <div className="mt-12">
-      <div className="flex items-center gap-3 mb-6">
+    <motion.div variants={fadeUp} custom={index}>
+      <Magnet padding={40} magnetStrength={2}>
         <div
-          className="flex items-center justify-center w-10 h-10 rounded-lg"
+          className="group rounded-2xl border p-6 md:p-8 transition-all duration-300 hover:shadow-2xl cursor-pointer h-full"
           style={{
-            backgroundColor: ac.iconBg,
-            color: ac.primary,
+            backgroundColor: cc.bg,
+            borderColor: cc.border,
+            backdropFilter: cc.backdropFilter,
+            borderWidth: "1px",
           }}
         >
-          {icon}
-        </div>
-        <h3 className="text-2xl md:text-3xl font-bold" style={{ color: palette.heading }}>
-          {title}
-        </h3>
-      </div>
+          {/* Header with title and role */}
+          <div className="mb-4 pb-4" style={{ borderBottomColor: `${ac.primary}30`, borderBottomWidth: "1px" }}>
+            <div className="flex items-start justify-between gap-3 mb-3">
+              <div className="flex-1">
+                <h4 className="text-lg md:text-xl font-semibold group-hover:text-opacity-100 transition-colors" style={{ color: palette.heading }}>
+                  {event.title}
+                </h4>
+                <div
+                  className="inline-flex items-center gap-1 mt-2 px-2 py-1 rounded-lg text-xs font-medium"
+                  style={{
+                    backgroundColor: `${ac.primary}15`,
+                    color: ac.primary,
+                  }}
+                >
+                  <Sparkles size={12} />
+                  {event.role}
+                </div>
+              </div>
+            </div>
+          </div>
 
+          {/* Metadata */}
+          <div className="flex flex-col gap-2 mb-4 text-xs md:text-sm" style={{ color: palette.textSecondary }}>
+            <div className="flex items-center gap-2">
+              <Calendar size={14} style={{ color: ac.primary }} />
+              <span>{event.date}</span>
+            </div>
+            {event.location && (
+              <div className="flex items-center gap-2">
+                <MapPin size={14} style={{ color: ac.primary }} />
+                <span>{event.location}</span>
+              </div>
+            )}
+            {event.attendees && (
+              <div className="flex items-center gap-2">
+                <Users size={14} style={{ color: ac.primary }} />
+                <span>{event.attendees}+ attendees</span>
+              </div>
+            )}
+          </div>
+
+          {/* Description */}
+          <p className="text-sm md:text-base mb-4 line-clamp-3 group-hover:line-clamp-none transition-all" style={{ color: palette.text }}>
+            {event.description}
+          </p>
+
+          {/* Impact highlight */}
+          {event.impact && (
+            <motion.div
+              className="flex items-start gap-3 p-3 rounded-lg mb-4 border"
+              style={{
+                backgroundColor: `${ac.primary}08`,
+                borderColor: `${ac.primary}30`,
+              }}
+              whileHover={{ backgroundColor: `${ac.primary}15` }}
+            >
+              <Trophy size={16} className="mt-0.5 flex-shrink-0" style={{ color: ac.primary }} />
+              <p className="text-xs md:text-sm leading-relaxed" style={{ color: palette.text }}>
+                <span className="font-semibold">Impact:</span> {event.impact}
+              </p>
+            </motion.div>
+          )}
+
+          {/* Tags */}
+          {event.tags && (
+            <div className="flex flex-wrap gap-2">
+              {event.tags.map((tag) => (
+                <Badge key={tag} text={tag} />
+              ))}
+            </div>
+          )}
+        </div>
+      </Magnet>
+    </motion.div>
+  );
+}
+
+function EventSection({ title, subtitle, events, icon, theme, cc, ac, palette }: EventSectionProps) {
+  return (
+    <section className="py-12">
+      {/* Section header */}
+      <motion.div variants={scaleIn} initial="hidden" whileInView="show" viewport={{ once: true }} className="mb-12">
+        <div className="flex items-center gap-4 mb-6">
+          <div
+            className="flex items-center justify-center w-12 h-12 rounded-lg"
+            style={{
+              backgroundColor: `${ac.primary}20`,
+              color: ac.primary,
+            }}
+          >
+            {icon}
+          </div>
+          <div>
+            <h3 className="text-3xl md:text-4xl font-bold" style={{ color: palette.heading }}>
+              <ShinyText text={title} speed={6} />
+            </h3>
+            {subtitle && (
+              <p className="text-sm md:text-base mt-1" style={{ color: palette.textSecondary }}>
+                {subtitle}
+              </p>
+            )}
+          </div>
+        </div>
+      </motion.div>
+
+      {/* Events grid */}
       <motion.div
-        className="space-y-4"
+        className="grid grid-cols-1 md:grid-cols-2 gap-6"
         initial="hidden"
         whileInView="show"
         viewport={{ once: true }}
+        variants={{
+          show: {
+            transition: {
+              staggerChildren: 0.1,
+            },
+          },
+        }}
       >
         {events.map((event, index) => (
-          <motion.div key={`${event.title}-${index}`} variants={fadeUp} custom={index}>
-            <div
-              className="rounded-2xl border p-6 md:p-8 transition-all duration-300 hover:shadow-xl"
-              style={{
-                backgroundColor: cc.bg,
-                borderColor: cc.border,
-                backdropFilter: cc.backdropFilter,
-              }}
-            >
-              <div className="flex flex-col md:flex-row md:items-start md:justify-between gap-4 mb-4">
-                <div className="flex-1">
-                  <h4 className="text-lg md:text-xl font-semibold" style={{ color: palette.heading }}>
-                    {event.title}
-                  </h4>
-                  <p className="text-sm md:text-base mt-1" style={{ color: palette.textSecondary }}>
-                    {event.role}
-                  </p>
-                </div>
-                <div className="flex flex-col items-start md:items-end gap-1 text-xs md:text-sm" style={{ color: palette.textSecondary }}>
-                  <div className="flex items-center gap-2">
-                    <Calendar size={14} />
-                    {event.date}
-                  </div>
-                  {event.location && (
-                    <div className="flex items-center gap-2">
-                      <MapPin size={14} />
-                      {event.location}
-                    </div>
-                  )}
-                  {event.attendees && (
-                    <div className="flex items-center gap-2">
-                      <Users size={14} />
-                      {event.attendees}+ attendees
-                    </div>
-                  )}
-                </div>
-              </div>
-
-              <p className="text-sm md:text-base mb-4" style={{ color: palette.text }}>
-                {event.description}
-              </p>
-
-              {event.impact && (
-                <div
-                  className="flex items-start gap-2 p-3 rounded-lg mb-4"
-                  style={{ backgroundColor: `${ac.primary}15` }}
-                >
-                  <Trophy size={16} className="mt-0.5" style={{ color: ac.primary }} />
-                  <p className="text-xs md:text-sm" style={{ color: palette.text }}>
-                    <span className="font-semibold">Impact: </span>
-                    {event.impact}
-                  </p>
-                </div>
-              )}
-
-              {event.tags && (
-                <div className="flex flex-wrap gap-2">
-                  {event.tags.map((tag) => (
-                    <Badge key={tag} text={tag} />
-                  ))}
-                </div>
-              )}
-            </div>
-          </motion.div>
+          <EventCard
+            key={`${event.title}-${index}`}
+            event={event}
+            index={index}
+            cc={cc}
+            ac={ac}
+            palette={palette}
+          />
         ))}
       </motion.div>
-    </div>
+    </section>
   );
 }
 
@@ -361,39 +413,42 @@ export default function EventsPage() {
 
         {/* Call to action */}
         <motion.div
-          variants={fadeUp}
+          variants={scaleIn}
           initial="hidden"
           whileInView="show"
           viewport={{ once: true }}
-          className="mt-12 text-center"
+          className="mt-16 text-center"
         >
           <div
             className="rounded-2xl border p-8 md:p-12"
             style={{
-              backgroundColor: cc.bg,
-              borderColor: cc.border,
+              backgroundColor: `${ac.primary}08`,
+              borderColor: `${ac.primary}30`,
               backdropFilter: cc.backdropFilter,
             }}
           >
-            <h3 className="text-2xl md:text-3xl font-bold mb-4" style={{ color: palette.heading }}>
+            <Sparkles size={40} className="mx-auto mb-4" style={{ color: ac.primary }} />
+            <h3 className="text-2xl md:text-3xl font-bold mb-3" style={{ color: palette.heading }}>
               Interested in Collaborating?
             </h3>
-            <p className="text-base md:text-lg max-w-2xl mx-auto mb-6" style={{ color: palette.text }}>
+            <p className="text-base md:text-lg max-w-2xl mx-auto mb-8" style={{ color: palette.textSecondary }}>
               I'm always open to speaking opportunities, workshop collaborations, mentoring new developers, and organizing community events. 
               Let's build something amazing together!
             </p>
-            <a
-              href="/contact"
-              className="inline-block px-8 py-3 rounded-xl font-semibold transition-all duration-300 hover:scale-105"
-              style={{
-                backgroundColor: ac.primary,
-                color: palette.bg,
-                borderColor: ac.primary,
-                border: "1px solid",
-              }}
-            >
-              Get in Touch
-            </a>
+            <Magnet padding={40} magnetStrength={2}>
+              <a
+                href="/contact"
+                className="inline-flex items-center gap-2 px-8 py-3 rounded-xl font-semibold transition-all duration-300 hover:shadow-lg"
+                style={{
+                  backgroundColor: ac.primary,
+                  color: palette.bg,
+                  border: `1px solid ${ac.primary}`,
+                }}
+              >
+                <span>Get in Touch</span>
+                <ExternalLink size={16} />
+              </a>
+            </Magnet>
           </div>
         </motion.div>
       </section>

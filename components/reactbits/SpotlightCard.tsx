@@ -28,6 +28,7 @@ const SpotlightCard: React.FC<SpotlightCardProps> = ({
     <div
       ref={divRef}
       onMouseMove={handleMouseMove}
+      data-cursor="interactive"
       className={`spotlight-card ${className}`}
       style={style}
     >

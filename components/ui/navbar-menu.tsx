@@ -30,7 +30,7 @@ export const MenuItem = ({
   panelClassName?: string;
 }) => {
   return (
-    <div onMouseEnter={() => setActive(item)} className="relative">
+    <div onMouseEnter={() => setActive(item)} data-cursor="interactive" className="relative">
       <motion.p
         transition={{ duration: 0.3 }}
         className={itemClassName || "cursor-pointer text-black hover:opacity-[0.9] dark:text-white"}

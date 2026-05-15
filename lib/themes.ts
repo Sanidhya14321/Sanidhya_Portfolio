@@ -274,6 +274,34 @@ export const accentCSS: Record<Theme, {
   },
 };
 
+// ─── Custom cursor tokens per theme ───────────────────────────────────
+export const cursorCSS: Record<Theme, {
+  dot: string;
+  glow: string;
+  glowSoft: string;
+}> = {
+  aurora: {
+    dot: "#E2E8F0",
+    glow: "rgba(124, 58, 237, 0.42)",
+    glowSoft: "rgba(6, 182, 212, 0.18)",
+  },
+  industrial: {
+    dot: "#FAFAFA",
+    glow: "rgba(255, 255, 255, 0.20)",
+    glowSoft: "rgba(255, 255, 255, 0.08)",
+  },
+  glass: {
+    dot: "#FFFFFF",
+    glow: "rgba(255, 255, 255, 0.22)",
+    glowSoft: "rgba(255, 255, 255, 0.10)",
+  },
+  "dark-horse": {
+    dot: "#FFFFFF",
+    glow: "rgba(0, 255, 163, 0.30)",
+    glowSoft: "rgba(0, 217, 255, 0.16)",
+  },
+};
+
 // ─── Badge inline styles ──────────────────────────────────────────────
 export const badgeCSS: Record<Theme, {
   bg: string;

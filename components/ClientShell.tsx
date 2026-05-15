@@ -7,6 +7,7 @@ import Footer from "@/components/Footer";
 import ClickSpark from "@/components/reactbits/ClickSpark";
 import PixelSnow from "@/components/reactbits/PixelSnow";
 import RouteLoadingIndicator from "@/components/ui/RouteLoadingIndicator";
+import CustomCursor from "@/components/ui/CustomCursor";
 
 const sparkColor: Record<string, string> = {
   aurora: "#a855f7",
@@ -34,6 +35,7 @@ export default function ClientShell({ children }: { children: ReactNode }) {
   return (
     <ClickSpark sparkColor={sparkColor[theme]} sparkSize={10} sparkRadius={25} sparkCount={8} duration={400}>
       <RouteLoadingIndicator />
+      <CustomCursor />
       <PixelSnow particleCount={80} color={snowColor[theme]} opacity={0.4} speed={0.5} />
       <Navigation />
       <div className="pt-20 min-h-screen">

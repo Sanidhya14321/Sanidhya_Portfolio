@@ -18,6 +18,7 @@ export default function ThemedCard({ children, className = "", delay = 0, onClic
 
   return (
     <motion.div
+      data-cursor="interactive"
       className={`${cs.base} ${cs.hover} ${cs.radius} ${cs.shadow} p-7 transition-all duration-300 ${className}`}
       initial={{ opacity: 0, y: 24 }}
       whileInView={{ opacity: 1, y: 0 }}

@@ -116,7 +116,7 @@ export default function CenteredFeedbackDrawer() {
               animate={{ opacity: 1 }}
               exit={{ opacity: 0 }}
               transition={{ duration: 0.2, ease: "easeOut" }}
-              style={{ backgroundColor: "rgba(0, 0, 0, 0.7)" }}
+              style={{ backgroundColor: "rgba(0, 0, 0, 0.94)" }}
             />
             <motion.div
               className="fixed inset-x-0 bottom-0 z-[10001] mt-24 flex max-h-[90vh] flex-col md:left-1/2 md:w-full md:max-w-2xl md:-translate-x-1/2"

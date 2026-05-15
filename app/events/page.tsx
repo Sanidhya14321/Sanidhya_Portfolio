@@ -1,13 +1,13 @@
 "use client";
 
+import { useState } from "react";
 import { useTheme } from "@/contexts/ThemeContext";
 import { cardCSS, accentCSS, colors } from "@/lib/themes";
 import PageTransition from "@/components/ui/PageTransition";
 import SectionHeading from "@/components/ui/SectionHeading";
 import Badge from "@/components/ui/Badge";
 import ShinyText from "@/components/reactbits/ShinyText";
-import Magnet from "@/components/reactbits/Magnet";
-import { motion } from "framer-motion";
+import { motion, AnimatePresence } from "framer-motion";
 import { Calendar, MapPin, Users, Trophy, BookOpen, ExternalLink, Sparkles } from "lucide-react";
 
 interface Event {
@@ -22,14 +22,28 @@ interface Event {
   impact?: string;
 }
 
+// Hardware-accelerated, fluid entrance animations
 const fadeUp = {
   hidden: { opacity: 0, y: 20 },
-  show: { opacity: 1, y: 0, transition: { duration: 0.5, ease: [0.22, 1, 0.36, 1] as const } },
+  show: (index: number) => ({
+    opacity: 1,
+    y: 0,
+    transition: { 
+      duration: 0.6, 
+      ease: [0.16, 1, 0.3, 1], // Custom cubic-bezier for a smooth, high-end feel
+      delay: index * 0.04 
+    },
+  }),
 };
 
 const scaleIn = {
-  hidden: { opacity: 0, scale: 0.95 },
-  show: { opacity: 1, scale: 1, transition: { duration: 0.4 } },
+  hidden: { opacity: 0, scale: 0.98, y: 10 },
+  show: { 
+    opacity: 1, 
+    scale: 1, 
+    y: 0, 
+    transition: { duration: 0.5, ease: [0.16, 1, 0.3, 1] } 
+  },
 };
 
 // Events organized
@@ -188,6 +202,7 @@ const eventsMentored: Event[] = [
 ];
 
 interface EventSectionProps {
+  id: string;
   title: string;
   subtitle?: string;
   events: Event[];
@@ -196,6 +211,7 @@ interface EventSectionProps {
   cc: any;
   ac: any;
   palette: any;
+  isCompactGrid?: boolean;
 }
 
 interface EventCardProps {
@@ -208,135 +224,134 @@ interface EventCardProps {
 
 function EventCard({ event, index, cc, ac, palette }: EventCardProps) {
   return (
-    <motion.div variants={fadeUp} custom={index}>
-      <Magnet padding={40} magnetStrength={2}>
-        <div
-          className="group rounded-2xl border p-6 md:p-8 transition-all duration-300 hover:shadow-2xl cursor-pointer h-full"
-          style={{
-            backgroundColor: cc.bg,
-            borderColor: cc.border,
-            backdropFilter: cc.backdropFilter,
-            borderWidth: "1px",
-          }}
-        >
+    <motion.div 
+      variants={fadeUp} 
+      custom={index}
+      className="h-full"
+    >
+      <div
+        className="group relative flex flex-col justify-between rounded-2xl border p-6 md:p-7 cursor-pointer h-full overflow-hidden transition-all duration-500 ease-[0.16,1,0.3,1] will-change-transform transform-gpu hover:-translate-y-2 hover:shadow-2xl"
+        style={{
+          backgroundColor: cc.bg,
+          borderColor: cc.border,
+          backdropFilter: cc.backdropFilter,
+          borderWidth: "1px",
+        }}
+      >
+        {/* Subtle Accent Highlight Overlay Line */}
+        <div 
+          className="absolute top-0 left-0 right-0 h-[2px] opacity-0 group-hover:opacity-100 transition-opacity duration-500 ease-[0.16,1,0.3,1]"
+          style={{ backgroundColor: ac.primary }}
+        />
+
+        <div>
           {/* Header with title and role */}
-          <div className="mb-4 pb-4" style={{ borderBottomColor: `${ac.primary}30`, borderBottomWidth: "1px" }}>
-            <div className="flex items-start justify-between gap-3 mb-3">
-              <div className="flex-1">
-                <h4 className="text-lg md:text-xl font-semibold group-hover:text-opacity-100 transition-colors" style={{ color: palette.heading }}>
-                  {event.title}
-                </h4>
-                <div
-                  className="inline-flex items-center gap-1 mt-2 px-2 py-1 rounded-lg text-xs font-medium"
-                  style={{
-                    backgroundColor: `${ac.primary}15`,
-                    color: ac.primary,
-                  }}
-                >
-                  <Sparkles size={12} />
-                  {event.role}
-                </div>
-              </div>
+          <div className="mb-4 pb-4 border-b transition-colors duration-500 ease-[0.16,1,0.3,1]" style={{ borderBottomColor: `${palette.text}15` }}>
+            <h4 className="text-lg md:text-xl font-bold tracking-tight mb-2.5 transition-colors duration-300 group-hover:text-opacity-80" style={{ color: palette.heading }}>
+              {event.title}
+            </h4>
+            <div
+              className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-md text-xs font-semibold tracking-wide uppercase transition-all duration-500 ease-[0.16,1,0.3,1] group-hover:scale-[1.02]"
+              style={{
+                backgroundColor: `${ac.primary}12`,
+                color: ac.primary,
+              }}
+            >
+              <Sparkles size={11} className="animate-pulse" />
+              {event.role}
             </div>
           </div>
 
           {/* Metadata */}
-          <div className="flex flex-col gap-2 mb-4 text-xs md:text-sm" style={{ color: palette.textSecondary }}>
-            <div className="flex items-center gap-2">
-              <Calendar size={14} style={{ color: ac.primary }} />
+          <div className="flex flex-wrap gap-x-4 gap-y-2 mb-4 text-xs font-medium" style={{ color: palette.textSecondary }}>
+            <div className="flex items-center gap-1.5">
+              <Calendar size={13} style={{ color: ac.primary }} />
               <span>{event.date}</span>
             </div>
             {event.location && (
-              <div className="flex items-center gap-2">
-                <MapPin size={14} style={{ color: ac.primary }} />
+              <div className="flex items-center gap-1.5">
+                <MapPin size={13} style={{ color: ac.primary }} />
                 <span>{event.location}</span>
               </div>
             )}
             {event.attendees && (
-              <div className="flex items-center gap-2">
-                <Users size={14} style={{ color: ac.primary }} />
-                <span>{event.attendees}+ attendees</span>
+              <div className="flex items-center gap-1.5">
+                <Users size={13} style={{ color: ac.primary }} />
+                <span>{event.attendees}+ attending</span>
               </div>
             )}
           </div>
 
           {/* Description */}
-          <p className="text-sm md:text-base mb-4 line-clamp-3 group-hover:line-clamp-none transition-all" style={{ color: palette.text }}>
+          <p className="text-sm md:text-base leading-relaxed mb-5 line-clamp-3 group-hover:line-clamp-none transition-all duration-500 ease-[0.16,1,0.3,1]" style={{ color: palette.text, opacity: 0.9 }}>
             {event.description}
           </p>
+        </div>
 
+        <div>
           {/* Impact highlight */}
           {event.impact && (
-            <motion.div
-              className="flex items-start gap-3 p-3 rounded-lg mb-4 border"
+            <div
+              className="flex items-start gap-2.5 p-3 rounded-xl mb-4 border transition-all duration-500 ease-[0.16,1,0.3,1] group-hover:bg-opacity-10"
               style={{
-                backgroundColor: `${ac.primary}08`,
-                borderColor: `${ac.primary}30`,
+                backgroundColor: `${ac.primary}05`,
+                borderColor: `${ac.primary}20`,
               }}
-              whileHover={{ backgroundColor: `${ac.primary}15` }}
             >
-              <Trophy size={16} className="mt-0.5 flex-shrink-0" style={{ color: ac.primary }} />
-              <p className="text-xs md:text-sm leading-relaxed" style={{ color: palette.text }}>
-                <span className="font-semibold">Impact:</span> {event.impact}
+              <Trophy size={14} className="mt-0.5 flex-shrink-0 transition-transform duration-500 ease-[0.16,1,0.3,1] group-hover:scale-110" style={{ color: ac.primary }} />
+              <p className="text-xs md:text-sm leading-normal font-medium" style={{ color: palette.text }}>
+                <span className="font-bold" style={{ color: ac.primary }}>Impact:</span> {event.impact}
               </p>
-            </motion.div>
+            </div>
           )}
 
-          {/* Tags */}
+          {/* Tags Layout */}
           {event.tags && (
-            <div className="flex flex-wrap gap-2">
+            <div className="flex flex-wrap gap-1.5 pt-2">
               {event.tags.map((tag) => (
                 <Badge key={tag} text={tag} />
               ))}
             </div>
           )}
         </div>
-      </Magnet>
+      </div>
     </motion.div>
   );
 }
 
-function EventSection({ title, subtitle, events, icon, theme, cc, ac, palette }: EventSectionProps) {
+function EventSection({ id, title, subtitle, events, icon, theme, cc, ac, palette, isCompactGrid = false }: EventSectionProps) {
   return (
-    <section className="py-12">
+    <section id={id} className="py-16 scroll-mt-24">
       {/* Section header */}
-      <motion.div variants={scaleIn} initial="hidden" whileInView="show" viewport={{ once: true }} className="mb-12">
-        <div className="flex items-center gap-4 mb-6">
+      <motion.div variants={scaleIn} initial="hidden" whileInView="show" viewport={{ once: true, margin: "-100px" }} className="mb-10">
+        <div className="flex items-center gap-3.5 mb-2">
           <div
-            className="flex items-center justify-center w-12 h-12 rounded-lg"
+            className="flex items-center justify-center w-10 h-10 rounded-xl border shadow-inner"
             style={{
-              backgroundColor: `${ac.primary}20`,
+              backgroundColor: `${ac.primary}10`,
+              borderColor: `${ac.primary}25`,
               color: ac.primary,
             }}
           >
             {icon}
           </div>
-          <div>
-            <h3 className="text-3xl md:text-4xl font-bold" style={{ color: palette.heading }}>
-              <ShinyText text={title} speed={6} />
-            </h3>
-            {subtitle && (
-              <p className="text-sm md:text-base mt-1" style={{ color: palette.textSecondary }}>
-                {subtitle}
-              </p>
-            )}
-          </div>
+          <h3 className="text-2xl md:text-3xl font-extrabold tracking-tight" style={{ color: palette.heading }}>
+            <ShinyText text={title} speed={6} />
+          </h3>
         </div>
+        {subtitle && (
+          <p className="text-sm md:text-base max-w-2xl pl-[54px]" style={{ color: palette.textSecondary }}>
+            {subtitle}
+          </p>
+        )}
       </motion.div>
 
-      {/* Events grid */}
+      {/* Events dynamic grid layout */}
       <motion.div
-        className="grid grid-cols-1 md:grid-cols-2 gap-6"
+        className={`grid grid-cols-1 gap-6 ${isCompactGrid ? 'sm:grid-cols-2 lg:grid-cols-3' : 'md:grid-cols-2'}`}
         initial="hidden"
         whileInView="show"
-        viewport={{ once: true }}
-        variants={{
-          show: {
-            transition: {
-              staggerChildren: 0.1,
-            },
-          },
-        }}
+        viewport={{ once: true, margin: "-50px" }}
       >
         {events.map((event, index) => (
           <EventCard
@@ -358,97 +373,165 @@ export default function EventsPage() {
   const cc = cardCSS[theme];
   const ac = accentCSS[theme];
   const palette = colors[theme];
+  
+  const [activeTab, setActiveTab] = useState("organized");
+
+  const sections = [
+    { id: "organized", label: "Organized", count: eventsOrganized.length },
+    { id: "attended", label: "Attended", count: eventsAttended.length },
+    { id: "mentored", label: "Mentored", count: eventsMentored.length }
+  ];
+
+  const handleTabClick = (id: string) => {
+    setActiveTab(id);
+    document.getElementById(id)?.scrollIntoView({ behavior: "smooth" });
+  };
 
   return (
     <PageTransition>
-      <section className="mx-auto max-w-[95%] xl:max-w-[1180px] 2xl:max-w-[1320px] px-6 md:px-8 lg:px-10 py-16 md:py-20">
+      <section className="mx-auto max-w-[95%] xl:max-w-[1180px] 2xl:max-w-[1320px] px-4 sm:px-6 md:px-8 lg:px-10 py-12 md:py-16">
         <SectionHeading label="Community" title="Events & Speaking" />
 
+        {/* Hero Info Description */}
         <div
-          className="mb-8 rounded-2xl border p-5 md:p-6"
+          className="mb-12 rounded-2xl border p-6 md:p-8 relative overflow-hidden shadow-sm"
           style={{
             backgroundColor: cc.bg,
             borderColor: cc.border,
             backdropFilter: cc.backdropFilter,
           }}
         >
-          <p className="max-w-3xl text-sm md:text-base" style={{ opacity: 0.8, color: palette.text }}>
+          <div className="absolute -right-10 -top-10 w-40 h-40 rounded-full blur-3xl opacity-20 pointer-events-none" style={{ backgroundColor: ac.primary }} />
+          <p className="max-w-3xl text-sm md:text-base leading-relaxed font-medium" style={{ color: palette.text }}>
             I'm passionate about community building, knowledge sharing, and fostering the next generation of developers. 
             Here are the events I've organized, attended, and mentored others through.
           </p>
         </div>
 
-        {/* Events Organized */}
-        <EventSection
-          title="Events Organized"
-          events={eventsOrganized}
-          icon={<Trophy size={20} />}
-          theme={theme}
-          cc={cc}
-          ac={ac}
-          palette={palette}
-        />
+        {/* Sticky Sub-Navigation Tab Bar */}
+        <div 
+          className="sticky top-[72px] z-40 backdrop-blur-md py-4 mb-4 border-b flex items-center justify-between overflow-x-auto no-scrollbar gap-4"
+          style={{ borderBottomColor: `${palette.text}10` }}
+        >
+          <div className="flex items-center gap-1.5 bg-opacity-40 p-1.5 rounded-xl border" style={{ backgroundColor: `${cc.bg}`, borderColor: cc.border }}>
+            {sections.map((tab) => (
+              <button
+                key={tab.id}
+                onClick={() => handleTabClick(tab.id)}
+                className="relative px-4 py-2 rounded-lg text-xs md:text-sm font-bold tracking-wide uppercase transition-colors duration-300 whitespace-nowrap flex items-center gap-1.5"
+                style={{ color: activeTab === tab.id ? palette.bg : palette.textSecondary }}
+              >
+                {activeTab === tab.id && (
+                  <motion.div
+                    layoutId="activeTabBackground"
+                    className="absolute inset-0 rounded-lg -z-10"
+                    style={{ backgroundColor: ac.primary }}
+                    transition={{ type: "spring", stiffness: 400, damping: 32 }}
+                  />
+                )}
+                <span>{tab.label}</span>
+                <span 
+                  className="inline-flex items-center justify-center text-[10px] w-4 h-4 rounded-full font-sans font-bold transition-colors duration-300"
+                  style={{ 
+                    backgroundColor: activeTab === tab.id ? `${palette.bg}30` : `${ac.primary}15`,
+                    color: activeTab === tab.id ? palette.bg : ac.primary 
+                  }}
+                >
+                  {tab.count}
+                </span>
+              </button>
+            ))}
+          </div>
+        </div>
 
-        {/* Events Attended */}
-        <EventSection
-          title="Events Attended"
-          events={eventsAttended}
-          icon={<Calendar size={20} />}
-          theme={theme}
-          cc={cc}
-          ac={ac}
-          palette={palette}
-        />
+        {/* Categorized Sections */}
+        <div className="space-y-4 divide-y" style={{ divideColor: `${palette.text}08` }}>
+          <EventSection
+            id="organized"
+            title="Events Organized"
+            subtitle="Leading tech events, hackathons, and multi-venue developer frameworks from concept to dynamic runtime execution."
+            events={eventsOrganized}
+            icon={<Trophy size={18} />}
+            theme={theme}
+            cc={cc}
+            ac={ac}
+            palette={palette}
+          />
 
-        {/* Events Mentored */}
-        <EventSection
-          title="Events Mentored"
-          events={eventsMentored}
-          icon={<BookOpen size={20} />}
-          theme={theme}
-          cc={cc}
-          ac={ac}
-          palette={palette}
-        />
+          <EventSection
+            id="attended"
+            title="Events Attended"
+            subtitle="Engaging with worldwide ecosystems, specialized frameworks workshops, and elite developer summits."
+            events={eventsAttended}
+            icon={<Calendar size={18} />}
+            theme={theme}
+            cc={cc}
+            ac={ac}
+            palette={palette}
+            isCompactGrid={true}
+          />
 
-        {/* Call to action */}
+          <EventSection
+            id="mentored"
+            title="Events Mentored"
+            subtitle="Empowering developers, advising core project frameworks, and guiding developers into global open-source tech contributions."
+            events={eventsMentored}
+            icon={<BookOpen size={18} />}
+            theme={theme}
+            cc={cc}
+            ac={ac}
+            palette={palette}
+          />
+        </div>
+
+        {/* Call To Action Container */}
         <motion.div
           variants={scaleIn}
           initial="hidden"
           whileInView="show"
           viewport={{ once: true }}
-          className="mt-16 text-center"
+          className="mt-20 text-center"
         >
           <div
-            className="rounded-2xl border p-8 md:p-12"
+            className="rounded-3xl border p-8 md:p-14 relative overflow-hidden shadow-xl"
             style={{
-              backgroundColor: `${ac.primary}08`,
-              borderColor: `${ac.primary}30`,
+              backgroundColor: `${ac.primary}05`,
+              borderColor: `${ac.primary}20`,
               backdropFilter: cc.backdropFilter,
             }}
           >
-            <Sparkles size={40} className="mx-auto mb-4" style={{ color: ac.primary }} />
-            <h3 className="text-2xl md:text-3xl font-bold mb-3" style={{ color: palette.heading }}>
-              Interested in Collaborating?
-            </h3>
-            <p className="text-base md:text-lg max-w-2xl mx-auto mb-8" style={{ color: palette.textSecondary }}>
-              I'm always open to speaking opportunities, workshop collaborations, mentoring new developers, and organizing community events. 
-              Let's build something amazing together!
-            </p>
-            <Magnet padding={40} magnetStrength={2}>
+            <div className="absolute -left-20 -bottom-20 w-64 h-64 rounded-full blur-3xl opacity-10 pointer-events-none" style={{ backgroundColor: ac.primary }} />
+            <div className="absolute -right-20 -top-20 w-64 h-64 rounded-full blur-3xl opacity-10 pointer-events-none" style={{ backgroundColor: ac.primary }} />
+
+            <div className="relative z-10">
+              <div 
+                className="w-14 h-14 mx-auto mb-5 rounded-2xl flex items-center justify-center shadow-sm border"
+                style={{ backgroundColor: `${palette.bg}`, borderColor: `${ac.primary}25` }}
+              >
+                <Sparkles size={24} style={{ color: ac.primary }} />
+              </div>
+              
+              <h3 className="text-2xl md:text-4xl font-extrabold tracking-tight mb-4" style={{ color: palette.heading }}>
+                Interested in Collaborating?
+              </h3>
+              <p className="text-sm md:text-lg max-w-2xl mx-auto mb-8 leading-relaxed" style={{ color: palette.textSecondary }}>
+                I'm always open to speaking opportunities, workshop collaborations, mentoring new developers, and organizing community events. 
+                Let's build something amazing together!
+              </p>
+              
               <a
                 href="/contact"
-                className="inline-flex items-center gap-2 px-8 py-3 rounded-xl font-semibold transition-all duration-300 hover:shadow-lg"
+                className="inline-flex items-center gap-2 px-8 py-3.5 rounded-xl font-bold tracking-wide transition-all duration-500 ease-[0.16,1,0.3,1] will-change-transform transform-gpu hover:-translate-y-0.5 hover:scale-[1.02] active:scale-[0.98] shadow-md hover:shadow-xl"
                 style={{
                   backgroundColor: ac.primary,
                   color: palette.bg,
-                  border: `1px solid ${ac.primary}`,
+                  boxShadow: `0 10px 25px -5px ${ac.primary}30`
                 }}
               >
                 <span>Get in Touch</span>
-                <ExternalLink size={16} />
+                <ExternalLink size={15} />
               </a>
-            </Magnet>
+            </div>
           </div>
         </motion.div>
       </section>

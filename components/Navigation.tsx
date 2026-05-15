@@ -90,8 +90,8 @@ export default function Navigation() {
 
   const activeColors: Record<string, string> = {
     aurora: "#818CF8",
-    industrial: "#000000",
-    glass: "#000000",
+    industrial: "#FFFFFF",
+    glass: "#FFFFFF",
     "dark-horse": "#00FFA3",
   };
 
@@ -156,7 +156,7 @@ export default function Navigation() {
                   <MenuItem setActive={setActive} active={active} item="Work" itemClassName={menuItemTextClass} panelClassName={menuPanelClass}>
                     <div className="flex flex-col space-y-3 text-sm">
                       <HoveredLink href="/projects" className={hoverLinkClass}>Projects</HoveredLink>
-                      <HoveredLink href="/events-organized" className={hoverLinkClass}>Events Organized</HoveredLink>
+                      <HoveredLink href="/events" className={hoverLinkClass}>Events Organized</HoveredLink>
                       <HoveredLink href="/skills" className={hoverLinkClass}>Skills</HoveredLink>
                     </div>
                   </MenuItem>

@@ -30,7 +30,7 @@ const fadeUp = {
     y: 0,
     transition: { 
       duration: 0.6, 
-      ease: [0.16, 1, 0.3, 1], // Custom cubic-bezier for a smooth, high-end feel
+      ease: [0.16, 1, 0.3, 1] as const, // Custom cubic-bezier for a smooth, high-end feel
       delay: index * 0.04 
     },
   }),
@@ -42,7 +42,7 @@ const scaleIn = {
     opacity: 1, 
     scale: 1, 
     y: 0, 
-    transition: { duration: 0.5, ease: [0.16, 1, 0.3, 1] } 
+    transition: { duration: 0.5, ease: [0.16, 1, 0.3, 1] as const } 
   },
 };
 
@@ -445,43 +445,49 @@ export default function EventsPage() {
         </div>
 
         {/* Categorized Sections */}
-        <div className="space-y-4 divide-y" style={{ divideColor: `${palette.text}08` }}>
-          <EventSection
-            id="organized"
-            title="Events Organized"
-            subtitle="Leading tech events, hackathons, and multi-venue developer frameworks from concept to dynamic runtime execution."
-            events={eventsOrganized}
-            icon={<Trophy size={18} />}
-            theme={theme}
-            cc={cc}
-            ac={ac}
-            palette={palette}
-          />
+        <div className="space-y-4">
+          <div>
+            <EventSection
+              id="organized"
+              title="Events Organized"
+              subtitle="Leading tech events, hackathons, and multi-venue developer frameworks from concept to dynamic runtime execution."
+              events={eventsOrganized}
+              icon={<Trophy size={18} />}
+              theme={theme}
+              cc={cc}
+              ac={ac}
+              palette={palette}
+            />
+          </div>
 
-          <EventSection
-            id="attended"
-            title="Events Attended"
-            subtitle="Engaging with worldwide ecosystems, specialized frameworks workshops, and elite developer summits."
-            events={eventsAttended}
-            icon={<Calendar size={18} />}
-            theme={theme}
-            cc={cc}
-            ac={ac}
-            palette={palette}
-            isCompactGrid={true}
-          />
+          <div className="border-t pt-4" style={{ borderTopColor: `${palette.text}08` }}>
+            <EventSection
+              id="attended"
+              title="Events Attended"
+              subtitle="Engaging with worldwide ecosystems, specialized frameworks workshops, and elite developer summits."
+              events={eventsAttended}
+              icon={<Calendar size={18} />}
+              theme={theme}
+              cc={cc}
+              ac={ac}
+              palette={palette}
+              isCompactGrid={true}
+            />
+          </div>
 
-          <EventSection
-            id="mentored"
-            title="Events Mentored"
-            subtitle="Empowering developers, advising core project frameworks, and guiding developers into global open-source tech contributions."
-            events={eventsMentored}
-            icon={<BookOpen size={18} />}
-            theme={theme}
-            cc={cc}
-            ac={ac}
-            palette={palette}
-          />
+          <div className="border-t pt-4" style={{ borderTopColor: `${palette.text}08` }}>
+            <EventSection
+              id="mentored"
+              title="Events Mentored"
+              subtitle="Empowering developers, advising core project frameworks, and guiding developers into global open-source tech contributions."
+              events={eventsMentored}
+              icon={<BookOpen size={18} />}
+              theme={theme}
+              cc={cc}
+              ac={ac}
+              palette={palette}
+            />
+          </div>
         </div>
 
         {/* Call To Action Container */}

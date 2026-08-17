@@ -1,8 +1,6 @@
 "use client";
 
 import React from "react";
-import { useTheme } from "@/contexts/ThemeContext";
-import { cardCSS } from "@/lib/themes";
 
 interface SkeletonProps {
   className?: string;
@@ -19,9 +17,6 @@ export const Skeleton: React.FC<SkeletonProps> = ({
   height,
   animation = "pulse",
 }) => {
-  const { theme } = useTheme();
-  const cc = cardCSS[theme];
-
   const variantClasses = {
     text: "h-4 rounded",
     circular: "rounded-full",
@@ -30,16 +25,14 @@ export const Skeleton: React.FC<SkeletonProps> = ({
   };
 
   const animationClasses = {
-    pulse: "animate-pulse",
-    wave: "animate-shimmer bg-gradient-to-r from-transparent via-white/10 to-transparent bg-[length:200%_100%]",
-    none: "",
+    pulse: "animate-pulse bg-white/5",
+    wave: "skeleton-shimmer",
+    none: "bg-white/5",
   };
 
   const style: React.CSSProperties = {
     width: typeof width === "number" ? `${width}px` : width,
     height: typeof height === "number" ? `${height}px` : height,
-    backgroundColor: cc.bg,
-    opacity: 0.6,
   };
 
   return (

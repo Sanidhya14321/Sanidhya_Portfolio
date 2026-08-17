@@ -1,8 +1,6 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
-import { useTheme } from "@/contexts/ThemeContext";
-import { cursorCSS } from "@/lib/themes";
 
 const interactiveSelector = [
   "a",
@@ -18,7 +16,6 @@ const interactiveSelector = [
 ].join(", ");
 
 export default function CustomCursor() {
-  const { theme } = useTheme();
   const [isEnabled, setIsEnabled] = useState(false);
   const haloRef = useRef<HTMLDivElement>(null);
   const dotRef = useRef<HTMLDivElement>(null);
@@ -80,7 +77,7 @@ export default function CustomCursor() {
 
       const isInteractive = target.visible && target.interactive;
       const haloScale = isInteractive ? 2 : 1;
-      const haloOpacity = target.visible ? (isInteractive ? 0.18 : 0.48) : 0;
+      const haloOpacity = target.visible ? (isInteractive ? 0.15 : 0.35) : 0;
       const haloBlur = 8;
       const dotScale = isInteractive ? 1 : 0.4;
 
@@ -92,9 +89,9 @@ export default function CustomCursor() {
 
       dot.style.transform = `${translate} translate(-50%, -50%) scale(${dotScale})`;
       dot.style.opacity = target.visible ? "1" : "0";
-      dot.style.backgroundColor = isInteractive ? "transparent" : themeCursor.dot;
-      dot.style.border = isInteractive ? `2px solid ${themeCursor.dot}` : "0px solid transparent";
-      dot.style.boxShadow = isInteractive ? "none" : `0 0 8px ${themeCursor.glow}`;
+      dot.style.backgroundColor = isInteractive ? "transparent" : "#FFFFFF";
+      dot.style.border = isInteractive ? "2px solid #FFFFFF" : "0px solid transparent";
+      dot.style.boxShadow = isInteractive ? "none" : "0 0 8px rgba(255, 255, 255, 0.4)";
 
       rafRef.current = window.requestAnimationFrame(animate);
     };
@@ -130,9 +127,7 @@ export default function CustomCursor() {
         window.cancelAnimationFrame(rafRef.current);
       }
     };
-  }, [theme]);
-
-  const themeCursor = cursorCSS[theme];
+  }, []);
 
   if (!isEnabled) {
     return null;
@@ -168,8 +163,8 @@ export default function CustomCursor() {
           className="absolute left-0 top-0 h-6 w-6 rounded-full transition-[opacity,transform,filter] duration-200 ease-out"
           style={{
             opacity: 0,
-            background: `radial-gradient(circle, ${themeCursor.glow} 0%, ${themeCursor.glowSoft} 45%, transparent 78%)`,
-            boxShadow: `0 0 20px ${themeCursor.glow}`,
+            background: "radial-gradient(circle, rgba(255,255,255,0.2) 0%, rgba(255,255,255,0.05) 45%, transparent 78%)",
+            boxShadow: "0 0 20px rgba(255,255,255,0.15)",
             willChange: "transform, opacity, filter",
           }}
         />
@@ -177,10 +172,10 @@ export default function CustomCursor() {
           ref={dotRef}
           className="absolute left-0 top-0 h-5 w-5 rounded-full transition-[opacity,transform,background-color,border-color] duration-75 ease-out"
           style={{
-            backgroundColor: themeCursor.dot,
+            backgroundColor: "#FFFFFF",
             border: "0px solid transparent",
             boxSizing: "border-box",
-            boxShadow: `0 0 8px ${themeCursor.glow}`,
+            boxShadow: "0 0 8px rgba(255,255,255,0.3)",
             willChange: "transform, opacity",
           }}
         />

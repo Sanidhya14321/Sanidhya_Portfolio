@@ -1,7 +1,5 @@
 "use client";
 
-import { useTheme } from "@/contexts/ThemeContext";
-import { sectionStyles } from "@/lib/themes";
 import { motion } from "framer-motion";
 import ShinyText from "@/components/reactbits/ShinyText";
 import BlurText from "@/components/reactbits/BlurText";
@@ -13,31 +11,31 @@ interface SectionHeadingProps {
 }
 
 export default function SectionHeading({ label, title, align = "left" }: SectionHeadingProps) {
-  const { theme } = useTheme();
-  const styles = sectionStyles[theme];
   const isCenter = align === "center";
 
   return (
     <motion.div
-      className={`mb-24 ${isCenter ? "text-center" : ""}`}
-      initial={{ opacity: 0, y: 30 }}
+      className={`mb-12 md:mb-16 ${isCenter ? "text-center" : ""}`}
+      initial={{ opacity: 0, y: 24 }}
       whileInView={{ opacity: 1, y: 0 }}
-      viewport={{ once: true, margin: "-80px" }}
-      transition={{ duration: 0.6, ease: [0.22, 1, 0.36, 1] }}
+      viewport={{ once: true, margin: "-60px" }}
+      transition={{ duration: 0.5, ease: [0.22, 1, 0.36, 1] }}
     >
-      <ShinyText 
-        text={label}
-        speed={4}
-        className={`${styles.labelClass} !text-inherit`}
-      />
+      <div className="inline-block mb-3">
+        <ShinyText 
+          text={label}
+          speed={5}
+          className="text-xs font-mono font-bold tracking-[0.25em] uppercase text-neutral-400 !text-inherit"
+        />
+      </div>
       <BlurText 
         text={title}
         delay={50}
         animateBy="words"
         direction="top"
-        className={`${styles.headingClass} mt-5 text-[var(--heading)]`}
+        className="text-3xl sm:text-4xl md:text-5xl font-bold tracking-tight text-white leading-tight"
       />
-      <div className={`${styles.dividerClass} ${isCenter ? "mx-auto" : ""}`} />
+      <div className={`w-12 h-0.5 bg-white/30 mt-4 ${isCenter ? "mx-auto" : ""}`} />
     </motion.div>
   );
 }

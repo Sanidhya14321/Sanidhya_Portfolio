@@ -10,8 +10,8 @@ interface TimelineEntry {
 
 export const Timeline = ({
   data,
-  heading = "Changelog from my journey",
-  subheading = "A quick timeline of product work, experiments, and milestones.",
+  heading = "Experience Timeline",
+  subheading = "Roles, impact, and technical stacks across my journey.",
   className,
 }: {
   data: TimelineEntry[];
@@ -39,28 +39,36 @@ export const Timeline = ({
   const opacityTransform = useTransform(scrollYProgress, [0, 0.1], [0, 1]);
 
   return (
-    <div className={`w-full font-sans md:px-10 ${className || ""}`} ref={containerRef}>
-      <div className="mx-auto max-w-7xl px-4 py-20 md:px-8 lg:px-10">
-        <h2 className="mb-4 max-w-4xl text-lg text-[var(--heading)] md:text-4xl">{heading}</h2>
-        <p className="max-w-sm text-sm md:text-base" style={{ opacity: 0.72 }}>
+    <div className={`w-full font-sans ${className || ""}`} ref={containerRef}>
+      <div className="mb-12 md:mb-16">
+        <div className="inline-block mb-3">
+          <p className="text-xs font-mono font-bold tracking-[0.25em] uppercase text-neutral-400">
+            Career
+          </p>
+        </div>
+        <h2 className="text-3xl sm:text-4xl md:text-5xl font-bold tracking-tight text-white leading-tight mb-4">
+          {heading}
+        </h2>
+        <p className="text-sm md:text-base text-neutral-400 max-w-2xl">
           {subheading}
         </p>
+        <div className="w-12 h-0.5 bg-white/30 mt-4" />
       </div>
 
-      <div ref={ref} className="relative mx-auto max-w-7xl pb-20">
+      <div ref={ref} className="relative mx-auto max-w-7xl pb-16">
         {data.map((item, index) => (
-          <div key={item.title + index} className="flex justify-start pt-10 md:gap-10 md:pt-40">
+          <div key={item.title + index} className="flex justify-start pt-10 md:gap-10 md:pt-24">
             <div className="sticky top-40 z-40 flex max-w-xs self-start md:w-full md:max-w-sm md:flex-row md:items-center">
-              <div className="absolute left-3 flex h-10 w-10 items-center justify-center rounded-full bg-white md:left-3 dark:bg-black">
-                <div className="h-4 w-4 rounded-full border border-neutral-300 bg-neutral-200 p-2 dark:border-neutral-700 dark:bg-neutral-800" />
+              <div className="absolute left-3 flex h-10 w-10 items-center justify-center rounded-full bg-black border border-white/20 md:left-3">
+                <div className="h-3 w-3 rounded-full bg-white" />
               </div>
-              <h3 className="hidden text-xl font-bold text-neutral-500 md:block md:pl-20 md:text-5xl dark:text-neutral-500">
+              <h3 className="hidden text-xl font-bold text-neutral-500 md:block md:pl-20 md:text-3xl lg:text-4xl font-mono">
                 {item.title}
               </h3>
             </div>
 
-            <div className="relative w-full pl-20 pr-4 md:pl-4">
-              <h3 className="mb-4 block text-left text-2xl font-bold text-neutral-500 md:hidden dark:text-neutral-500">
+            <div className="relative w-full pl-16 md:pl-4">
+              <h3 className="mb-4 block text-left text-xl font-bold text-neutral-400 md:hidden font-mono">
                 {item.title}
               </h3>
               {item.content}
@@ -70,14 +78,14 @@ export const Timeline = ({
 
         <div
           style={{ height: `${height}px` }}
-          className="absolute left-8 top-0 w-[2px] overflow-hidden bg-[linear-gradient(to_bottom,var(--tw-gradient-stops))] from-transparent from-[0%] via-neutral-200 to-transparent to-[99%] [mask-image:linear-gradient(to_bottom,transparent_0%,black_10%,black_90%,transparent_100%)] md:left-8 dark:via-neutral-700"
+          className="absolute left-8 top-0 w-[2px] overflow-hidden bg-[linear-gradient(to_bottom,var(--tw-gradient-stops))] from-transparent from-[0%] via-white/10 to-transparent to-[99%] [mask-image:linear-gradient(to_bottom,transparent_0%,black_10%,black_90%,transparent_100%)] md:left-8"
         >
           <motion.div
             style={{
               height: heightTransform,
               opacity: opacityTransform,
             }}
-            className="absolute inset-x-0 top-0 w-[2px] rounded-full bg-gradient-to-t from-purple-500 via-blue-500 to-transparent from-[0%] via-[10%]"
+            className="absolute inset-x-0 top-0 w-[2px] rounded-full bg-gradient-to-t from-white via-neutral-300 to-transparent from-[0%] via-[10%]"
           />
         </div>
       </div>

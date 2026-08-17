@@ -1,10 +1,8 @@
 "use client";
 
 import React, { useEffect, useRef, useState } from "react";
-import { ArrowUpRight, Package, Calendar, Sparkles, Zap } from "lucide-react";
+import { ArrowUpRight, Package, Sparkles } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { useTheme } from "@/contexts/ThemeContext";
-import { cardCSS, accentCSS, colors } from "@/lib/themes";
 
 export type TimeLine_01Entry = {
   icon: React.ComponentType<{ className?: string }>;
@@ -26,93 +24,12 @@ export interface TimeLine_01Props {
   className?: string;
 }
 
-export const defaultEntries: TimeLine_01Entry[] = [
-  {
-    icon: Package,
-    title: "Advanced Component Pack",
-    subtitle: "Version 2.1.0 • Feb 2025",
-    description:
-      "Ruixen UI now ships with an advanced component pack including complex layouts, enterprise-ready data tables, and animated navigation menus.",
-    items: [
-      "New Data Grid with sorting, filtering, and pagination",
-      "Kanban board with drag-and-drop support",
-      "Animated mega menu component",
-      "Masonry grid layout for galleries and portfolios",
-      "Extended accessibility support across all components",
-    ],
-    image:
-      "https://images.unsplash.com/photo-1518770660439-4636190af475?auto=format&fit=crop&w=1400&q=80",
-    button: {
-      url: "https://ruixenui.com",
-      text: "Explore Components",
-    },
-  },
-  {
-    icon: Sparkles,
-    title: "Theme Builder & Design Tokens",
-    subtitle: "Version 2.0.0 • Jan 2025",
-    description:
-      "We've introduced a fully customizable theme builder powered by design tokens so you can tailor Ruixen UI to match any brand identity.",
-    items: [
-      "Real-time theme preview in the dashboard",
-      "Customizable color palettes, typography, and spacing",
-      "Preset themes for quick project setup",
-      "Export tokens to CSS variables or JSON",
-    ],
-    image:
-      "https://images.unsplash.com/photo-1461749280684-dccba630e2f6?auto=format&fit=crop&w=1400&q=80",
-  },
-  {
-    icon: Zap,
-    title: "Motion & Interaction Update",
-    subtitle: "Version 1.8.0 • Dec 2024",
-    description:
-      "Micro-interactions across Ruixen UI have been enhanced with Framer Motion, delivering a smoother and more engaging user experience.",
-    items: [
-      "Animated dropdown menus and modals",
-      "Smooth transitions between pages",
-      "Custom easing curves for a premium feel",
-      "Reduced layout shift for better stability",
-    ],
-    image:
-      "https://images.unsplash.com/photo-1555066931-4365d14bab8c?auto=format&fit=crop&w=1400&q=80",
-  },
-  {
-    icon: Calendar,
-    title: "Initial Pro Release",
-    subtitle: "Version 1.5.0 • Oct 2024",
-    description:
-      "Ruixen UI Pro is here - a premium set of components, templates, and utilities designed for production-grade applications.",
-    items: [
-      "Full Figma design kit",
-      "Extended form components with validation",
-      "Chart components with Recharts integration",
-      "Ready-to-use dashboard layouts",
-    ],
-    image:
-      "https://images.unsplash.com/photo-1484417894907-623942c8ee29?auto=format&fit=crop&w=1400&q=80",
-    button: {
-      url: "https://ruixenui.com/pro",
-      text: "View Ruixen UI Pro",
-    },
-  },
-];
-
-/**
- * Behavior: Only the card that is currently centered in the viewport is "open".
- * As you scroll, the active card expands to reveal its full content. Others stay collapsed.
- */
 export default function TimeLine_01({
-  title = "Ruixen UI Release Notes",
-  description = "Stay up to date with the latest components, features, and performance enhancements in Ruixen UI - built to help you design and ship faster.",
-  entries = defaultEntries,
+  title = "Project Milestones",
+  description = "An interactive timeline of additional projects with highlights and launch links.",
+  entries = [],
   className,
 }: TimeLine_01Props) {
-  const { theme } = useTheme();
-  const cc = cardCSS[theme];
-  const ac = accentCSS[theme];
-  const palette = colors[theme];
-  
   const [activeIndex, setActiveIndex] = useState(0);
   const sentinelRefs = useRef<(HTMLDivElement | null)[]>([]);
 
@@ -151,52 +68,42 @@ export default function TimeLine_01({
   }, []);
 
   return (
-    <section className={"py-32 " + (className || "") }>
-      <div className="container">
+    <section className={"py-8 " + (className || "")}>
+      <div>
         <div className="mx-auto max-w-3xl">
-          <h1 className="mb-4 text-3xl font-bold tracking-tight md:text-5xl" style={{ color: palette.heading }}>
+          <h4 className="mb-2 text-xl md:text-2xl font-bold tracking-tight text-white">
             {title}
-          </h1>
-          <p className="mb-6 text-base md:text-lg" style={{ color: palette.textSecondary }}>
+          </h4>
+          <p className="mb-6 text-sm text-neutral-400">
             {description}
           </p>
         </div>
 
-        <div className="mx-auto mt-16 max-w-3xl space-y-16 md:mt-24 md:space-y-24">
+        <div className="mx-auto mt-8 max-w-3xl space-y-12">
           {entries.map((entry, index) => {
             const isActive = index === activeIndex;
 
             return (
               <div
                 key={index}
-                className="relative flex flex-col gap-4 md:flex-row md:gap-16"
+                className="relative flex flex-col gap-4 md:flex-row md:gap-8"
                 aria-current={isActive ? "true" : "false"}
               >
-                <div className="top-8 flex h-min w-64 shrink-0 items-center gap-4 md:sticky">
-                  <div className="flex items-center gap-3">
-                    <div
-                      className="rounded-lg p-2 transition-all duration-300"
-                      style={{
-                        backgroundColor: isActive ? ac.primary : ac.iconBg,
-                        color: isActive ? palette.bg : ac.primary,
-                      }}
-                    >
-                      <entry.icon className="h-4 w-4" />
-                    </div>
-                    <div className="flex flex-col">
-                      <span
-                        className="text-sm font-medium transition-colors duration-300"
-                        style={{ color: isActive ? palette.heading : palette.text }}
-                      >
-                        {entry.title}
-                      </span>
-                      <span
-                        className="text-xs transition-colors duration-300"
-                        style={{ color: palette.textSecondary }}
-                      >
-                        {entry.subtitle}
-                      </span>
-                    </div>
+                <div className="top-24 flex h-min w-56 shrink-0 items-center gap-3 md:sticky">
+                  <div
+                    className={`rounded-lg p-2 transition-all duration-300 border ${
+                      isActive ? "bg-white text-black border-white" : "bg-white/[0.04] text-white border-white/10"
+                    }`}
+                  >
+                    <entry.icon className="h-4 w-4" />
+                  </div>
+                  <div className="flex flex-col">
+                    <span className={`text-sm font-bold transition-colors duration-300 ${isActive ? "text-white" : "text-neutral-400"}`}>
+                      {entry.title}
+                    </span>
+                    <span className="text-xs font-mono text-neutral-500">
+                      {entry.subtitle}
+                    </span>
                   </div>
                 </div>
 
@@ -207,38 +114,24 @@ export default function TimeLine_01({
                 />
 
                 <article
-                  className="flex flex-col rounded-2xl border p-3 transition-all duration-300"
-                  style={{
-                    backgroundColor: isActive ? cc.bg : `${palette.bg}80`,
-                    borderColor: isActive ? ac.primary : cc.border,
-                    backdropFilter: cc.backdropFilter,
-                    boxShadow: isActive ? `0 20px 40px ${ac.primary}15` : "none",
-                  }}
+                  className={`flex flex-col rounded-2xl border p-5 transition-all duration-300 w-full ${
+                    isActive ? "bg-white/[0.04] border-white/30 shadow-xl shadow-black/50" : "bg-white/[0.01] border-white/10"
+                  }`}
                 >
                   {entry.image && (
                     <img
                       src={entry.image}
                       alt={`${entry.title} visual`}
-                      className="mb-4 h-72 w-full rounded-lg object-cover"
+                      className="mb-4 h-56 w-full rounded-xl object-cover grayscale contrast-125 border border-white/10"
                       loading="lazy"
                     />
                   )}
                   <div className="space-y-4">
-                    <div className="space-y-2">
-                      <h2
-                        className="text-md font-medium leading-tight tracking-tight transition-colors duration-200 md:text-lg"
-                        style={{ color: isActive ? palette.heading : palette.text }}
-                      >
+                    <div className="space-y-1">
+                      <h4 className="text-base font-bold text-white tracking-tight">
                         {entry.title}
-                      </h2>
-
-                      <p
-                        className={
-                          "text-xs leading-relaxed transition-all duration-300 md:text-sm " +
-                          (isActive ? "line-clamp-none" : "line-clamp-2")
-                        }
-                        style={{ color: palette.textSecondary }}
-                      >
+                      </h4>
+                      <p className={`text-xs md:text-sm text-neutral-300 leading-relaxed ${isActive ? "line-clamp-none" : "line-clamp-2"}`}>
                         {entry.description}
                       </p>
                     </div>
@@ -253,25 +146,15 @@ export default function TimeLine_01({
                       <div className="overflow-hidden">
                         <div className="space-y-4 pt-2">
                           {entry.items && entry.items.length > 0 && (
-                            <div
-                              className="rounded-lg border p-4"
-                              style={{
-                                backgroundColor: `${ac.primary}10`,
-                                borderColor: cc.border,
-                              }}
-                            >
+                            <div className="rounded-xl border border-white/10 bg-black/40 p-4">
                               <ul className="space-y-2">
                                 {entry.items.map((item, itemIndex) => (
                                   <li
                                     key={itemIndex}
-                                    className="flex items-start gap-2 text-sm"
-                                    style={{ color: palette.text }}
+                                    className="flex items-start gap-2.5 text-xs text-neutral-300"
                                   >
-                                    <div
-                                      className="mt-1.5 h-1.5 w-1.5 flex-shrink-0 rounded-full"
-                                      style={{ backgroundColor: ac.primary }}
-                                    />
-                                    <span className="leading-relaxed">{item}</span>
+                                    <span className="mt-1.5 h-1.5 w-1.5 rounded-full bg-white shrink-0" />
+                                    <span>{item}</span>
                                   </li>
                                 ))}
                               </ul>
@@ -279,20 +162,20 @@ export default function TimeLine_01({
                           )}
 
                           {entry.button && (
-                            <div className="flex justify-end">
+                            <div className="pt-2">
                               <Button
-                                variant="default"
-                                size="sm"
-                                className="group font-normal transition-all duration-200"
-                                style={{
-                                  backgroundColor: ac.primary,
-                                  color: palette.bg,
-                                }}
                                 asChild
+                                variant="outline"
+                                size="sm"
+                                className="group/btn gap-2 border-white/20 bg-white/5 text-white hover:bg-white hover:text-black hover:border-white transition-all text-xs font-medium"
                               >
-                                <a href={entry.button.url} target="_blank" rel="noreferrer">
+                                <a
+                                  href={entry.button.url}
+                                  target="_blank"
+                                  rel="noopener noreferrer"
+                                >
                                   {entry.button.text}
-                                  <ArrowUpRight className="ml-1.5 h-3.5 w-3.5 transition-transform group-hover:-translate-y-0.5 group-hover:translate-x-0.5" />
+                                  <ArrowUpRight className="h-3.5 w-3.5 transition-transform duration-200 group-hover/btn:-translate-y-0.5 group-hover/btn:translate-x-0.5" />
                                 </a>
                               </Button>
                             </div>

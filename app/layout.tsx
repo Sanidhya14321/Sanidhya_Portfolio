@@ -1,8 +1,5 @@
 import type { Metadata } from "next";
-import { Suspense } from "react";
 import "./globals.css";
-import { ThemeProvider } from "@/contexts/ThemeContext";
-import { LoadingProvider } from "@/contexts/LoadingContext";
 import ClientShell from "@/components/ClientShell";
 
 export const metadata: Metadata = {
@@ -31,12 +28,8 @@ export default function RootLayout({
 }: Readonly<{ children: React.ReactNode }>) {
   return (
     <html lang="en" suppressHydrationWarning>
-      <body className="antialiased min-h-screen" suppressHydrationWarning>
-        <ThemeProvider>
-          {/* <LoadingProvider> */}
-            <ClientShell>{children}</ClientShell>
-          {/* </LoadingProvider> */}
-        </ThemeProvider>
+      <body className="antialiased min-h-screen bg-[#0A0A0A] text-[#D4D4D4]" suppressHydrationWarning>
+        <ClientShell>{children}</ClientShell>
       </body>
     </html>
   );

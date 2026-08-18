@@ -1,35 +1,64 @@
 "use client";
 
 import Link from "next/link";
-import { motion } from "framer-motion";
-import BlurText from "@/components/reactbits/BlurText";
 
 export default function NotFound() {
   return (
-    <div className="flex min-h-[80vh] flex-col items-center justify-center px-6 text-center">
-      <motion.div
-        initial={{ opacity: 0, y: 24 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.5, ease: [0.22, 1, 0.36, 1] }}
+    <div
+      style={{
+        display: "flex",
+        flexDirection: "column",
+        alignItems: "center",
+        justifyContent: "center",
+        minHeight: "80vh",
+        textAlign: "center",
+        padding: "2rem",
+        background: "var(--bg)",
+      }}
+    >
+      <h1
+        style={{
+          fontFamily: "var(--font-display)",
+          fontWeight: 900,
+          fontSize: "clamp(8rem, 20vw, 18rem)",
+          textTransform: "uppercase",
+          letterSpacing: "-0.04em",
+          lineHeight: 0.85,
+          color: "var(--text)",
+        }}
       >
-        <BlurText
-          text="404"
-          delay={60}
-          animateBy="words"
-          direction="top"
-          className="text-7xl md:text-8xl lg:text-9xl font-bold text-white tracking-tighter"
-        />
-        <p className="mt-6 text-base md:text-lg text-neutral-400">Page not found</p>
-        <div className="mt-8">
-          <Link
-            href="/"
-            className="inline-flex items-center gap-2 px-6 py-3 text-sm font-medium bg-white text-black rounded-xl hover:bg-neutral-200 transition-all shadow-lg"
-          >
-            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5"><path d="M19 12H5M12 19l-7-7 7-7"/></svg>
-            Return to Portfolio
-          </Link>
-        </div>
-      </motion.div>
+        404
+      </h1>
+      <p
+        style={{
+          fontFamily: "var(--font-body)",
+          fontSize: "1rem",
+          color: "var(--text-muted)",
+          marginTop: "2rem",
+          textTransform: "uppercase",
+          letterSpacing: "0.1em",
+        }}
+      >
+        Page not found
+      </p>
+      <Link
+        href="/"
+        style={{
+          marginTop: "2rem",
+          fontFamily: "var(--font-display)",
+          fontWeight: 900,
+          fontSize: "1.2rem",
+          textTransform: "uppercase",
+          letterSpacing: "0.05em",
+          color: "var(--text)",
+          textDecoration: "none",
+          borderBottom: "2px solid var(--text)",
+          paddingBottom: "2px",
+          transition: "opacity 0.2s ease",
+        }}
+      >
+        RETURN HOME →
+      </Link>
     </div>
   );
 }

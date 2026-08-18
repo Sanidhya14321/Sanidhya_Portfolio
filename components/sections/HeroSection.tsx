@@ -1,99 +1,299 @@
 "use client";
 
 import { portfolioData } from "@/data/portfolio";
-import { motion } from "framer-motion";
-import BlurText from "@/components/reactbits/BlurText";
-import RotatingText from "@/components/reactbits/RotatingText";
-import ClickSpark from "@/components/reactbits/ClickSpark";
-import ThemedButton from "@/components/ui/ThemedButton";
-import LazyComponent from "@/components/ui/LazyComponent";
-import Skeleton from "@/components/ui/Skeleton";
+import { useEffect, useState, useRef } from "react";
+import { motion, useScroll, useTransform, useSpring } from "framer-motion";
 
-const stagger = {
-  hidden: {},
-  show: { transition: { staggerChildren: 0.12, delayChildren: 0.2 } },
-};
+function HeroChar({
+  char,
+  index,
+  visible,
+}: {
+  char: string;
+  index: number;
+  visible: boolean;
+}) {
+  const [isFlipping, setIsFlipping] = useState(false);
 
-const fadeUp = {
-  hidden: { opacity: 0, y: 30 },
-  show: { opacity: 1, y: 0, transition: { duration: 0.6, ease: [0.22, 1, 0.36, 1] as const } },
-};
+  const handleMouseEnter = () => {
+    if (isFlipping || char === " ") return;
+    setIsFlipping(true);
+  };
+
+  return (
+    <span
+      aria-hidden="true"
+      className={`hero-char${visible ? " visible" : ""}`}
+      style={{
+        display: "inline-block",
+        transitionDelay: `${0.015 * index}s`,
+        perspective: "800px",
+      }}
+      onMouseEnter={handleMouseEnter}
+    >
+      <motion.span
+        style={{
+          display: "inline-block",
+          transformStyle: "preserve-3d",
+          cursor: "default",
+          userSelect: "none",
+        }}
+        animate={isFlipping ? { rotateY: [0, 360] } : { rotateY: 0 }}
+        transition={{
+          duration: 0.65,
+          ease: [0.25, 1, 0.5, 1],
+        }}
+        onAnimationComplete={() => setIsFlipping(false)}
+      >
+        {char === " " ? "\u00A0" : char}
+      </motion.span>
+    </span>
+  );
+}
+
+function HeroName({ name, visible }: { name: string; visible: boolean }) {
+  const chars = name.split("");
+  return (
+    <div
+      aria-label={name}
+      style={{
+        fontFamily: "var(--font-display)",
+        fontWeight: 900,
+        textTransform: "uppercase",
+        letterSpacing: "-0.015em",
+        lineHeight: 0.85,
+        fontSize: "clamp(4rem, 12vw, 13.5rem)",
+        display: "block",
+        overflow: "hidden",
+        whiteSpace: "nowrap",
+        width: "100%",
+        textAlign: "center",
+      }}
+    >
+      {chars.map((char, i) => (
+        <HeroChar key={i} char={char} index={i} visible={visible} />
+      ))}
+    </div>
+  );
+}
 
 export default function HeroSection() {
   const data = portfolioData;
+  const [visible, setVisible] = useState(false);
+  const containerRef = useRef<HTMLDivElement>(null);
 
-  const rotatingWords = ["Full Stack Developer", "AI-ML Engineer", "System Architect"];
+  useEffect(() => {
+    const t = setTimeout(() => setVisible(true), 250);
+    return () => clearTimeout(t);
+  }, []);
+
+  // Track scroll progress inside the hero container
+  const { scrollYProgress } = useScroll({
+    target: containerRef,
+    offset: ["start start", "end end"],
+  });
+
+  const smoothProgress = useSpring(scrollYProgress, {
+    stiffness: 120,
+    damping: 24,
+    restDelta: 0.001,
+  });
+
+  // 1. Text Animation
+  const leftX = useTransform(smoothProgress, [0, 0.75], ["-14vw", "0vw"]);
+  const rightX = useTransform(smoothProgress, [0, 0.75], ["14vw", "0vw"]);
+
+  // 2. Top Label Animation
+  const labelLeftX = useTransform(smoothProgress, [0, 0.75], ["-7vw", "0vw"]);
+  const labelRightX = useTransform(smoothProgress, [0, 0.75], ["7vw", "0vw"]);
+
+  // 3. Central Media Animation
+  const mediaWidth = useTransform(smoothProgress, [0, 0.8], ["20vw", "100vw"]);
+  const mediaHeight = useTransform(smoothProgress, [0, 0.8], ["24vh", "100vh"]);
+  const mediaY = useTransform(smoothProgress, [0, 0.8], ["1rem", "8rem"]);
 
   return (
-    <section id="home" className="relative flex min-h-[90vh] items-center justify-center overflow-hidden px-6 py-16 md:py-24">
-      <div className="relative z-10 w-full max-w-[1200px] mx-auto">
-        <motion.div variants={stagger} initial="hidden" animate="show" className="flex flex-col items-center">
-          {/* Name */}
-          <motion.div variants={fadeUp} className="mb-4 text-center">
-            <BlurText
-              text={data.name}
-              delay={80}
-              animateBy="words"
-              direction="bottom"
-              className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl xl:text-8xl font-bold tracking-tight text-white leading-[1.1]"
-            />
-          </motion.div>
+    <>
+      {/* ── SECTION 1: Top Name Section ── */}
+      <section
+        id="home"
+        style={{
+          width: "100%",
+          paddingTop: "40vh",
+          paddingBottom: "clamp(2rem, 4vh, 3.5rem)",
+          paddingLeft: "0.5rem",
+          paddingRight: "0.5rem",
+          background: "var(--bg)",
+          overflow: "hidden",
+        }}
+      >
+        <div style={{ width: "100%", overflow: "hidden" }}>
+          <HeroName name={data.name} visible={visible} />
+        </div>
+      </section>
 
-          {/* Subtitle */}
-          <motion.div variants={fadeUp} className="mb-8 min-h-10 flex items-center justify-center overflow-hidden">
-            <RotatingText
-              texts={rotatingWords}
-              className="text-lg md:text-xl font-mono text-neutral-400 font-medium tracking-wide"
-              rotationInterval={3000}
-              staggerFrom="first"
-              staggerDuration={0.03}
-            />
-          </motion.div>
-
-          {/* Bio & Profile Container */}
-          <div className="flex flex-col lg:flex-row items-center justify-center lg:items-start gap-10 lg:gap-14 w-full mt-4">
-            <div className="max-w-2xl text-center lg:text-left flex flex-col justify-center">
-              <motion.p variants={fadeUp} className="text-sm md:text-base lg:text-lg text-neutral-300 leading-relaxed opacity-90 mb-8">
-                {data.about.narrative}
-              </motion.p>
-              {/* CTA Button */}
-              <motion.div variants={fadeUp} className="flex flex-col sm:flex-row items-center gap-4 justify-center lg:justify-start">
-                <ClickSpark sparkColor="#FFFFFF">
-                  <ThemedButton href="#projects" variant="primary">
-                    View Projects
-                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" className="ml-2">
-                      <path d="M5 12h14M12 5l7 7-7 7" />
-                    </svg>
-                  </ThemedButton>
-                </ClickSpark>
-                <ClickSpark sparkColor="#FFFFFF">
-                  <ThemedButton href="#contact" variant="secondary">
-                    Get in Touch
-                  </ThemedButton>
-                </ClickSpark>
-              </motion.div>
+      {/* ── SECTION 2: Center Interactive Showcase Section (Text + Media) ── */}
+      <div
+        ref={containerRef}
+        style={{
+          position: "relative",
+          height: "auto",
+          minHeight: "180vh",
+          background: "var(--bg)",
+        }}
+      >
+        <section
+          style={{
+            position: "sticky",
+            top: 0,
+            height: "auto",
+            minHeight: "100vh",
+            background: "var(--bg)",
+            overflow: "hidden",
+            display: "flex",
+            flexDirection: "column",
+            alignItems: "center",
+            justifyContent: "center",
+          }}
+        >
+          {/* Center Stage (Labels + Text + Media) */}
+          <div
+            style={{
+              position: "relative",
+              width: "100%",
+              display: "flex",
+              flexDirection: "column",
+              alignItems: "center",
+              justifyContent: "center",
+            }}
+          >
+            {/* 2A: Top Labels ("FULL STACK & ML" and "AI Engineer") */}
+            <div
+              style={{
+                display: "flex",
+                justifyContent: "center",
+                alignItems: "center",
+                width: "100%",
+                marginBottom: "0.5rem",
+                fontFamily: "var(--font-body)",
+                fontSize: "clamp(0.6rem, 1.1vw, 0.75rem)",
+                fontWeight: 600,
+                textTransform: "uppercase",
+                letterSpacing: "0.12em",
+                color: "var(--text-muted)",
+                zIndex: 10,
+                pointerEvents: "none",
+              }}
+            >
+              <motion.span style={{ x: labelLeftX, display: "inline-block" }}>
+                FULL STACK &amp;&nbsp;
+              </motion.span>
+              <motion.span style={{ x: labelRightX, display: "inline-block" }}>
+                AI Engineer
+              </motion.span>
             </div>
 
-            {/* Profile Image with subtle border and shadow */}
-            <LazyComponent
-              fallback={
-                <div className="shrink-0">
-                  <Skeleton variant="rounded" width={280} height={350} />
-                </div>
-              }
-              rootMargin="200px"
+            {/* 2B: Merging Text ("A FULL STACK" + "DEVELOPER") */}
+            <div
+              style={{
+                position: "relative",
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "center",
+                width: "100%",
+                zIndex: 6,
+                pointerEvents: "none",
+              }}
             >
-              <div className="shrink-0 rounded-2xl overflow-hidden border border-white/10 shadow-2xl bg-white/[0.02]">
-                <img
-                  src="/DSC02945.JPG"
-                  alt="Sanidhya Vats"
-                  className="object-cover w-[240px] sm:w-[280px] h-[300px] sm:h-[350px] grayscale contrast-125 brightness-95 hover:grayscale-0 transition-all duration-500"
-                />
-              </div>
-            </LazyComponent>
+              <motion.span
+                style={{
+                  x: leftX,
+                  fontFamily: "var(--font-display)",
+                  fontWeight: 900,
+                  fontSize: "clamp(1.8rem, 4.4vw, 5.5rem)",
+                  textTransform: "uppercase",
+                  letterSpacing: "-0.02em",
+                  lineHeight: 0.9,
+                  color: "var(--text)",
+                  whiteSpace: "nowrap",
+                  display: "inline-block",
+                  willChange: "transform",
+                }}
+              >
+                A FULL STACK&nbsp;
+              </motion.span>
+
+              <motion.span
+                style={{
+                  x: rightX,
+                  fontFamily: "var(--font-display)",
+                  fontWeight: 900,
+                  fontSize: "clamp(1.8rem, 4.4vw, 5.5rem)",
+                  textTransform: "uppercase",
+                  letterSpacing: "-0.02em",
+                  lineHeight: 0.9,
+                  color: "var(--text)",
+                  whiteSpace: "nowrap",
+                  display: "inline-block",
+                  willChange: "transform",
+                }}
+              >
+                DEVELOPER
+              </motion.span>
+            </div>
+
+            {/* 2C: Center Image / Video Slot */}
+            <div
+              style={{
+                position: "relative",
+                display: "flex",
+                justifyContent: "center",
+                width: "100%",
+                marginTop: "-3rem",
+                zIndex: 2,
+              }}
+            >
+              <motion.div
+                style={{
+                  width: mediaWidth,
+                  height: mediaHeight,
+                  y: mediaY,
+                  overflow: "hidden",
+                  border: "none",
+                  boxShadow: "none",
+                  display: "flex",
+                  alignItems: "center",
+                  justifyContent: "center",
+                  flexShrink: 0,
+                  willChange: "width, height, transform",
+                }}
+              >
+                <div
+                  style={{
+                    position: "relative",
+                    width: "100%",
+                    height: "100%",
+                    overflow: "hidden",
+                    border: "none",
+                  }}
+                >
+                  <img
+                    src="/Debate-App/main.png"
+                    alt="Portfolio Visual Showcase"
+                    style={{
+                      width: "100%",
+                      height: "100%",
+                      objectFit: "cover",
+                      display: "block",
+                      border: "none",
+                    }}
+                  />
+                </div>
+              </motion.div>
+            </div>
           </div>
-        </motion.div>
+        </section>
       </div>
-    </section>
+    </>
   );
 }

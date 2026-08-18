@@ -1,51 +1,140 @@
 "use client";
 
-import Dock from "@/components/reactbits/Dock";
+import Link from "next/link";
+import { usePathname } from "next/navigation";
+import { useEffect, useState } from "react";
 
-const dockItems = [
-  {
-    href: "#home",
-    label: "Home",
-    icon: <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2z" /><polyline points="9 22 9 12 15 12 15 22" /></svg>
-  },
-  {
-    href: "#about",
-    label: "About",
-    icon: <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M20 21v-2a4 4 0 00-4-4H8a4 4 0 00-4 4v2" /><circle cx="12" cy="7" r="4" /></svg>
-  },
-  {
-    href: "#experience",
-    label: "Experience",
-    icon: <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z" /></svg>
-  },
-  {
-    href: "#projects",
-    label: "Projects",
-    icon: <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><rect x="3" y="3" width="18" height="18" rx="2" /><path d="M3 9h18M9 21V9" /></svg>
-  },
-  {
-    href: "#skills",
-    label: "Skills",
-    icon: <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M22 12h-4l-3 9L9 3l-3 9H2" /></svg>
-  },
-  {
-    href: "#events",
-    label: "Events",
-    icon: <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><rect x="3" y="4" width="18" height="18" rx="2" /><path d="M16 2v4M8 2v4M3 10h18" /></svg>
-  },
-  {
-    href: "#contact",
-    label: "Contact",
-    icon: <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z" /><polyline points="22,6 12,13 2,6" /></svg>
-  },
+// Live clock with city, time, GMT offset
+function LiveClock() {
+  const [time, setTime] = useState("");
+  const [offset, setOffset] = useState("");
+
+  useEffect(() => {
+    function update() {
+      const now = new Date();
+      const hh = now.getHours().toString().padStart(2, "0");
+      const mm = now.getMinutes().toString().padStart(2, "0");
+      const tzOffset = -now.getTimezoneOffset();
+      const sign = tzOffset >= 0 ? "+" : "-";
+      const absOffset = Math.abs(tzOffset);
+      const oh = Math.floor(absOffset / 60);
+      setTime(`${hh}:${mm}`);
+      setOffset(`GMT${sign}${oh}`);
+    }
+    update();
+    const id = setInterval(update, 1000 * 30);
+    return () => clearInterval(id);
+  }, []);
+
+  return (
+    <span>
+      {time} {offset}
+    </span>
+  );
+}
+
+const navLinks = [
+  { href: "/", label: "HOME" },
+  { href: "/works", label: "WORKS" },
+  { href: "/break", label: "BREAK" },
+  { href: "/about", label: "ABOUT" },
 ];
 
 export default function Navigation() {
+  const [scrolled, setScrolled] = useState(false);
+  const pathname = usePathname();
+
+  useEffect(() => {
+    const onScroll = () => setScrolled(window.scrollY > 10);
+    window.addEventListener("scroll", onScroll, { passive: true });
+    return () => window.removeEventListener("scroll", onScroll);
+  }, []);
+
+  const city = "NEW DELHI, IN";
+  const coords = "28.6139° N, 77.2090° E";
+
   return (
-    <Dock
-      items={dockItems}
-      activeColor="#FFFFFF"
-      showOnScroll={true}
-    />
+    <header
+      className="fixed top-0 left-0 right-0 z-50"
+      style={{
+        backgroundColor: scrolled ? "rgba(232, 228, 220, 0.95)" : "transparent",
+        backdropFilter: scrolled ? "blur(8px)" : "none",
+        borderBottom: scrolled ? "1px solid rgba(26, 26, 26, 0.1)" : "none",
+        transition: "background-color 0.3s ease, border-color 0.3s ease",
+      }}
+    >
+      <div
+        className="flex items-center justify-between"
+        style={{
+          padding: "1rem 1.5rem",
+          fontFamily: "var(--font-body)",
+          fontSize: "0.6875rem",
+          fontWeight: 500,
+          textTransform: "uppercase",
+          letterSpacing: "0.08em",
+          color: "var(--text-muted)",
+        }}
+      >
+        {/* Left — location + time + coords */}
+        <div className="flex items-center gap-4">
+          <Link
+            href="/"
+            style={{
+              textDecoration: "none",
+              color: "inherit",
+              display: "flex",
+              alignItems: "center",
+              gap: "0.35rem",
+            }}
+          >
+            <span
+              style={{
+                width: "6px",
+                height: "6px",
+                borderRadius: "50%",
+                background: "var(--text)",
+                display: "inline-block",
+                flexShrink: 0,
+              }}
+            />
+            {city}
+          </Link>
+          <span>
+            <LiveClock />
+          </span>
+          <span className="hidden md:inline">{coords}</span>
+        </div>
+
+        {/* Right — nav links matching reference */}
+        <nav aria-label="Main navigation">
+          <ul className="flex items-center gap-6 list-none">
+            {navLinks.map((link) => {
+              const isActive = pathname === link.href || (link.href !== "/" && pathname.startsWith(link.href));
+              return (
+                <li key={link.href}>
+                  <Link
+                    href={link.href}
+                    className="nav-link"
+                    style={{
+                      fontFamily: "var(--font-body)",
+                      fontSize: "0.6875rem",
+                      fontWeight: isActive ? 800 : 600,
+                      textTransform: "uppercase",
+                      letterSpacing: "0.1em",
+                      color: "var(--text)",
+                      textDecoration: "none",
+                      borderBottom: isActive ? "1.5px solid var(--text)" : "none",
+                      paddingBottom: "2px",
+                    }}
+                  >
+                    {link.label}
+                  </Link>
+                </li>
+              );
+            })}
+          </ul>
+        </nav>
+      </div>
+    </header>
   );
 }

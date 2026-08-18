@@ -1,79 +1,244 @@
 /* ── Google Fonts ────────────────────────────────────────────────────── */
-@import url("https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=Space+Grotesk:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap");
+@import url("https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@400;500;600;700;800;900&family=Barlow:wght@300;400;500;600;700&display=swap");
 
 @import "tailwindcss";
 
-/* ── CSS Variables ───────────────────────────────────────────────────── */
+/* ── CSS Design Tokens ───────────────────────────────────────────────── */
 :root {
-  --heading: #FFFFFF;
-  --body-bg: #0A0A0A;
-  --text-main: #D4D4D4;
-  --text-muted: #8A8A8A;
-  --cursor-dot: #FFFFFF;
-  --cursor-glow: rgba(255, 255, 255, 0.25);
-  --cursor-glow-soft: rgba(255, 255, 255, 0.08);
+  /* Colors */
+  --bg:           #E8E4DC;
+  --bg-dark:      #2C1A0E;
+  --text:         #1A1A1A;
+  --text-muted:   #6B6B6B;
+  --text-cream:   #E8E4DC;
+  --border:       rgba(26, 26, 26, 0.15);
+
+  /* Typography */
+  --font-display: 'Barlow Condensed', Impact, 'Arial Narrow', sans-serif;
+  --font-body:    'Barlow', -apple-system, BlinkMacSystemFont, sans-serif;
+
+  /* Motion */
+  --ease-out-expo: cubic-bezier(0.19, 1, 0.22, 1);
+  --ease-in-out:   cubic-bezier(0.77, 0, 0.175, 1);
+  --duration-fast: 0.3s;
+  --duration-med:  0.6s;
+  --duration-slow: 1.2s;
+  --stagger:       0.05s;
+
+  /* Marquee */
+  --marquee-speed: 25s;
 }
 
 /* ── Base ────────────────────────────────────────────────────────────── */
+*, *::before, *::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
 html {
   scroll-behavior: smooth;
+  font-size: 16px;
 }
 
 @media (prefers-reduced-motion: reduce) {
-  html {
-    scroll-behavior: auto;
+  html { scroll-behavior: auto; }
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
   }
 }
 
 body {
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
-  background-color: var(--body-bg);
-  color: var(--text-main);
-  font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  background-color: var(--bg);
+  color: var(--text);
+  font-family: var(--font-body);
   overflow-x: hidden;
-}
-
-/* Ambient dark gradient background */
-body::before {
-  content: '';
-  position: fixed;
-  inset: 0;
-  background:
-    radial-gradient(ellipse 70% 40% at 50% -10%, rgba(255, 255, 255, 0.05), transparent),
-    radial-gradient(ellipse 50% 30% at 80% 60%, rgba(255, 255, 255, 0.02), transparent);
-  pointer-events: none;
-  z-index: 0;
-}
-
-/* ── Headings ────────────────────────────────────────────────────────── */
-h1, h2, h3, h4, h5, h6 {
-  font-family: 'Space Grotesk', 'Inter', sans-serif;
-  color: var(--heading);
-  letter-spacing: -0.02em;
+  line-height: 1.5;
 }
 
 /* ── Scrollbar ───────────────────────────────────────────────────────── */
-::-webkit-scrollbar { width: 6px; }
+::-webkit-scrollbar { width: 4px; }
 ::-webkit-scrollbar-track { background: transparent; }
-::-webkit-scrollbar-thumb { 
-  background: rgba(255, 255, 255, 0.15); 
-  border-radius: 4px;
+::-webkit-scrollbar-thumb {
+  background: rgba(26, 26, 26, 0.2);
+  border-radius: 2px;
 }
-::-webkit-scrollbar-thumb:hover { background: rgba(255, 255, 255, 0.3); }
+::-webkit-scrollbar-thumb:hover { background: rgba(26, 26, 26, 0.4); }
 
 /* ── Selection ───────────────────────────────────────────────────────── */
-::selection { 
-  background: rgba(255, 255, 255, 0.2); 
-  color: #FFFFFF; 
+::selection {
+  background: var(--text);
+  color: var(--bg);
 }
 
 /* ── Focus ───────────────────────────────────────────────────────────── */
 :focus-visible {
-  outline: 2px solid rgba(255, 255, 255, 0.6);
+  outline: 2px solid var(--text);
   outline-offset: 2px;
 }
 
+/* ── Typography ──────────────────────────────────────────────────────── */
+.display {
+  font-family: var(--font-display);
+  font-weight: 900;
+  text-transform: uppercase;
+  letter-spacing: -0.02em;
+  line-height: 0.9;
+}
+
+.label {
+  font-family: var(--font-body);
+  font-size: 0.6875rem;
+  font-weight: 500;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--text-muted);
+}
+
+/* ── Section Padding ─────────────────────────────────────────────────── */
+.section-pad {
+  padding-left: 2rem;
+  padding-right: 2rem;
+}
+
+@media (min-width: 1024px) {
+  .section-pad {
+    padding-left: 3rem;
+    padding-right: 3rem;
+  }
+}
+
+/* ── Horizontal Rule ─────────────────────────────────────────────────── */
+hr, .divider {
+  border: none;
+  border-top: 1px solid var(--border);
+}
+
+/* ── Marquee ─────────────────────────────────────────────────────────── */
+.marquee-track {
+  display: flex;
+  white-space: nowrap;
+  overflow: hidden;
+  gap: 0;
+}
+
+.marquee-inner {
+  display: flex;
+  flex-shrink: 0;
+  animation: marquee-scroll var(--marquee-speed) linear infinite;
+  will-change: transform;
+}
+
+.marquee-inner.reverse {
+  animation-direction: reverse;
+}
+
+@keyframes marquee-scroll {
+  from { transform: translateX(0); }
+  to   { transform: translateX(-50%); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .marquee-inner { animation: none; }
+}
+
+/* ── Hero name character animation ──────────────────────────────────── */
+.hero-char {
+  display: inline-block;
+  opacity: 0;
+  transform: translateY(60px) skewY(3deg);
+  transition: opacity var(--duration-med) var(--ease-out-expo),
+              transform var(--duration-med) var(--ease-out-expo);
+}
+
+.hero-char.visible {
+  opacity: 1;
+  transform: translateY(0) skewY(0deg);
+}
+
+/* ── Loader overlay ──────────────────────────────────────────────────── */
+.loader-overlay {
+  position: fixed;
+  inset: 0;
+  background: var(--text);
+  z-index: 9999;
+  display: flex;
+  align-items: flex-end;
+  justify-content: flex-end;
+  padding: 2rem 3rem;
+  pointer-events: none;
+}
+
+.loader-counter {
+  font-family: var(--font-display);
+  font-weight: 900;
+  font-size: clamp(6rem, 20vw, 16rem);
+  color: var(--bg);
+  line-height: 1;
+  letter-spacing: -0.04em;
+}
+
+/* ── Work tile ───────────────────────────────────────────────────────── */
+.work-tile {
+  position: relative;
+  overflow: hidden;
+  cursor: pointer;
+}
+
+.work-tile img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+/* ── Nav link ────────────────────────────────────────────────────────── */
+.nav-link {
+  position: relative;
+  font-family: var(--font-body);
+  font-size: 0.75rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  color: var(--text);
+  text-decoration: none;
+  transition: opacity 0.2s ease;
+}
+
+.nav-link::after {
+  content: '';
+  position: absolute;
+  bottom: -2px;
+  left: 0;
+  width: 100%;
+  height: 1px;
+  background: currentColor;
+  transform: scaleX(0);
+  transform-origin: right;
+  transition: transform 0.3s var(--ease-in-out);
+}
+
+.nav-link:hover::after {
+  transform: scaleX(1);
+  transform-origin: left;
+}
+
+/* ── Scroll reveal ───────────────────────────────────────────────────── */
+.reveal {
+  opacity: 0;
+  transform: translateY(40px);
+  transition: opacity 0.8s var(--ease-out-expo), transform 0.8s var(--ease-out-expo);
+}
+
+.reveal.in-view {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* ── Custom cursor ───────────────────────────────────────────────────── */
 html.has-custom-cursor,
 html.has-custom-cursor *,
 html.has-custom-cursor *::before,
@@ -88,98 +253,4 @@ html.has-custom-cursor *::after {
   html.has-custom-cursor *::after {
     cursor: auto !important;
   }
-}
-
-/* ── Gradient text utility ───────────────────────────────────────────── */
-.gradient-text {
-  background-image: linear-gradient(135deg, #FFFFFF 0%, #A3A3A3 100%);
-  -webkit-background-clip: text;
-  background-clip: text;
-  -webkit-text-fill-color: transparent;
-}
-
-/* ── Ensure content sits above pseudo layers ─────────────────────────── */
-body > div,
-body > main,
-body > footer {
-  position: relative;
-  z-index: 1;
-}
-
-/* ── SpotlightCard ───────────────────────────────────────────────────── */
-.spotlight-card {
-  position: relative;
-  overflow: hidden;
-  --mouse-x: 50%;
-  --mouse-y: 50%;
-  --spotlight-color: rgba(255, 255, 255, 0.08);
-}
-
-.spotlight-card::before {
-  content: '';
-  position: absolute;
-  inset: 0;
-  background: radial-gradient(
-    600px circle at var(--mouse-x) var(--mouse-y),
-    var(--spotlight-color),
-    transparent 40%
-  );
-  opacity: 0;
-  transition: opacity 0.4s ease;
-  pointer-events: none;
-  z-index: 1;
-}
-
-.spotlight-card:hover::before {
-  opacity: 1;
-}
-
-.spotlight-card > * {
-  position: relative;
-  z-index: 2;
-}
-
-/* ── ShinyText ───────────────────────────────────────────────────────── */
-.shiny-text {
-  background: linear-gradient(
-    120deg,
-    currentColor 40%,
-    rgba(255, 255, 255, 0.9) 50%,
-    currentColor 60%
-  );
-  background-size: 200% 100%;
-  -webkit-background-clip: text;
-  background-clip: text;
-  -webkit-text-fill-color: transparent;
-  animation: shiny-text-sweep var(--shine-speed, 5s) ease-in-out infinite;
-}
-
-.shiny-text.disabled {
-  animation: none;
-}
-
-@keyframes shiny-text-sweep {
-  0%, 90%, 100% { background-position: 200% center; }
-  45% { background-position: 0% center; }
-}
-
-/* ── Skeleton Loading ────────────────────────────────────────────────── */
-@keyframes shimmer {
-  0% {
-    background-position: -200% 0;
-  }
-  100% {
-    background-position: 200% 0;
-  }
-}
-
-.skeleton-shimmer {
-  background: linear-gradient(
-    90deg,
-    rgba(255, 255, 255, 0.03) 25%,
-    rgba(255, 255, 255, 0.08) 50%,
-    rgba(255, 255, 255, 0.03) 75%
-  );
-  background-size: 200% 100%;
-  animation: shimmer 1.5s infinite;
 }

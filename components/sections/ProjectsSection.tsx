@@ -1,173 +1,307 @@
 "use client";
 
-import { useMemo, useState } from "react";
-import {
-  Boxes,
-  Bot,
-  Brain,
-  ExternalLink,
-  FolderKanban,
-  Github,
-  Globe,
-  Layers,
-  Sparkles,
-} from "lucide-react";
-import InteractiveSelector, {
-  InteractiveSelectorOption,
-} from "@/components/ui/interactive-selector";
-import SectionHeading from "@/components/ui/SectionHeading";
-import TimeLine_01, { type TimeLine_01Entry } from "@/components/ui/release-time-line";
-import { portfolioData } from "@/data/portfolio";
+import { featuredProjects } from "@/data/portfolio";
+import { useRef, useEffect, useState } from "react";
+import Link from "next/link";
 
-const getProjectIcon = (field?: string) => {
-  const normalized = (field || "").toLowerCase();
+function ProjectCard({
+  project,
+  index,
+  aspectRatio = "16/10",
+  isWide = false,
+}: {
+  project: (typeof featuredProjects)[0];
+  index: number;
+  aspectRatio?: string;
+  isWide?: boolean;
+}) {
+  const ref = useRef<HTMLDivElement>(null);
+  const [visible, setVisible] = useState(false);
 
-  if (normalized.includes("agent") || normalized.includes("ai")) {
-    return <Bot size={20} />;
-  }
+  useEffect(() => {
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        if (entry.isIntersecting) {
+          setVisible(true);
+          observer.disconnect();
+        }
+      },
+      { threshold: 0.05 }
+    );
+    if (ref.current) observer.observe(ref.current);
+    return () => observer.disconnect();
+  }, []);
 
-  if (normalized.includes("ml")) {
-    return <Brain size={20} />;
-  }
-
-  if (normalized.includes("web")) {
-    return <Globe size={20} />;
-  }
-
-  if (normalized.includes("core")) {
-    return <Boxes size={20} />;
-  }
-
-  return <FolderKanban size={20} />;
-};
-
-export default function ProjectsSection() {
-  const featured = portfolioData.featuredProjects;
-  const all = portfolioData.allProjects;
-
-  const selectorProjects = featured.length > 0 ? featured : all.slice(0, 5);
-
-  const selectorOptions = useMemo<InteractiveSelectorOption[]>(
-    () =>
-      selectorProjects.map((project) => ({
-        title: project.title,
-        description: project.description,
-        image: project.image,
-        icon: getProjectIcon(project.field),
-      })),
-    [selectorProjects]
-  );
-
-  const [activeIndex, setActiveIndex] = useState(0);
-
-  const activeProject = selectorProjects[activeIndex] || selectorProjects[0];
-  const allProjectList = all.length > 0 ? all : featured;
-
-  const projectJourneyEntries = useMemo<TimeLine_01Entry[]>(
-    () =>
-      allProjectList.map((project) => ({
-        icon: getProjectIcon(project.field).type,
-        title: project.title,
-        subtitle: `${project.field || "Project"}${project.status ? ` • ${project.status}` : ""}`,
-        description: project.detailedDescription || project.description,
-        items: project.highlights && project.highlights.length > 0 ? project.highlights : project.tech,
-        image:
-          project.image ||
-          "https://images.unsplash.com/photo-1498050108023-c5249f4df085?auto=format&fit=crop&w=1200&q=80",
-        button: project.demo
-          ? { url: project.demo, text: "Open Live Demo" }
-          : project.github
-            ? { url: project.github, text: "Open Repository" }
-            : undefined,
-      })),
-    [allProjectList]
-  );
+  const slug = project.id || project.title.toLowerCase().replace(/\s+/g, "-");
 
   return (
-    <section id="projects" className="mx-auto max-w-[1200px] px-6 md:px-8 lg:px-10 py-12 scroll-mt-12">
-      <SectionHeading label="Builds" title="Projects" />
+    <Link
+      href={`/projects/${slug}`}
+      style={{ display: "block", textDecoration: "none", color: "inherit" }}
+    >
+      <div
+        ref={ref}
+        style={{
+          opacity: visible ? 1 : 0,
+          transform: visible ? "translateY(0)" : "translateY(30px)",
+          transition: `opacity 0.7s cubic-bezier(0.19, 1, 0.22, 1) ${index * 0.08}s, transform 0.7s cubic-bezier(0.19, 1, 0.22, 1) ${index * 0.08}s`,
+          aspectRatio: aspectRatio,
+          minHeight: isWide ? "clamp(300px, 42vw, 560px)" : "clamp(260px, 32vw, 440px)",
+          background: "#161616",
+          borderBottom: "1px solid var(--border)",
+          position: "relative",
+          overflow: "hidden",
+          width: "100%",
+          cursor: "pointer",
+        }}
+      >
+        {/* Project Image - Static, no hover zoom */}
+        <img
+          src={project.image}
+          alt={project.title}
+          style={{
+            width: "100%",
+            height: "100%",
+            objectFit: "cover",
+            display: "block",
+            transform: "none",
+          }}
+          loading="lazy"
+        />
 
-      <InteractiveSelector
-        options={selectorOptions}
-        title="Featured Work"
-        subtitle="Focused builds across web systems, full-stack architecture, and machine learning."
-        onActiveChange={setActiveIndex}
-      />
-
-      {activeProject ? (
-        <div className="mt-8 rounded-2xl border border-white/10 bg-white/[0.02] backdrop-blur-md p-6 md:p-8 transition-all duration-300">
-          <div className="flex flex-wrap items-start justify-between gap-4">
-            <div>
-              <h3 className="text-2xl font-bold text-white tracking-tight">
-                {activeProject.title}
-              </h3>
-              <p className="mt-1 text-xs font-mono text-neutral-400">
-                {activeProject.field || "Project"}
-                {activeProject.status ? ` • ${activeProject.status}` : ""}
-              </p>
-            </div>
-
-            <div className="flex gap-2">
-              {activeProject.github ? (
-                <a
-                  href={activeProject.github}
-                  target="_blank"
-                  rel="noreferrer"
-                  className="inline-flex items-center gap-2 rounded-lg border border-white/15 bg-white/[0.04] px-3.5 py-2 text-xs font-medium text-white hover:bg-white hover:text-black hover:border-white transition-all"
-                >
-                  <Github size={15} />
-                  GitHub
-                </a>
-              ) : null}
-              {activeProject.demo ? (
-                <a
-                  href={activeProject.demo}
-                  target="_blank"
-                  rel="noreferrer"
-                  className="inline-flex items-center gap-2 rounded-lg border border-white/15 bg-white/[0.04] px-3.5 py-2 text-xs font-medium text-white hover:bg-white hover:text-black hover:border-white transition-all"
-                >
-                  <ExternalLink size={15} />
-                  Live Demo
-                </a>
-              ) : null}
-            </div>
+        {/* Clean Static Bottom Title Overlay */}
+        <div
+          style={{
+            position: "absolute",
+            inset: 0,
+            background: "linear-gradient(to top, rgba(0,0,0,0.85) 0%, rgba(0,0,0,0.3) 35%, transparent 65%)",
+            display: "flex",
+            flexDirection: "column",
+            justifyContent: "flex-end",
+            padding: "clamp(1.5rem, 3.5vw, 3rem)",
+          }}
+        >
+          <div>
+            <p
+              className="label"
+              style={{
+                color: "rgba(232, 228, 220, 0.75)",
+                marginBottom: "0.5rem",
+                letterSpacing: "0.12em",
+              }}
+            >
+              {project.field || project.tech[0]}
+            </p>
+            <h3
+              style={{
+                fontFamily: "var(--font-display)",
+                fontWeight: 900,
+                fontSize: isWide
+                  ? "clamp(2rem, 5vw, 4.5rem)"
+                  : "clamp(1.6rem, 3.5vw, 3rem)",
+                textTransform: "uppercase",
+                color: "var(--text-cream)",
+                lineHeight: 0.92,
+                margin: 0,
+                letterSpacing: "-0.015em",
+              }}
+            >
+              {project.title}
+            </h3>
           </div>
-
-          <p className="mt-4 text-sm md:text-base text-neutral-300 leading-relaxed">
-            {activeProject.detailedDescription || activeProject.description}
-          </p>
-
-          <div className="mt-5 flex items-start gap-2">
-            <Layers size={18} className="mt-0.5 text-white shrink-0" />
-            <div className="flex flex-wrap gap-2">
-              {activeProject.tech.map((t) => (
-                <span
-                  key={t}
-                  className="rounded-md border border-white/10 bg-white/[0.03] px-2.5 py-1 text-xs font-mono text-neutral-300"
-                >
-                  {t}
-                </span>
-              ))}
-            </div>
-          </div>
-
-          {activeProject.highlights && activeProject.highlights.length > 0 ? (
-            <div className="mt-5 pt-4 border-t border-white/10">
-              <p className="mb-3 inline-flex items-center gap-2 text-xs font-mono font-bold uppercase tracking-wider text-neutral-300">
-                <Sparkles size={14} className="text-white" /> Key Highlights
-              </p>
-              <ul className="space-y-2">
-                {activeProject.highlights.map((point) => (
-                  <li key={point} className="flex items-start gap-2.5 text-xs md:text-sm text-neutral-300">
-                    <span className="mt-1.5 h-1.5 w-1.5 rounded-full bg-white shrink-0" />
-                    <span>{point}</span>
-                  </li>
-                ))}
-              </ul>
-            </div>
-          ) : null}
         </div>
-      ) : null}
+
+        {/* Corner Badge */}
+        <div
+          style={{
+            position: "absolute",
+            top: "clamp(1rem, 2.5vw, 1.8rem)",
+            left: "clamp(1rem, 2.5vw, 1.8rem)",
+            zIndex: 3,
+          }}
+        >
+          <span
+            className="label"
+            style={{
+              background: "var(--bg)",
+              padding: "0.3rem 0.8rem",
+              borderRadius: "2px",
+              color: "var(--text)",
+              fontWeight: 600,
+              fontSize: "0.6875rem",
+            }}
+          >
+            {project.field || "ENGINEERING"}
+          </span>
+        </div>
+      </div>
+    </Link>
+  );
+}
+
+export default function ProjectsSection() {
+  const featured = featuredProjects.slice(0, 4);
+
+  const pills = ["CONCEPTUAL", "EXPRESSIVE", "IMMERSIVE"];
+
+  return (
+    <section id="projects" style={{ background: "var(--bg)", width: "100%" }}>
+      {/* ── Signature Giant FEATURED WORKS Section Banner (Matching Reference Site) ── */}
+      <div
+        style={{
+          borderTop: "1px solid var(--border)",
+          padding: "clamp(2rem, 4vw, 3.5rem) clamp(1rem, 3vw, 2.5rem) clamp(1rem, 2vw, 2rem)",
+          width: "100%",
+          overflow: "hidden",
+        }}
+      >
+        <h2
+          style={{
+            fontFamily: "var(--font-display)",
+            fontWeight: 900,
+            fontSize: "clamp(4.5rem, 15vw, 18rem)",
+            textTransform: "uppercase",
+            letterSpacing: "-0.03em",
+            lineHeight: 0.82,
+            color: "var(--text)",
+            margin: 0,
+            whiteSpace: "nowrap",
+            width: "100%",
+          }}
+        >
+          FEATURED WORKS
+        </h2>
+      </div>
+
+      {/* ── Subheader Bar with Category Insights & Pill Tags ── */}
+      <div
+        style={{
+          borderTop: "1px solid var(--border)",
+          borderBottom: "1px solid var(--border)",
+          padding: "1rem clamp(1rem, 3vw, 2.5rem)",
+          display: "flex",
+          alignItems: "center",
+          justifyContent: "space-between",
+          flexWrap: "wrap",
+          gap: "1rem",
+        }}
+      >
+        <span
+          className="label"
+          style={{
+            color: "var(--text)",
+            fontWeight: 600,
+            letterSpacing: "0.12em",
+          }}
+        >
+          DESIGN INSIGHTS
+        </span>
+
+        {/* Right Pill Badges */}
+        <div style={{ display: "flex", alignItems: "center", gap: "0.5rem", flexWrap: "wrap" }}>
+          {pills.map((pill) => (
+            <span
+              key={pill}
+              style={{
+                fontFamily: "var(--font-body)",
+                fontSize: "0.6875rem",
+                fontWeight: 700,
+                letterSpacing: "0.08em",
+                textTransform: "uppercase",
+                background: "var(--text)",
+                color: "var(--bg)",
+                padding: "0.35rem 0.85rem",
+                borderRadius: "999px",
+                display: "inline-block",
+              }}
+            >
+              {pill}
+            </span>
+          ))}
+        </div>
+      </div>
+
+      {/* ── 1. Top Wide Hero Project Banner (e.g. Arizona Diamondbacks style) ── */}
+      {featured[0] && (
+        <div style={{ width: "100%" }}>
+          <ProjectCard project={featured[0]} index={0} isWide={true} aspectRatio="21/9" />
+        </div>
+      )}
+
+      {/* ── 2. Mid 2-Column Split Grid (e.g. Home in Hotpot & Find Your Community) ── */}
+      {featured.length > 2 && (
+        <div
+          style={{
+            display: "grid",
+            gridTemplateColumns: "repeat(auto-fit, minmax(min(100%, 480px), 1fr))",
+            gap: 0,
+            width: "100%",
+          }}
+        >
+          {featured[1] && (
+            <div style={{ borderRight: "1px solid var(--border)" }}>
+              <ProjectCard project={featured[1]} index={1} isWide={false} aspectRatio="16/10" />
+            </div>
+          )}
+          {featured[2] && (
+            <div>
+              <ProjectCard project={featured[2]} index={2} isWide={false} aspectRatio="16/10" />
+            </div>
+          )}
+        </div>
+      )}
+
+      {/* ── 3. Bottom Wide Full-Width Project Banner (e.g. Where Brilliant Minds...) ── */}
+      {featured[3] && (
+        <div style={{ width: "100%" }}>
+          <ProjectCard project={featured[3]} index={3} isWide={true} aspectRatio="21/9" />
+        </div>
+      )}
+
+      {/* ── 4. Prominent Center 'SEE ALL WORK' Pill Button ── */}
+      <div
+        style={{
+          width: "100%",
+          padding: "clamp(5rem, 10vw, 8.5rem) 2rem",
+          display: "flex",
+          alignItems: "center",
+          justifyContent: "center",
+        }}
+      >
+        <Link
+          href="/works"
+          style={{
+            display: "inline-flex",
+            alignItems: "center",
+            justifyContent: "center",
+            fontFamily: "var(--font-display)",
+            fontWeight: 900,
+            fontSize: "clamp(1.4rem, 2.5vw, 2.2rem)",
+            textTransform: "uppercase",
+            letterSpacing: "0.04em",
+            padding: "1.1rem clamp(2.8rem, 6vw, 4.5rem)",
+            borderRadius: "999px",
+            border: "2px solid var(--text)",
+            background: "transparent",
+            color: "var(--text)",
+            textDecoration: "none",
+            transition: "all 0.3s cubic-bezier(0.19, 1, 0.22, 1)",
+            boxShadow: "0 2px 10px rgba(0,0,0,0.04)",
+          }}
+          onMouseEnter={(e) => {
+            e.currentTarget.style.background = "var(--text)";
+            e.currentTarget.style.color = "var(--bg)";
+            e.currentTarget.style.transform = "scale(1.04)";
+          }}
+          onMouseLeave={(e) => {
+            e.currentTarget.style.background = "transparent";
+            e.currentTarget.style.color = "var(--text)";
+            e.currentTarget.style.transform = "scale(1)";
+          }}
+        >
+          SEE ALL WORK
+        </Link>
+      </div>
     </section>
   );
 }

@@ -1,24 +1,31 @@
 "use client";
 
-import { ReactNode, Suspense } from "react";
+import { ReactNode, Suspense, useState, useEffect } from "react";
 import Navigation from "@/components/Navigation";
 import Footer from "@/components/Footer";
-import ClickSpark from "@/components/reactbits/ClickSpark";
-import PixelSnow from "@/components/reactbits/PixelSnow";
+import Loader from "@/components/ui/Loader";
 import CustomCursor from "@/components/ui/CustomCursor";
 
 export default function ClientShell({ children }: { children: ReactNode }) {
+  const [loaded, setLoaded] = useState(false);
+
+  useEffect(() => {
+    // Loader finishes after 550ms
+    const timer = setTimeout(() => setLoaded(true), 550);
+    return () => clearTimeout(timer);
+  }, []);
+
   return (
-    <ClickSpark sparkColor="#FFFFFF" sparkSize={10} sparkRadius={25} sparkCount={8} duration={400}>
+    <>
+      <Loader done={loaded} />
       <CustomCursor />
-      <PixelSnow particleCount={60} color="#FFFFFF" opacity={0.3} speed={0.4} />
       <Navigation />
       <main className="min-h-screen">
-        <Suspense fallback={<div className="min-h-screen animate-pulse" />}>
+        <Suspense fallback={<div className="min-h-screen" />}>
           {children}
         </Suspense>
       </main>
       <Footer />
-    </ClickSpark>
+    </>
   );
 }

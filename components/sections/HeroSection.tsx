@@ -117,7 +117,7 @@ export default function HeroSection() {
   // 3. Central Media Animation
   const mediaWidth = useTransform(smoothProgress, [0, 1], ["20vw", "100vw"]);
   const mediaHeight = useTransform(smoothProgress, [0, 1], ["24vh", "100vh"]);
-  const mediaY = useTransform(smoothProgress, [0, 1], ["1rem", "6rem"]);
+  const mediaY = useTransform(smoothProgress, [0, 1], ["1rem", "7rem"]);
 
   return (
     <>

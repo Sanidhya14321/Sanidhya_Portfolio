@@ -2,6 +2,7 @@
 
 import { portfolioData } from "@/data/portfolio";
 import { useEffect, useRef, useState } from "react";
+import { motion, useScroll, useTransform } from "framer-motion";
 
 function RevealBlock({ children, delay = 0 }: { children: React.ReactNode; delay?: number }) {
   const ref = useRef<HTMLDivElement>(null);
@@ -34,12 +35,20 @@ function RevealBlock({ children, delay = 0 }: { children: React.ReactNode; delay
 }
 
 export default function SkillsSection() {
+  const sectionRef = useRef<HTMLElement>(null);
   const skills = portfolioData.skills;
   const categories = Object.keys(skills);
   const subPills = ["LANGUAGES", "FRAMEWORKS", "AI / ML", "SYSTEMS"];
 
+  const { scrollYProgress } = useScroll({
+    target: sectionRef,
+    offset: ["start end", "end start"],
+  });
+
+  const headerX = useTransform(scrollYProgress, [0, 1], ["-2vw", "2vw"]);
+
   return (
-    <section id="skills" style={{ background: "var(--bg)", width: "100%" }}>
+    <section ref={sectionRef} id="skills" style={{ background: "var(--bg)", width: "100%" }}>
       {/* ── Giant SKILLS Section Banner ── */}
       <div
         style={{
@@ -49,8 +58,9 @@ export default function SkillsSection() {
           overflow: "hidden",
         }}
       >
-        <h2
+        <motion.h2
           style={{
+            x: headerX,
             fontFamily: "var(--font-display)",
             fontWeight: 900,
             fontSize: "clamp(4.5rem, 15vw, 18rem)",
@@ -64,7 +74,7 @@ export default function SkillsSection() {
           }}
         >
           SKILLS
-        </h2>
+        </motion.h2>
       </div>
 
       {/* ── Subheader Bar ── */}

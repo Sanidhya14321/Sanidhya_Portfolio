@@ -36,7 +36,6 @@ function LiveClock() {
 const navLinks = [
   { href: "/", label: "HOME" },
   { href: "/works", label: "WORKS" },
-  { href: "/break", label: "BREAK" },
   { href: "/about", label: "ABOUT" },
 ];
 

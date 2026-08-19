@@ -3,6 +3,7 @@
 import { portfolioData } from "@/data/portfolio";
 import { useEffect, useRef, useState } from "react";
 import Link from "next/link";
+import { motion, useScroll, useTransform } from "framer-motion";
 
 function RevealBlock({
   children,
@@ -43,11 +44,20 @@ function RevealBlock({
 }
 
 export default function AboutSection() {
+  const sectionRef = useRef<HTMLElement>(null);
   const data = portfolioData;
   const pills = ["ENGINEER", "COMMUNITY", "CREATIVE TECH"];
 
+  const { scrollYProgress } = useScroll({
+    target: sectionRef,
+    offset: ["start end", "end start"],
+  });
+
+  const headerX = useTransform(scrollYProgress, [0, 1], ["-2vw", "2vw"]);
+  const imageY = useTransform(scrollYProgress, [0, 1], ["-8%", "8%"]);
+
   return (
-    <section id="about" style={{ background: "var(--bg)", width: "100%" }}>
+    <section ref={sectionRef} id="about" style={{ background: "var(--bg)", width: "100%" }}>
       {/* ── Giant ABOUT Section Banner ── */}
       <div
         style={{
@@ -57,8 +67,9 @@ export default function AboutSection() {
           overflow: "hidden",
         }}
       >
-        <h2
+        <motion.h2
           style={{
+            x: headerX,
             fontFamily: "var(--font-display)",
             fontWeight: 900,
             fontSize: "clamp(4.5rem, 15vw, 18rem)",
@@ -72,7 +83,7 @@ export default function AboutSection() {
           }}
         >
           ABOUT
-        </h2>
+        </motion.h2>
       </div>
 
       {/* ── Subheader Bar ── */}
@@ -140,19 +151,31 @@ export default function AboutSection() {
             overflow: "hidden",
             aspectRatio: "4/5",
             background: "#161616",
+            position: "relative",
           }}
         >
-          <img
-            src="/DSC02945.JPG"
-            alt="Sanidhya Vats"
+          <motion.div
             style={{
+              position: "absolute",
+              top: "-10%",
+              left: 0,
               width: "100%",
-              height: "100%",
-              objectFit: "cover",
-              display: "block",
-              filter: "grayscale(0.12) contrast(1.05)",
+              height: "120%",
+              y: imageY,
             }}
-          />
+          >
+            <img
+              src="/DSC02945.JPG"
+              alt="Sanidhya Vats"
+              style={{
+                width: "100%",
+                height: "100%",
+                objectFit: "cover",
+                display: "block",
+                filter: "grayscale(0.12) contrast(1.05)",
+              }}
+            />
+          </motion.div>
         </div>
 
         {/* Right — Bio & Highlights */}

@@ -2,10 +2,18 @@
 
 import { useRef, useEffect, useState } from "react";
 import { portfolioData } from "@/data/portfolio";
+import { motion, useScroll, useTransform } from "framer-motion";
 
 export default function ManifestoSection() {
-  const ref = useRef<HTMLDivElement>(null);
+  const sectionRef = useRef<HTMLDivElement>(null);
   const [inView, setInView] = useState(false);
+
+  const { scrollYProgress } = useScroll({
+    target: sectionRef,
+    offset: ["start end", "end start"],
+  });
+
+  const statementY = useTransform(scrollYProgress, [0, 1], ["20px", "-20px"]);
 
   useEffect(() => {
     const observer = new IntersectionObserver(
@@ -16,13 +24,13 @@ export default function ManifestoSection() {
       },
       { threshold: 0.15 }
     );
-    if (ref.current) observer.observe(ref.current);
+    if (sectionRef.current) observer.observe(sectionRef.current);
     return () => observer.disconnect();
   }, []);
 
   return (
     <section
-      ref={ref}
+      ref={sectionRef}
       style={{
         background: "var(--bg-dark)",
         color: "var(--text-cream)",
@@ -71,11 +79,11 @@ export default function ManifestoSection() {
         </div>
 
         {/* Main Display Statement */}
-        <div
+        <motion.div
           style={{
+            y: statementY,
             opacity: inView ? 1 : 0,
-            transform: inView ? "translateY(0)" : "translateY(40px)",
-            transition: "opacity 0.8s cubic-bezier(0.19, 1, 0.22, 1), transform 0.8s cubic-bezier(0.19, 1, 0.22, 1)",
+            transition: "opacity 0.8s cubic-bezier(0.19, 1, 0.22, 1)",
           }}
         >
           <h2
@@ -94,7 +102,7 @@ export default function ManifestoSection() {
             AGENTIC AI &amp; SCALABLE <br />
             SYSTEMS WITH PURPOSE
           </h2>
-        </div>
+        </motion.div>
 
         {/* Supporting Narrative Column */}
         <div

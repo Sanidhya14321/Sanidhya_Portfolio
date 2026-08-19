@@ -47,71 +47,100 @@ export default async function ProjectDetailPage({
   const imagesList = project.images && project.images.length > 0 ? project.images : [project.image];
 
   return (
-    <div style={{ background: "var(--bg)", minHeight: "100svh", paddingTop: "clamp(3.5rem, 6vh, 5rem)" }}>
-      {/* ── Top Hero Section ── */}
-      <section style={{ padding: "clamp(2rem, 3vw, 3rem) clamp(1.2rem, 3vw, 2.5rem) 2rem", borderBottom: "1px solid var(--border)" }}>
-        {/* Back Link */}
-        <div style={{ marginBottom: "1.5rem" }}>
+    <div style={{ background: "var(--bg)", minHeight: "100svh", paddingTop: "clamp(4rem, 7vh, 6.5rem)" }}>
+      {/* ── 1. Header & Title Section ── */}
+      <section
+        style={{
+          padding: "clamp(1.5rem, 3vw, 2.5rem) clamp(1.2rem, 3vw, 2.5rem) clamp(2rem, 4vw, 3.5rem)",
+          borderBottom: "1px solid var(--border)",
+        }}
+      >
+        {/* Back Crumb */}
+        <div style={{ marginBottom: "1.8rem" }}>
           <Link
             href="/works"
             className="label"
             style={{
-              color: "var(--text-muted)",
+              color: "var(--text)",
               textDecoration: "none",
               display: "inline-flex",
               alignItems: "center",
               gap: "0.5rem",
+              fontWeight: 700,
+              letterSpacing: "0.1em",
+              transition: "opacity 0.2s ease",
             }}
           >
-            ← ALL WORKS
+            ← ALL WORKS ({combinedProjects.length})
           </Link>
         </div>
 
-        {/* Title & Category Header */}
-        <div style={{ display: "flex", flexDirection: "column", gap: "1rem" }}>
-          <div style={{ display: "flex", alignItems: "center", gap: "1rem" }}>
+        {/* Category & Status Bar */}
+        <div
+          style={{
+            display: "flex",
+            alignItems: "center",
+            gap: "0.8rem",
+            marginBottom: "1rem",
+            flexWrap: "wrap",
+          }}
+        >
+          <span
+            style={{
+              background: "var(--text)",
+              color: "var(--bg)",
+              fontFamily: "var(--font-body)",
+              fontSize: "0.6875rem",
+              fontWeight: 700,
+              letterSpacing: "0.08em",
+              textTransform: "uppercase",
+              padding: "0.3rem 0.8rem",
+              borderRadius: "999px",
+            }}
+          >
+            {project.field || "ENGINEERING"}
+          </span>
+
+          {project.status && (
             <span
               className="label"
               style={{
-                border: "1px solid var(--border)",
-                padding: "0.2rem 0.6rem",
-                borderRadius: "2px",
+                background: "rgba(26,26,26,0.06)",
+                padding: "0.3rem 0.75rem",
+                borderRadius: "999px",
                 color: "var(--text)",
+                fontWeight: 600,
               }}
             >
-              {project.field || "ENGINEERING"}
+              ● {project.status}
             </span>
-            {project.status && (
-              <span className="label" style={{ color: "var(--text-muted)" }}>
-                ● {project.status}
-              </span>
-            )}
-          </div>
-
-          <h1
-            style={{
-              fontFamily: "var(--font-display)",
-              fontWeight: 900,
-              fontSize: "clamp(3.5rem, 10vw, 11rem)",
-              textTransform: "uppercase",
-              letterSpacing: "-0.03em",
-              lineHeight: 0.88,
-              color: "var(--text)",
-            }}
-          >
-            {project.title}
-          </h1>
+          )}
         </div>
 
-        {/* Metadata Bar & Action Links */}
+        {/* Giant Display Title */}
+        <h1
+          style={{
+            fontFamily: "var(--font-display)",
+            fontWeight: 900,
+            fontSize: "clamp(3.5rem, 11vw, 12rem)",
+            textTransform: "uppercase",
+            letterSpacing: "-0.03em",
+            lineHeight: 0.85,
+            color: "var(--text)",
+            margin: "0 0 2rem 0",
+          }}
+        >
+          {project.title}
+        </h1>
+
+        {/* Narrative & Action Capsule Buttons */}
         <div
           style={{
             display: "flex",
             flexWrap: "wrap",
-            alignItems: "center",
+            alignItems: "flex-end",
             justifyContent: "space-between",
             gap: "2rem",
-            marginTop: "3rem",
             paddingTop: "1.5rem",
             borderTop: "1px solid var(--border)",
           }}
@@ -119,32 +148,40 @@ export default async function ProjectDetailPage({
           <p
             style={{
               fontFamily: "var(--font-body)",
-              fontSize: "clamp(1rem, 2vw, 1.35rem)",
-              maxWidth: "45ch",
+              fontSize: "clamp(1.05rem, 1.8vw, 1.35rem)",
+              maxWidth: "50ch",
               color: "var(--text)",
-              lineHeight: 1.5,
+              lineHeight: 1.6,
+              margin: 0,
             }}
           >
             {project.description}
           </p>
 
-          <div style={{ display: "flex", alignItems: "center", gap: "1rem" }}>
+          {/* Action Capsule Buttons */}
+          <div style={{ display: "flex", alignItems: "center", gap: "0.8rem", flexWrap: "wrap" }}>
             {project.demo && (
               <a
                 href={project.demo}
                 target="_blank"
                 rel="noopener noreferrer"
                 style={{
+                  display: "inline-flex",
+                  alignItems: "center",
+                  justifyContent: "center",
                   fontFamily: "var(--font-display)",
                   fontWeight: 900,
-                  fontSize: "1rem",
+                  fontSize: "1.1rem",
                   textTransform: "uppercase",
-                  padding: "0.8rem 1.8rem",
+                  letterSpacing: "0.04em",
+                  padding: "0.85rem 2rem",
+                  borderRadius: "999px",
                   background: "var(--text)",
                   color: "var(--bg)",
+                  border: "2px solid var(--text)",
                   textDecoration: "none",
-                  display: "inline-block",
-                  letterSpacing: "0.05em",
+                  transition: "transform 0.2s ease, opacity 0.2s ease",
+                  boxShadow: "0 2px 10px rgba(0,0,0,0.06)",
                 }}
               >
                 LIVE DEMO ↗
@@ -156,16 +193,21 @@ export default async function ProjectDetailPage({
                 target="_blank"
                 rel="noopener noreferrer"
                 style={{
+                  display: "inline-flex",
+                  alignItems: "center",
+                  justifyContent: "center",
                   fontFamily: "var(--font-display)",
                   fontWeight: 900,
-                  fontSize: "1rem",
+                  fontSize: "1.1rem",
                   textTransform: "uppercase",
-                  padding: "0.8rem 1.8rem",
-                  border: "1px solid var(--text)",
+                  letterSpacing: "0.04em",
+                  padding: "0.85rem 2rem",
+                  borderRadius: "999px",
+                  border: "2px solid var(--text)",
+                  background: "transparent",
                   color: "var(--text)",
                   textDecoration: "none",
-                  display: "inline-block",
-                  letterSpacing: "0.05em",
+                  transition: "all 0.2s ease",
                 }}
               >
                 GITHUB REPO ↗
@@ -175,46 +217,64 @@ export default async function ProjectDetailPage({
         </div>
       </section>
 
-      {/* ── Main Banner Image Showcase ── */}
-      <section style={{ width: "100%", background: "#1a1a1a", borderBottom: "1px solid var(--border)" }}>
-        <img
-          src={project.image}
-          alt={project.title}
-          style={{
-            width: "100%",
-            maxHeight: "75vh",
-            objectFit: "cover",
-            display: "block",
-          }}
-        />
+      {/* ── 2. Full-Width Main Media Banner Showcase ── */}
+      <section
+        style={{
+          width: "100%",
+          background: "#141414",
+          borderBottom: "1px solid var(--border)",
+          overflow: "hidden",
+        }}
+      >
+        <div style={{ maxWidth: "1600px", margin: "0 auto" }}>
+          <img
+            src={project.image}
+            alt={project.title}
+            style={{
+              width: "100%",
+              maxHeight: "80vh",
+              objectFit: "contain",
+              display: "block",
+            }}
+          />
+        </div>
       </section>
 
-      {/* ── Detailed Architecture & Tech Stack Grid ── */}
-      <section style={{ padding: "clamp(2.5rem, 5vw, 4rem) clamp(1.2rem, 3vw, 2.5rem)", borderBottom: "1px solid var(--border)" }}>
+      {/* ── 3. Editorial Architecture & System Specifications ── */}
+      <section
+        style={{
+          padding: "clamp(3rem, 6vw, 5.5rem) clamp(1.2rem, 3vw, 2.5rem)",
+          borderBottom: "1px solid var(--border)",
+        }}
+      >
         <div
           style={{
             maxWidth: "1400px",
             margin: "0 auto",
             display: "grid",
-            gridTemplateColumns: "repeat(auto-fit, minmax(min(100%, 300px), 1fr))",
-            gap: "clamp(2rem, 4vw, 4rem)",
+            gridTemplateColumns: "repeat(auto-fit, minmax(min(100%, 340px), 1fr))",
+            gap: "clamp(2.5rem, 5vw, 4.5rem)",
           }}
         >
-          {/* Tech Stack */}
+          {/* Column 1: Tech Stack & Overview */}
           <div>
-            <h3 className="label" style={{ marginBottom: "1.5rem" }}>TECHNOLOGY STACK</h3>
-            <div style={{ display: "flex", flexWrap: "wrap", gap: "0.5rem" }}>
+            <p className="label" style={{ marginBottom: "1.2rem", letterSpacing: "0.1em" }}>
+              (SYSTEM DELIVERABLES &amp; TECH)
+            </p>
+            <div style={{ display: "flex", flexWrap: "wrap", gap: "0.4rem", marginBottom: "2.5rem" }}>
               {project.tech.map((t) => (
                 <span
                   key={t}
                   style={{
                     fontFamily: "var(--font-body)",
-                    fontSize: "0.8rem",
-                    fontWeight: 600,
+                    fontSize: "0.75rem",
+                    fontWeight: 700,
                     textTransform: "uppercase",
-                    padding: "0.4rem 0.8rem",
+                    letterSpacing: "0.06em",
+                    padding: "0.35rem 0.8rem",
                     background: "rgba(26,26,26,0.06)",
                     border: "1px solid var(--border)",
+                    borderRadius: "2px",
                     color: "var(--text)",
                   }}
                 >
@@ -224,27 +284,39 @@ export default async function ProjectDetailPage({
             </div>
 
             {project.detailedDescription && (
-              <div style={{ marginTop: "3rem" }}>
-                <h3 className="label" style={{ marginBottom: "1rem" }}>PROJECT OVERVIEW</h3>
-                <p style={{ fontFamily: "var(--font-body)", fontSize: "0.95rem", lineHeight: 1.7, color: "var(--text)" }}>
+              <div style={{ borderTop: "1px solid var(--border)", paddingTop: "1.8rem" }}>
+                <p className="label" style={{ marginBottom: "0.8rem", letterSpacing: "0.1em" }}>
+                  ARCHITECTURE DEEP DIVE
+                </p>
+                <p
+                  style={{
+                    fontFamily: "var(--font-body)",
+                    fontSize: "0.95rem",
+                    lineHeight: 1.7,
+                    color: "var(--text)",
+                  }}
+                >
                   {project.detailedDescription}
                 </p>
               </div>
             )}
           </div>
 
-          {/* Highlights & Achievements */}
+          {/* Column 2: Key Capabilities & Highlights */}
           <div>
-            <h3 className="label" style={{ marginBottom: "1.5rem" }}>KEY HIGHLIGHTS</h3>
+            <p className="label" style={{ marginBottom: "1.2rem", letterSpacing: "0.1em" }}>
+              (KEY CAPABILITIES &amp; HIGHLIGHTS)
+            </p>
+
             {project.highlights && project.highlights.length > 0 ? (
-              <ul style={{ listStyle: "none", display: "flex", flexDirection: "column", gap: "1rem" }}>
+              <ul style={{ listStyle: "none", padding: 0, display: "flex", flexDirection: "column", gap: "1rem" }}>
                 {project.highlights.map((h, idx) => (
                   <li
                     key={idx}
                     style={{
                       display: "flex",
                       alignItems: "flex-start",
-                      gap: "1rem",
+                      gap: "0.9rem",
                       fontFamily: "var(--font-body)",
                       fontSize: "0.95rem",
                       lineHeight: 1.6,
@@ -253,7 +325,14 @@ export default async function ProjectDetailPage({
                       borderBottom: "1px solid var(--border)",
                     }}
                   >
-                    <span style={{ fontFamily: "var(--font-display)", fontWeight: 900, fontSize: "1.2rem", color: "var(--text-muted)" }}>
+                    <span
+                      style={{
+                        fontFamily: "var(--font-display)",
+                        fontWeight: 900,
+                        fontSize: "1.15rem",
+                        color: "var(--text-muted)",
+                      }}
+                    >
                       {String(idx + 1).padStart(2, "0")}
                     </span>
                     <span>{h}</span>
@@ -261,33 +340,62 @@ export default async function ProjectDetailPage({
                 ))}
               </ul>
             ) : (
-              <p style={{ fontFamily: "var(--font-body)", fontSize: "0.9rem", color: "var(--text-muted)" }}>
-                Built with scalable architecture, high performance standards, and production-grade code.
+              <p style={{ fontFamily: "var(--font-body)", fontSize: "0.92rem", color: "var(--text-muted)", lineHeight: 1.6 }}>
+                Architected with high scalability, fault tolerance, and clean user-centric interactive interfaces.
               </p>
             )}
           </div>
         </div>
       </section>
 
-      {/* ── Secondary Gallery Showcase ── */}
+      {/* ── 4. Secondary Screenshot Gallery ── */}
       {imagesList.length > 1 && (
-        <section style={{ padding: "clamp(2.5rem, 5vw, 4rem) clamp(1.2rem, 3vw, 2.5rem)", borderBottom: "1px solid var(--border)" }}>
-          <h3 className="label" style={{ marginBottom: "2rem" }}>VISUAL GALLERY</h3>
-          <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(min(100%, 360px), 1fr))", gap: "1.5rem" }}>
-            {imagesList.map((imgSrc, idx) => (
-              <div key={idx} style={{ background: "#1a1a1a", border: "1px solid var(--border)", overflow: "hidden" }}>
-                <img
-                  src={imgSrc}
-                  alt={`${project.title} screenshot ${idx + 1}`}
-                  style={{ width: "100%", height: "100%", objectFit: "cover", display: "block" }}
-                />
-              </div>
-            ))}
+        <section
+          style={{
+            padding: "clamp(3rem, 6vw, 5.5rem) clamp(1.2rem, 3vw, 2.5rem)",
+            borderBottom: "1px solid var(--border)",
+          }}
+        >
+          <div style={{ maxWidth: "1400px", margin: "0 auto" }}>
+            <p className="label" style={{ marginBottom: "2rem", letterSpacing: "0.1em" }}>
+              VISUAL GALLERY &amp; SCREENSHOTS
+            </p>
+            <div
+              style={{
+                display: "grid",
+                gridTemplateColumns: "repeat(auto-fit, minmax(min(100%, 380px), 1fr))",
+                gap: "1.5rem",
+              }}
+            >
+              {imagesList.map((imgSrc, idx) => (
+                <div
+                  key={idx}
+                  style={{
+                    background: "#161616",
+                    border: "1px solid var(--border)",
+                    borderRadius: "4px",
+                    overflow: "hidden",
+                    aspectRatio: "16/10",
+                  }}
+                >
+                  <img
+                    src={imgSrc}
+                    alt={`${project.title} screenshot ${idx + 1}`}
+                    style={{
+                      width: "100%",
+                      height: "100%",
+                      objectFit: "cover",
+                      display: "block",
+                    }}
+                  />
+                </div>
+              ))}
+            </div>
           </div>
         </section>
       )}
 
-      {/* ── Next Project Transition Footer (matching reference) ── */}
+      {/* ── 5. Next Project Transition Banner ── */}
       <Link
         href={`/projects/${nextSlug}`}
         style={{
@@ -295,14 +403,19 @@ export default async function ProjectDetailPage({
           display: "block",
           background: "var(--bg-dark)",
           color: "var(--text-cream)",
-          padding: "5rem 2rem",
+          padding: "clamp(4.5rem, 8vh, 7rem) clamp(1.2rem, 3vw, 2.5rem)",
           transition: "background 0.3s ease",
         }}
       >
         <div style={{ maxWidth: "1400px", margin: "0 auto" }}>
           <span
             className="label"
-            style={{ color: "rgba(232,228,220,0.5)", display: "block", marginBottom: "1rem" }}
+            style={{
+              color: "rgba(232,228,220,0.6)",
+              display: "block",
+              marginBottom: "1rem",
+              letterSpacing: "0.12em",
+            }}
           >
             NEXT PROJECT →
           </span>
@@ -310,11 +423,12 @@ export default async function ProjectDetailPage({
             style={{
               fontFamily: "var(--font-display)",
               fontWeight: 900,
-              fontSize: "clamp(3rem, 9vw, 9rem)",
+              fontSize: "clamp(3.2rem, 10vw, 10rem)",
               textTransform: "uppercase",
               letterSpacing: "-0.03em",
-              lineHeight: 0.9,
+              lineHeight: 0.88,
               color: "var(--text-cream)",
+              margin: 0,
             }}
           >
             {nextProject.title}

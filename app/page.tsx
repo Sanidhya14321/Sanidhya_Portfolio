@@ -3,7 +3,6 @@
 import HeroSection from "@/components/sections/HeroSection";
 import ManifestoSection from "@/components/sections/ManifestoSection";
 import ProjectsSection from "@/components/sections/ProjectsSection";
-import BreakTeaserSection from "@/components/sections/BreakTeaserSection";
 import ExperienceSection from "@/components/sections/ExperienceSection";
 import SkillsSection from "@/components/sections/SkillsSection";
 import AboutSection from "@/components/sections/AboutSection";
@@ -56,9 +55,6 @@ export default function Home() {
 
       {/* 4. Featured Works Section */}
       <ProjectsSection />
-
-      {/* 5. Break / Experiments Section */}
-      <BreakTeaserSection />
 
       {/* 6. Experience Timeline */}
       <ExperienceSection />

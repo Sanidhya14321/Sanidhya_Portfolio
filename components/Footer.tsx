@@ -32,25 +32,26 @@ export default function Footer() {
       style={{
         background: "var(--bg)",
         borderTop: "1px solid var(--border)",
+        width: "100%",
       }}
     >
-      {/* Links section */}
+      {/* ── Follow & Navigation Columns ── */}
       <div
         style={{
           display: "grid",
-          gridTemplateColumns: "1fr 1fr",
+          gridTemplateColumns: "repeat(auto-fit, minmax(min(100%, 280px), 1fr))",
           borderBottom: "1px solid var(--border)",
         }}
       >
-        {/* Follow column */}
+        {/* Follow Column */}
         <div
           style={{
             borderRight: "1px solid var(--border)",
-            padding: "2rem 2rem",
+            padding: "clamp(2rem, 4vw, 3.5rem) clamp(1.2rem, 3vw, 2.5rem)",
           }}
         >
-          <p className="label" style={{ marginBottom: "1rem" }}>(FOLLOW)</p>
-          <ul style={{ listStyle: "none", display: "flex", flexDirection: "column", gap: "0.5rem" }}>
+          <p className="label" style={{ marginBottom: "1.2rem", letterSpacing: "0.1em" }}>(FOLLOW)</p>
+          <ul style={{ listStyle: "none", display: "flex", flexDirection: "column", gap: "0.6rem", padding: 0 }}>
             {socialLinks.map((link) => (
               <li key={link.label}>
                 <a
@@ -60,17 +61,23 @@ export default function Footer() {
                   style={{
                     fontFamily: "var(--font-display)",
                     fontWeight: 900,
-                    fontSize: "clamp(1.5rem, 3vw, 2.5rem)",
+                    fontSize: "clamp(2rem, 4.5vw, 3.5rem)",
                     textTransform: "uppercase",
-                    letterSpacing: "-0.01em",
+                    letterSpacing: "-0.015em",
                     color: "var(--text)",
                     textDecoration: "none",
                     display: "inline-block",
-                    lineHeight: 1.2,
-                    transition: "opacity 0.2s ease",
+                    lineHeight: 1.1,
+                    transition: "opacity 0.2s ease, transform 0.2s ease",
                   }}
-                  onMouseEnter={(e) => ((e.target as HTMLElement).style.opacity = "0.5")}
-                  onMouseLeave={(e) => ((e.target as HTMLElement).style.opacity = "1")}
+                  onMouseEnter={(e) => {
+                    (e.target as HTMLElement).style.opacity = "0.45";
+                    (e.target as HTMLElement).style.transform = "translateX(6px)";
+                  }}
+                  onMouseLeave={(e) => {
+                    (e.target as HTMLElement).style.opacity = "1";
+                    (e.target as HTMLElement).style.transform = "translateX(0px)";
+                  }}
                 >
                   {link.label}
                 </a>
@@ -79,10 +86,10 @@ export default function Footer() {
           </ul>
         </div>
 
-        {/* Navigation column */}
-        <div style={{ padding: "2rem 2rem" }}>
-          <p className="label" style={{ marginBottom: "1rem", textAlign: "right" }}>(NAVIGATION)</p>
-          <ul style={{ listStyle: "none", display: "flex", flexDirection: "column", gap: "0.5rem", alignItems: "flex-end" }}>
+        {/* Navigation Column */}
+        <div style={{ padding: "clamp(2rem, 4vw, 3.5rem) clamp(1.2rem, 3vw, 2.5rem)" }}>
+          <p className="label" style={{ marginBottom: "1.2rem", letterSpacing: "0.1em" }}>(NAVIGATION)</p>
+          <ul style={{ listStyle: "none", display: "flex", flexDirection: "column", gap: "0.6rem", padding: 0 }}>
             {navLinks.map((link) => (
               <li key={link.label}>
                 <Link
@@ -90,17 +97,23 @@ export default function Footer() {
                   style={{
                     fontFamily: "var(--font-display)",
                     fontWeight: 900,
-                    fontSize: "clamp(1.5rem, 3vw, 2.5rem)",
+                    fontSize: "clamp(2rem, 4.5vw, 3.5rem)",
                     textTransform: "uppercase",
-                    letterSpacing: "-0.01em",
+                    letterSpacing: "-0.015em",
                     color: "var(--text)",
                     textDecoration: "none",
                     display: "inline-block",
-                    lineHeight: 1.2,
-                    transition: "opacity 0.2s ease",
+                    lineHeight: 1.1,
+                    transition: "opacity 0.2s ease, transform 0.2s ease",
                   }}
-                  onMouseEnter={(e) => ((e.target as HTMLElement).style.opacity = "0.5")}
-                  onMouseLeave={(e) => ((e.target as HTMLElement).style.opacity = "1")}
+                  onMouseEnter={(e) => {
+                    (e.target as HTMLElement).style.opacity = "0.45";
+                    (e.target as HTMLElement).style.transform = "translateX(6px)";
+                  }}
+                  onMouseLeave={(e) => {
+                    (e.target as HTMLElement).style.opacity = "1";
+                    (e.target as HTMLElement).style.transform = "translateX(0px)";
+                  }}
                 >
                   {link.label}
                 </Link>
@@ -110,38 +123,59 @@ export default function Footer() {
         </div>
       </div>
 
-      {/* Back to top */}
+      {/* ── Signature Capsule Back To Top Button ── */}
       <div
         style={{
+          width: "100%",
+          padding: "clamp(3.5rem, 6vw, 5.5rem) 2rem",
           display: "flex",
+          alignItems: "center",
           justifyContent: "center",
-          padding: "1.2rem 2rem",
           borderBottom: "1px solid var(--border)",
         }}
       >
-        <a
-          href="#"
+        <button
+          type="button"
           onClick={scrollToTop}
-          className="label"
           style={{
+            display: "inline-flex",
+            alignItems: "center",
+            justifyContent: "center",
+            fontFamily: "var(--font-display)",
+            fontWeight: 900,
+            fontSize: "clamp(1.2rem, 2.2vw, 1.8rem)",
+            textTransform: "uppercase",
+            letterSpacing: "0.04em",
+            padding: "1rem clamp(2.5rem, 5vw, 4rem)",
+            borderRadius: "999px",
+            border: "2px solid var(--text)",
+            background: "transparent",
             color: "var(--text)",
-            textDecoration: "none",
             cursor: "pointer",
-            transition: "opacity 0.2s ease",
+            transition: "all 0.3s cubic-bezier(0.19, 1, 0.22, 1)",
+            boxShadow: "0 2px 10px rgba(0,0,0,0.04)",
           }}
-          onMouseEnter={(e) => ((e.target as HTMLElement).style.opacity = "0.5")}
-          onMouseLeave={(e) => ((e.target as HTMLElement).style.opacity = "1")}
+          onMouseEnter={(e) => {
+            e.currentTarget.style.background = "var(--text)";
+            e.currentTarget.style.color = "var(--bg)";
+            e.currentTarget.style.transform = "scale(1.04)";
+          }}
+          onMouseLeave={(e) => {
+            e.currentTarget.style.background = "transparent";
+            e.currentTarget.style.color = "var(--text)";
+            e.currentTarget.style.transform = "scale(1)";
+          }}
         >
           BACK TO TOP ↑
-        </a>
+        </button>
       </div>
 
-      {/* Dark brown CTA marquee */}
+      {/* ── Giant Dark CTA Marquee ── */}
       <div
         style={{
           background: "var(--bg-dark)",
           overflow: "hidden",
-          padding: "2rem 0",
+          padding: "clamp(2rem, 4vw, 3.5rem) 0",
         }}
       >
         <div
@@ -153,10 +187,10 @@ export default function Footer() {
             style={{
               fontFamily: "var(--font-display)",
               fontWeight: 900,
-              fontSize: "clamp(4rem, 11vw, 10rem)",
+              fontSize: "clamp(4.5rem, 14vw, 14rem)",
               textTransform: "uppercase",
-              letterSpacing: "-0.02em",
-              lineHeight: 0.9,
+              letterSpacing: "-0.03em",
+              lineHeight: 0.82,
               color: "var(--text-cream)",
               whiteSpace: "nowrap",
             }}
@@ -167,10 +201,10 @@ export default function Footer() {
         </div>
       </div>
 
-      {/* Bottom bar */}
+      {/* ── Bottom Metadata Bar ── */}
       <div
         style={{
-          padding: "1rem 2rem",
+          padding: "1.2rem clamp(1rem, 3vw, 2.5rem)",
           display: "flex",
           flexWrap: "wrap",
           alignItems: "center",
@@ -182,15 +216,15 @@ export default function Footer() {
       >
         <span
           className="label"
-          style={{ color: "rgba(232,228,220,0.5)", letterSpacing: "0.05em" }}
+          style={{ color: "rgba(232,228,220,0.6)", letterSpacing: "0.08em" }}
         >
           ● NEW DELHI, IN &nbsp;&nbsp; 28.6139° N, 77.2090° E
         </span>
         <span
           className="label"
-          style={{ color: "rgba(232,228,220,0.5)", letterSpacing: "0.05em" }}
+          style={{ color: "rgba(232,228,220,0.6)", letterSpacing: "0.08em" }}
         >
-          ©{year} ALL RIGHTS RESERVED
+          ©{year} SANIDHYA VATS — ALL RIGHTS RESERVED
         </span>
       </div>
     </footer>

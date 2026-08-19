@@ -41,50 +41,46 @@ const navLinks = [
 ];
 
 export default function Navigation() {
-  const [scrolled, setScrolled] = useState(false);
   const pathname = usePathname();
-
-  useEffect(() => {
-    const onScroll = () => setScrolled(window.scrollY > 10);
-    window.addEventListener("scroll", onScroll, { passive: true });
-    return () => window.removeEventListener("scroll", onScroll);
-  }, []);
 
   const city = "NEW DELHI, IN";
   const coords = "28.6139° N, 77.2090° E";
 
   return (
     <header
-      className="fixed top-0 left-0 right-0 z-50"
+      className="fixed top-0 left-0 right-0 z-50 pointer-events-none"
       style={{
-        backgroundColor: scrolled ? "rgba(232, 228, 220, 0.95)" : "transparent",
-        backdropFilter: scrolled ? "blur(8px)" : "none",
-        borderBottom: scrolled ? "1px solid rgba(26, 26, 26, 0.1)" : "none",
-        transition: "background-color 0.3s ease, border-color 0.3s ease",
+        backgroundColor: "transparent",
+        backdropFilter: "none",
+        borderBottom: "none",
+        mixBlendMode: "difference",
+        width: "100%",
       }}
     >
       <div
-        className="flex items-center justify-between"
+        className="flex items-center justify-between pointer-events-auto"
         style={{
-          padding: "1rem 1.5rem",
+          padding: "1rem clamp(0.75rem, 2.5vw, 2.5rem)",
           fontFamily: "var(--font-body)",
-          fontSize: "0.6875rem",
-          fontWeight: 500,
+          fontSize: "clamp(0.6rem, 1.2vw, 0.6875rem)",
+          fontWeight: 600,
           textTransform: "uppercase",
           letterSpacing: "0.08em",
-          color: "var(--text-muted)",
+          color: "#ffffff",
+          width: "100%",
         }}
       >
         {/* Left — location + time + coords */}
-        <div className="flex items-center gap-4">
+        <div className="flex items-center" style={{ gap: "clamp(0.4rem, 1.5vw, 1rem)" }}>
           <Link
             href="/"
             style={{
               textDecoration: "none",
-              color: "inherit",
+              color: "#ffffff",
               display: "flex",
               alignItems: "center",
               gap: "0.35rem",
+              whiteSpace: "nowrap",
             }}
           >
             <span
@@ -92,22 +88,27 @@ export default function Navigation() {
                 width: "6px",
                 height: "6px",
                 borderRadius: "50%",
-                background: "var(--text)",
+                background: "#ffffff",
                 display: "inline-block",
                 flexShrink: 0,
               }}
             />
             {city}
           </Link>
-          <span>
+          <span style={{ color: "#ffffff", whiteSpace: "nowrap" }}>
             <LiveClock />
           </span>
-          <span className="hidden md:inline">{coords}</span>
+          <span className="hidden md:inline" style={{ color: "#ffffff", opacity: 0.85, whiteSpace: "nowrap" }}>
+            {coords}
+          </span>
         </div>
 
         {/* Right — nav links matching reference */}
         <nav aria-label="Main navigation">
-          <ul className="flex items-center gap-6 list-none">
+          <ul
+            className="flex items-center list-none m-0 p-0"
+            style={{ gap: "clamp(0.6rem, 2vw, 1.5rem)" }}
+          >
             {navLinks.map((link) => {
               const isActive = pathname === link.href || (link.href !== "/" && pathname.startsWith(link.href));
               return (
@@ -117,14 +118,15 @@ export default function Navigation() {
                     className="nav-link"
                     style={{
                       fontFamily: "var(--font-body)",
-                      fontSize: "0.6875rem",
+                      fontSize: "clamp(0.6rem, 1.2vw, 0.6875rem)",
                       fontWeight: isActive ? 800 : 600,
                       textTransform: "uppercase",
-                      letterSpacing: "0.1em",
-                      color: "var(--text)",
+                      letterSpacing: "0.08em",
+                      color: "#ffffff",
                       textDecoration: "none",
-                      borderBottom: isActive ? "1.5px solid var(--text)" : "none",
+                      borderBottom: isActive ? "1.5px solid #ffffff" : "none",
                       paddingBottom: "2px",
+                      whiteSpace: "nowrap",
                     }}
                   >
                     {link.label}

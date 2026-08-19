@@ -97,8 +97,8 @@ export default function AboutPage() {
       <SkillsSection />
 
       {/* Education & Achievements */}
-      <section style={{ padding: "4rem 2rem", borderTop: "1px solid var(--border)" }}>
-        <div style={{ maxWidth: "1400px", margin: "0 auto", display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(320px, 1fr))", gap: "3rem" }}>
+      <section style={{ padding: "clamp(2.5rem, 5vw, 4rem) clamp(1.2rem, 3vw, 2.5rem)", borderTop: "1px solid var(--border)" }}>
+        <div style={{ maxWidth: "1400px", margin: "0 auto", display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(min(100%, 300px), 1fr))", gap: "clamp(2rem, 4vw, 3rem)" }}>
           <div>
             <p className="label" style={{ marginBottom: "1rem" }}>EDUCATION</p>
             <h3

@@ -100,7 +100,7 @@ export default function ManifestoSection() {
         <div
           style={{
             display: "grid",
-            gridTemplateColumns: "repeat(auto-fit, minmax(300px, 1fr))",
+            gridTemplateColumns: "repeat(auto-fit, minmax(min(100%, 280px), 1fr))",
             gap: "2.5rem",
             borderTop: "1px solid rgba(232, 228, 220, 0.15)",
             paddingTop: "2rem",

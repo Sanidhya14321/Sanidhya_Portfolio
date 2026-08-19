@@ -2,6 +2,7 @@
 
 import { portfolioData } from "@/data/portfolio";
 import { useEffect, useRef, useState } from "react";
+import Link from "next/link";
 
 function RevealBlock({
   children,
@@ -21,7 +22,7 @@ function RevealBlock({
           observer.disconnect();
         }
       },
-      { threshold: 0.1 }
+      { threshold: 0.08 }
     );
     if (ref.current) observer.observe(ref.current);
     return () => observer.disconnect();
@@ -32,8 +33,8 @@ function RevealBlock({
       ref={ref}
       style={{
         opacity: visible ? 1 : 0,
-        transform: visible ? "translateY(0)" : "translateY(30px)",
-        transition: `opacity 0.8s cubic-bezier(0.19, 1, 0.22, 1) ${delay}s, transform 0.8s cubic-bezier(0.19, 1, 0.22, 1) ${delay}s`,
+        transform: visible ? "translateY(0)" : "translateY(24px)",
+        transition: `opacity 0.7s cubic-bezier(0.19, 1, 0.22, 1) ${delay}s, transform 0.7s cubic-bezier(0.19, 1, 0.22, 1) ${delay}s`,
       }}
     >
       {children}
@@ -43,51 +44,102 @@ function RevealBlock({
 
 export default function AboutSection() {
   const data = portfolioData;
+  const pills = ["ENGINEER", "COMMUNITY", "CREATIVE TECH"];
 
   return (
-    <section
-      id="about"
-      style={{
-        background: "var(--bg)",
-        borderTop: "1px solid var(--border)",
-      }}
-    >
-      {/* Section heading */}
-      <div style={{ padding: "2rem 2rem 0" }}>
-        <RevealBlock>
-          <h2
-            style={{
-              fontFamily: "var(--font-display)",
-              fontWeight: 900,
-              fontSize: "clamp(3rem, 8vw, 8rem)",
-              textTransform: "uppercase",
-              letterSpacing: "-0.02em",
-              lineHeight: 0.9,
-              color: "var(--text)",
-              marginBottom: "3rem",
-            }}
-          >
-            ABOUT SANIDHYA
-          </h2>
-        </RevealBlock>
+    <section id="about" style={{ background: "var(--bg)", width: "100%" }}>
+      {/* ── Giant ABOUT Section Banner ── */}
+      <div
+        style={{
+          borderTop: "1px solid var(--border)",
+          padding: "clamp(2rem, 4vw, 3.5rem) clamp(1rem, 3vw, 2.5rem) clamp(1rem, 2vw, 2rem)",
+          width: "100%",
+          overflow: "hidden",
+        }}
+      >
+        <h2
+          style={{
+            fontFamily: "var(--font-display)",
+            fontWeight: 900,
+            fontSize: "clamp(4.5rem, 15vw, 18rem)",
+            textTransform: "uppercase",
+            letterSpacing: "-0.03em",
+            lineHeight: 0.82,
+            color: "var(--text)",
+            margin: 0,
+            whiteSpace: "nowrap",
+            width: "100%",
+          }}
+        >
+          ABOUT
+        </h2>
       </div>
 
-      {/* Responsive layout — side-by-side on desktop, naturally stacked on mobile */}
+      {/* ── Subheader Bar ── */}
+      <div
+        style={{
+          borderTop: "1px solid var(--border)",
+          borderBottom: "1px solid var(--border)",
+          padding: "1rem clamp(1rem, 3vw, 2.5rem)",
+          display: "flex",
+          alignItems: "center",
+          justifyContent: "space-between",
+          flexWrap: "wrap",
+          gap: "1rem",
+        }}
+      >
+        <span
+          className="label"
+          style={{
+            color: "var(--text)",
+            fontWeight: 600,
+            letterSpacing: "0.12em",
+          }}
+        >
+          BACKGROUND &amp; PHILOSOPHY
+        </span>
+
+        {/* Right Pill Badges */}
+        <div style={{ display: "flex", alignItems: "center", gap: "0.5rem", flexWrap: "wrap" }}>
+          {pills.map((pill) => (
+            <span
+              key={pill}
+              style={{
+                fontFamily: "var(--font-body)",
+                fontSize: "0.6875rem",
+                fontWeight: 700,
+                letterSpacing: "0.08em",
+                textTransform: "uppercase",
+                background: "var(--text)",
+                color: "var(--bg)",
+                padding: "0.35rem 0.85rem",
+                borderRadius: "999px",
+                display: "inline-block",
+              }}
+            >
+              {pill}
+            </span>
+          ))}
+        </div>
+      </div>
+
+      {/* ── Editorial 2-Column Split: Portrait & Narrative ── */}
       <div
         style={{
           display: "grid",
           gridTemplateColumns: "repeat(auto-fit, minmax(min(100%, 380px), 1fr))",
           gap: "0",
-          borderTop: "1px solid var(--border)",
+          borderBottom: "1px solid var(--border)",
         }}
       >
-        {/* Left — Profile image */}
+        {/* Left — Portrait */}
         <div
           style={{
             borderRight: "1px solid var(--border)",
+            borderBottom: "1px solid var(--border)",
             overflow: "hidden",
             aspectRatio: "4/5",
-            background: "#1a1a1a",
+            background: "#161616",
           }}
         >
           <img
@@ -98,61 +150,59 @@ export default function AboutSection() {
               height: "100%",
               objectFit: "cover",
               display: "block",
-              filter: "grayscale(0.2) contrast(1.05)",
+              filter: "grayscale(0.12) contrast(1.05)",
             }}
           />
         </div>
 
-        {/* Right — Bio + details */}
+        {/* Right — Bio & Highlights */}
         <div
           style={{
-            padding: "2.5rem 2rem",
+            padding: "clamp(2rem, 4vw, 3.5rem) clamp(1.5rem, 3vw, 3rem)",
             display: "flex",
             flexDirection: "column",
             justifyContent: "space-between",
           }}
         >
           <div>
-            <RevealBlock delay={0.1}>
+            <RevealBlock delay={0.05}>
               <p
                 className="label"
-                style={{ marginBottom: "1.5rem" }}
+                style={{ marginBottom: "1.2rem", letterSpacing: "0.1em" }}
               >
-                WHO&apos;S THIS?
+                (THE NARRATIVE)
               </p>
               <p
                 style={{
                   fontFamily: "var(--font-body)",
-                  fontSize: "clamp(0.95rem, 1.5vw, 1.2rem)",
-                  lineHeight: 1.7,
+                  fontSize: "clamp(1rem, 1.6vw, 1.2rem)",
+                  lineHeight: 1.75,
                   color: "var(--text)",
-                  maxWidth: "50ch",
+                  marginBottom: "2.5rem",
                 }}
               >
                 {data.about.narrative}
               </p>
             </RevealBlock>
-          </div>
 
-          {/* Highlights */}
-          <div style={{ marginTop: "3rem" }}>
-            <RevealBlock delay={0.2}>
-              <p className="label" style={{ marginBottom: "1rem" }}>HIGHLIGHTS</p>
-              <ul style={{ listStyle: "none", display: "flex", flexDirection: "column", gap: "0.6rem" }}>
+            {/* Core Highlights */}
+            <RevealBlock delay={0.1}>
+              <p className="label" style={{ marginBottom: "1rem", letterSpacing: "0.1em" }}>CORE HIGHLIGHTS</p>
+              <ul style={{ listStyle: "none", display: "flex", flexDirection: "column", gap: "0.75rem", padding: 0 }}>
                 {data.about.highlights.map((h, i) => (
                   <li
                     key={i}
                     style={{
                       display: "flex",
                       alignItems: "flex-start",
-                      gap: "0.5rem",
+                      gap: "0.6rem",
                       fontFamily: "var(--font-body)",
-                      fontSize: "0.875rem",
-                      color: "var(--text-muted)",
-                      lineHeight: 1.5,
+                      fontSize: "0.92rem",
+                      color: "var(--text)",
+                      lineHeight: 1.55,
                     }}
                   >
-                    <span style={{ color: "var(--text)", flexShrink: 0 }}>—</span>
+                    <span style={{ color: "var(--text-muted)", flexShrink: 0, fontWeight: 700 }}>—</span>
                     {h}
                   </li>
                 ))}
@@ -160,32 +210,33 @@ export default function AboutSection() {
             </RevealBlock>
           </div>
 
-          {/* Education */}
+          {/* Education Milestone */}
           <div
             style={{
-              marginTop: "3rem",
+              marginTop: "2.5rem",
               paddingTop: "1.5rem",
               borderTop: "1px solid var(--border)",
             }}
           >
-            <RevealBlock delay={0.3}>
-              <p className="label" style={{ marginBottom: "0.5rem" }}>EDUCATION</p>
-              <p
+            <RevealBlock delay={0.15}>
+              <p className="label" style={{ marginBottom: "0.4rem" }}>ACADEMICS</p>
+              <h3
                 style={{
                   fontFamily: "var(--font-display)",
-                  fontWeight: 800,
-                  fontSize: "clamp(1rem, 2vw, 1.5rem)",
+                  fontWeight: 900,
+                  fontSize: "clamp(1.2rem, 2.2vw, 1.6rem)",
                   textTransform: "uppercase",
                   color: "var(--text)",
                   lineHeight: 1.1,
+                  margin: 0,
                 }}
               >
                 {data.education.institution}
-              </p>
+              </h3>
               <p
                 style={{
                   fontFamily: "var(--font-body)",
-                  fontSize: "0.8rem",
+                  fontSize: "0.85rem",
                   color: "var(--text-muted)",
                   marginTop: "0.3rem",
                 }}
@@ -197,37 +248,49 @@ export default function AboutSection() {
         </div>
       </div>
 
-      {/* Achievements row */}
-      <div style={{ borderTop: "1px solid var(--border)" }}>
-        {data.achievements.map((item, i) => (
-          <div
-            key={i}
-            style={{
-              padding: "1rem 2rem",
-              borderBottom: "1px solid var(--border)",
-              display: "flex",
-              alignItems: "center",
-              gap: "1.5rem",
-            }}
-          >
-            <span
-              className="label"
-              style={{ minWidth: "2ch", color: "var(--text-muted)" }}
-            >
-              {String(i + 1).padStart(2, "0")}
-            </span>
-            <span
-              style={{
-                fontFamily: "var(--font-body)",
-                fontSize: "0.875rem",
-                color: "var(--text)",
-                lineHeight: 1.5,
-              }}
-            >
-              {item}
-            </span>
-          </div>
-        ))}
+      {/* ── Center Action Pill Button ── */}
+      <div
+        style={{
+          width: "100%",
+          padding: "clamp(4.5rem, 8vw, 7.5rem) 2rem",
+          display: "flex",
+          alignItems: "center",
+          justifyContent: "center",
+        }}
+      >
+        <Link
+          href="/about"
+          style={{
+            display: "inline-flex",
+            alignItems: "center",
+            justifyContent: "center",
+            fontFamily: "var(--font-display)",
+            fontWeight: 900,
+            fontSize: "clamp(1.4rem, 2.5vw, 2.2rem)",
+            textTransform: "uppercase",
+            letterSpacing: "0.04em",
+            padding: "1.1rem clamp(2.8rem, 6vw, 4.5rem)",
+            borderRadius: "999px",
+            border: "2px solid var(--text)",
+            background: "transparent",
+            color: "var(--text)",
+            textDecoration: "none",
+            transition: "all 0.3s cubic-bezier(0.19, 1, 0.22, 1)",
+            boxShadow: "0 2px 10px rgba(0,0,0,0.04)",
+          }}
+          onMouseEnter={(e) => {
+            e.currentTarget.style.background = "var(--text)";
+            e.currentTarget.style.color = "var(--bg)";
+            e.currentTarget.style.transform = "scale(1.04)";
+          }}
+          onMouseLeave={(e) => {
+            e.currentTarget.style.background = "transparent";
+            e.currentTarget.style.color = "var(--text)";
+            e.currentTarget.style.transform = "scale(1)";
+          }}
+        >
+          EXPLORE FULL BIO
+        </Link>
       </div>
     </section>
   );

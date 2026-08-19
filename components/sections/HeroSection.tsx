@@ -2,7 +2,7 @@
 
 import { portfolioData } from "@/data/portfolio";
 import { useEffect, useState, useRef } from "react";
-import { motion, useScroll, useTransform, useSpring } from "framer-motion";
+import { motion, useScroll, useTransform, useSpring, useAnimationControls } from "framer-motion";
 
 function HeroChar({
   char,
@@ -13,11 +13,21 @@ function HeroChar({
   index: number;
   visible: boolean;
 }) {
-  const [isFlipping, setIsFlipping] = useState(false);
+  const controls = useAnimationControls();
+  const isFlipping = useRef(false);
 
-  const handleMouseEnter = () => {
-    if (isFlipping || char === " ") return;
-    setIsFlipping(true);
+  const handleMouseEnter = async () => {
+    if (isFlipping.current || char === " ") return;
+    isFlipping.current = true;
+    await controls.start({
+      rotateY: 360,
+      transition: {
+        duration: 0.6,
+        ease: [0.22, 1, 0.36, 1],
+      },
+    });
+    controls.set({ rotateY: 0 });
+    isFlipping.current = false;
   };
 
   return (
@@ -27,23 +37,20 @@ function HeroChar({
       style={{
         display: "inline-block",
         transitionDelay: `${0.015 * index}s`,
-        perspective: "800px",
+        perspective: "1000px",
       }}
       onMouseEnter={handleMouseEnter}
     >
       <motion.span
+        animate={controls}
+        initial={{ rotateY: 0 }}
         style={{
           display: "inline-block",
           transformStyle: "preserve-3d",
           cursor: "default",
           userSelect: "none",
+          transformOrigin: "center center",
         }}
-        animate={isFlipping ? { rotateY: [0, 360] } : { rotateY: 0 }}
-        transition={{
-          duration: 0.65,
-          ease: [0.25, 1, 0.5, 1],
-        }}
-        onAnimationComplete={() => setIsFlipping(false)}
       >
         {char === " " ? "\u00A0" : char}
       </motion.span>
@@ -62,7 +69,7 @@ function HeroName({ name, visible }: { name: string; visible: boolean }) {
         textTransform: "uppercase",
         letterSpacing: "-0.015em",
         lineHeight: 0.85,
-        fontSize: "clamp(4rem, 12vw, 13.5rem)",
+        fontSize: "clamp(2.8rem, 11.5vw, 13.5rem)",
         display: "block",
         overflow: "hidden",
         whiteSpace: "nowrap",
@@ -108,9 +115,9 @@ export default function HeroSection() {
   const labelRightX = useTransform(smoothProgress, [0, 0.75], ["7vw", "0vw"]);
 
   // 3. Central Media Animation
-  const mediaWidth = useTransform(smoothProgress, [0, 0.8], ["20vw", "100vw"]);
-  const mediaHeight = useTransform(smoothProgress, [0, 0.8], ["24vh", "100vh"]);
-  const mediaY = useTransform(smoothProgress, [0, 0.8], ["1rem", "8rem"]);
+  const mediaWidth = useTransform(smoothProgress, [0, 1], ["20vw", "100vw"]);
+  const mediaHeight = useTransform(smoothProgress, [0, 1], ["24vh", "100vh"]);
+  const mediaY = useTransform(smoothProgress, [0, 1], ["1rem", "6rem"]);
 
   return (
     <>
@@ -138,7 +145,7 @@ export default function HeroSection() {
         style={{
           position: "relative",
           height: "auto",
-          minHeight: "180vh",
+          minHeight: "220vh",
           background: "var(--bg)",
         }}
       >
@@ -147,7 +154,7 @@ export default function HeroSection() {
             position: "sticky",
             top: 0,
             height: "auto",
-            minHeight: "100vh",
+            minHeight: "128vh",
             background: "var(--bg)",
             overflow: "hidden",
             display: "flex",

@@ -285,7 +285,7 @@ export default function HeroSection() {
                   }}
                 >
                   <img
-                    src="/Debate-App/main.png"
+                    src="/DSC03737.JPG"
                     alt="Portfolio Visual Showcase"
                     style={{
                       width: "100%",

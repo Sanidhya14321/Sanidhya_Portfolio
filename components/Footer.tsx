@@ -13,10 +13,9 @@ const socialLinks = [
 ];
 
 const navLinks = [
-  { label: "HOME", href: "/" },
-  { label: "WORKS", href: "/works" },
-  { label: "BREAK", href: "/break" },
-  { label: "ABOUT", href: "/about" },
+  { label: "HOME", href: "/", dir: "down" },
+  { label: "WORKS", href: "/works", dir: "up" },
+  { label: "ABOUT", href: "/about", dir: "left" },
 ];
 
 export default function Footer() {
@@ -94,6 +93,7 @@ export default function Footer() {
               <li key={link.label}>
                 <Link
                   href={link.href}
+                  data-transition-dir={link.dir}
                   style={{
                     fontFamily: "var(--font-display)",
                     fontWeight: 900,

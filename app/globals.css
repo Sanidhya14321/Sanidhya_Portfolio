@@ -99,6 +99,46 @@ body {
   color: var(--text-muted);
 }
 
+/* ── 4-Column Pillar Grid with Guaranteed Responsive Separator Lines ── */
+.grid-pillars-4 {
+  display: grid;
+  grid-template-columns: 1fr;
+  width: 100%;
+}
+@media (min-width: 768px) {
+  .grid-pillars-4 {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+@media (min-width: 1200px) {
+  .grid-pillars-4 {
+    grid-template-columns: repeat(4, 1fr);
+  }
+}
+
+.pillar-card {
+  border-bottom: 1px solid var(--border);
+  position: relative;
+}
+@media (min-width: 768px) {
+  .pillar-card:nth-child(odd) {
+    border-right: 1px solid var(--border);
+  }
+  .pillar-card:nth-child(3),
+  .pillar-card:nth-child(4) {
+    border-bottom: none;
+  }
+}
+@media (min-width: 1200px) {
+  .pillar-card {
+    border-bottom: none !important;
+    border-right: 1px solid var(--border) !important;
+  }
+  .pillar-card:last-child {
+    border-right: none !important;
+  }
+}
+
 /* ── Section Padding ─────────────────────────────────────────────────── */
 .section-pad {
   padding-left: 2rem;

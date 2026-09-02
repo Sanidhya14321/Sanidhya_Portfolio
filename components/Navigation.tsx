@@ -34,9 +34,9 @@ function LiveClock() {
 }
 
 const navLinks = [
-  { href: "/", label: "HOME" },
-  { href: "/works", label: "WORKS" },
-  { href: "/about", label: "ABOUT" },
+  { href: "/", label: "HOME", dir: "down" },
+  { href: "/works", label: "WORKS", dir: "up" },
+  { href: "/about", label: "ABOUT", dir: "left" },
 ];
 
 export default function Navigation() {
@@ -73,6 +73,7 @@ export default function Navigation() {
         <div className="flex items-center" style={{ gap: "clamp(0.4rem, 1.5vw, 1rem)" }}>
           <Link
             href="/"
+            data-transition-dir="down"
             style={{
               textDecoration: "none",
               color: "#ffffff",
@@ -114,6 +115,7 @@ export default function Navigation() {
                 <li key={link.href}>
                   <Link
                     href={link.href}
+                    data-transition-dir={link.dir}
                     className="nav-link"
                     style={{
                       fontFamily: "var(--font-body)",

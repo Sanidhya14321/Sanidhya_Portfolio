@@ -5,6 +5,7 @@ import Navigation from "@/components/Navigation";
 import Footer from "@/components/Footer";
 import Loader from "@/components/ui/Loader";
 import CustomCursor from "@/components/ui/CustomCursor";
+import StaggeredColorTransitionProvider from "@/components/ui/StaggeredColorTransition";
 
 export default function ClientShell({ children }: { children: ReactNode }) {
   const [loaded, setLoaded] = useState(false);
@@ -16,7 +17,7 @@ export default function ClientShell({ children }: { children: ReactNode }) {
   }, []);
 
   return (
-    <>
+    <StaggeredColorTransitionProvider>
       <Loader done={loaded} />
       <CustomCursor />
       <Navigation />
@@ -26,6 +27,6 @@ export default function ClientShell({ children }: { children: ReactNode }) {
         </Suspense>
       </main>
       <Footer />
-    </>
+    </StaggeredColorTransitionProvider>
   );
 }

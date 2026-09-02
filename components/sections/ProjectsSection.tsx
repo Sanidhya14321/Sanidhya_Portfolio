@@ -114,6 +114,7 @@ export default function ProjectsSection() {
             >
               <Link
                 href={`/projects/${slug}`}
+                data-transition-dir="right"
                 style={{ textDecoration: "none", color: "inherit", display: "block" }}
               >
                 {/* 1. Image Container */}
@@ -260,6 +261,7 @@ export default function ProjectsSection() {
       >
         <Link
           href="/works"
+          data-transition-dir="up"
           style={{
             display: "inline-flex",
             alignItems: "center",

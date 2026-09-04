@@ -2,11 +2,24 @@
 
 import { featuredProjects, allProjects } from "@/data/portfolio";
 import Link from "next/link";
-import { motion } from "framer-motion";
+import HoverImageReveal from "@/components/originkit/ui/hover-image-reveal";
 
 export default function ProjectsSection() {
-  const featured = featuredProjects.slice(0, 4);
+  const featured = featuredProjects.slice(0, 6);
   const totalProjectsCount = featuredProjects.length + allProjects.length;
+
+  const hoverItems = featured.map((project, i) => {
+    const slug = project.id || project.title.toLowerCase().replace(/\s+/g, "-");
+    return {
+      text: project.title.toUpperCase(),
+      image: { src: project.image, alt: project.title },
+      link: `/projects/${slug}`,
+      index: String(i + 1).padStart(2, "0"),
+      category: project.field || "ENGINEERING",
+      tech: project.tech,
+      description: project.description,
+    };
+  });
 
   return (
     <section id="projects" style={{ background: "var(--bg)", width: "100%", position: "relative" }}>
@@ -50,16 +63,28 @@ export default function ProjectsSection() {
           gap: "1rem",
         }}
       >
-        <span
-          className="label"
-          style={{
-            color: "var(--text)",
-            fontWeight: 600,
-            letterSpacing: "0.12em",
-          }}
-        >
-          FEATURED CASE STUDIES
-        </span>
+        <div style={{ display: "flex", alignItems: "center", gap: "0.75rem" }}>
+          <span
+            className="label"
+            style={{
+              color: "var(--text)",
+              fontWeight: 700,
+              letterSpacing: "0.12em",
+            }}
+          >
+            FEATURED CASE STUDIES
+          </span>
+          <span style={{ color: "var(--border)" }}>/</span>
+          <span
+            className="label"
+            style={{
+              color: "var(--text-muted)",
+              letterSpacing: "0.08em",
+            }}
+          >
+            HOVER TO REVEAL PREVIEW
+          </span>
+        </div>
 
         <div style={{ display: "flex", alignItems: "center", gap: "0.5rem" }}>
           <span
@@ -76,176 +101,34 @@ export default function ProjectsSection() {
               display: "inline-block",
             }}
           >
-            04 CURATED HIGHLIGHTS
+            0{featured.length} CURATED HIGHLIGHTS
           </span>
         </div>
       </div>
 
-      {/* ── Clean 2-Column Editorial Grid ── */}
-      <div
-        style={{
-          display: "grid",
-          gridTemplateColumns: "repeat(auto-fit, minmax(min(100%, 540px), 1fr))",
-          gap: 0,
-          width: "100%",
-          borderBottom: "1px solid var(--border)",
-        }}
-      >
-        {featured.map((project, i) => {
-          const slug = project.id || project.title.toLowerCase().replace(/\s+/g, "-");
-
-          return (
-            <motion.div
-              key={slug}
-              initial={{ opacity: 0, y: 25 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true, margin: "-50px" }}
-              transition={{ duration: 0.6, delay: i * 0.1, ease: [0.19, 1, 0.22, 1] }}
-              style={{
-                borderRight: i % 2 === 0 ? "1px solid var(--border)" : "none",
-                borderBottom: i < 2 ? "1px solid var(--border)" : "none",
-                padding: "clamp(2rem, 4vw, 3.5rem) clamp(1.2rem, 3vw, 2.8rem)",
-                display: "flex",
-                flexDirection: "column",
-                justifyContent: "space-between",
-                background: "var(--bg)",
-                transition: "background 0.3s ease",
-              }}
-            >
-              <Link
-                href={`/projects/${slug}`}
-                data-transition-dir="right"
-                style={{ textDecoration: "none", color: "inherit", display: "block" }}
-              >
-                {/* 1. Image Container */}
-                <div
-                  style={{
-                    position: "relative",
-                    width: "100%",
-                    aspectRatio: "16/10",
-                    background: "#161616",
-                    borderRadius: "4px",
-                    overflow: "hidden",
-                    border: "1px solid var(--border)",
-                    marginBottom: "1.6rem",
-                  }}
-                >
-                  <img
-                    src={project.image}
-                    alt={project.title}
-                    style={{
-                      width: "100%",
-                      height: "100%",
-                      objectFit: "cover",
-                      display: "block",
-                      transition: "transform 0.6s cubic-bezier(0.19, 1, 0.22, 1)",
-                    }}
-                    loading="lazy"
-                  />
-                </div>
-
-                {/* 2. Metadata Bar (Index + Category) */}
-                <div
-                  style={{
-                    display: "flex",
-                    alignItems: "center",
-                    justifyContent: "space-between",
-                    marginBottom: "0.6rem",
-                  }}
-                >
-                  <div style={{ display: "flex", alignItems: "center", gap: "0.5rem" }}>
-                    <span
-                      style={{
-                        fontFamily: "var(--font-display)",
-                        fontWeight: 900,
-                        fontSize: "1.1rem",
-                        color: "var(--text-muted)",
-                      }}
-                    >
-                      0{i + 1}
-                    </span>
-                    <span
-                      className="label"
-                      style={{
-                        background: "rgba(26,26,26,0.06)",
-                        padding: "0.2rem 0.55rem",
-                        borderRadius: "2px",
-                        fontWeight: 700,
-                        letterSpacing: "0.08em",
-                        color: "var(--text)",
-                      }}
-                    >
-                      {project.field || "ENGINEERING"}
-                    </span>
-                  </div>
-
-                  <span
-                    style={{
-                      fontFamily: "var(--font-display)",
-                      fontWeight: 900,
-                      fontSize: "1.1rem",
-                      color: "var(--text)",
-                    }}
-                  >
-                    ↗
-                  </span>
-                </div>
-
-                {/* 3. Title */}
-                <h3
-                  style={{
-                    fontFamily: "var(--font-display)",
-                    fontWeight: 900,
-                    fontSize: "clamp(1.8rem, 3.2vw, 2.6rem)",
-                    textTransform: "uppercase",
-                    letterSpacing: "-0.015em",
-                    lineHeight: 0.95,
-                    color: "var(--text)",
-                    marginBottom: "0.6rem",
-                  }}
-                >
-                  {project.title}
-                </h3>
-
-                {/* 4. Narrative Summary */}
-                <p
-                  style={{
-                    fontFamily: "var(--font-body)",
-                    fontSize: "0.92rem",
-                    lineHeight: 1.55,
-                    color: "var(--text)",
-                    opacity: 0.85,
-                    marginBottom: "1.2rem",
-                  }}
-                >
-                  {project.description}
-                </p>
-
-                {/* 5. Minimalist Tech Stack Pills */}
-                {project.tech && (
-                  <div style={{ display: "flex", flexWrap: "wrap", gap: "0.35rem" }}>
-                    {project.tech.map((t) => (
-                      <span
-                        key={t}
-                        className="label"
-                        style={{
-                          border: "1px solid var(--border)",
-                          padding: "0.18rem 0.48rem",
-                          borderRadius: "2px",
-                          color: "var(--text)",
-                          fontSize: "0.625rem",
-                          fontWeight: 600,
-                        }}
-                      >
-                        {t}
-                      </span>
-                    ))}
-                  </div>
-                )}
-              </Link>
-            </motion.div>
-          );
-        })}
+      {/* ── Originkit Hover Image Reveal Showcase ── */}
+      <div style={{ width: "100%", position: "relative" }}>
+        <HoverImageReveal
+          items={hoverItems}
+          layout="rows"
+          textColor="var(--text)"
+          dimColor="rgba(26, 26, 26, 0.22)"
+          borderColor="var(--border)"
+          imageWidth={420}
+          imageHeight={270}
+          rounded={8}
+          offsetX={180}
+          offsetY={-30}
+          followStrength={5}
+          font={{
+            fontFamily: "var(--font-display)",
+            fontWeight: 900,
+            fontSize: "clamp(2rem, 4.5vw, 4.5rem)",
+            lineHeight: 1.05,
+            letterSpacing: "-0.02em",
+            textTransform: "uppercase",
+          }}
+        />
       </div>
 
       {/* ── Signature Centered Capsule Action Button ── */}

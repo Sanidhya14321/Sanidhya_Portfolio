@@ -4,11 +4,13 @@ import { useState } from "react";
 import { featuredProjects, allProjects } from "@/data/portfolio";
 import Link from "next/link";
 import { motion, AnimatePresence } from "framer-motion";
+import HoverImageReveal from "@/components/originkit/ui/hover-image-reveal";
 
 const allCombined = [...featuredProjects, ...allProjects];
 
 export default function WorksPage() {
   const [activeFilter, setActiveFilter] = useState("ALL");
+  const [viewMode, setViewMode] = useState<"reveal" | "grid">("reveal");
 
   const categories = [
     { label: "ALL", count: allCombined.length },
@@ -27,6 +29,19 @@ export default function WorksPage() {
     return true;
   });
 
+  const hoverItems = filteredProjects.map((project, i) => {
+    const slug = project.id || project.title.toLowerCase().replace(/\s+/g, "-");
+    return {
+      text: project.title.toUpperCase(),
+      image: { src: project.image, alt: project.title },
+      link: `/projects/${slug}`,
+      index: String(i + 1).padStart(2, "0"),
+      category: project.field || "ENGINEERING",
+      tech: project.tech,
+      description: project.description,
+    };
+  });
+
   return (
     <div
       style={{
@@ -37,7 +52,7 @@ export default function WorksPage() {
         overflowX: "hidden",
       }}
     >
-      {/* ── 1. Page Header with Title & Filter Bar ── */}
+      {/* ── 1. Page Header with Title & Controls ── */}
       <section
         style={{
           padding: "clamp(1.5rem, 3vw, 2.5rem) clamp(1.2rem, 3vw, 2.5rem) clamp(2rem, 4vw, 3rem)",
@@ -74,16 +89,71 @@ export default function WorksPage() {
             </h1>
           </div>
 
-          <span
-            className="label"
-            style={{
-              fontWeight: 700,
-              color: "var(--text)",
-              letterSpacing: "0.1em",
-            }}
-          >
-            SHOWING {filteredProjects.length} OF {allCombined.length} PROJECTS
-          </span>
+          <div style={{ display: "flex", alignItems: "center", gap: "1rem", flexWrap: "wrap" }}>
+            <span
+              className="label"
+              style={{
+                fontWeight: 700,
+                color: "var(--text)",
+                letterSpacing: "0.1em",
+              }}
+            >
+              SHOWING {filteredProjects.length} OF {allCombined.length} PROJECTS
+            </span>
+
+            {/* View Mode Switcher */}
+            <div
+              style={{
+                display: "inline-flex",
+                alignItems: "center",
+                background: "rgba(26, 26, 26, 0.06)",
+                borderRadius: "999px",
+                padding: "3px",
+                border: "1px solid var(--border)",
+              }}
+            >
+              <button
+                type="button"
+                onClick={() => setViewMode("reveal")}
+                style={{
+                  fontFamily: "var(--font-body)",
+                  fontSize: "0.6875rem",
+                  fontWeight: 700,
+                  letterSpacing: "0.08em",
+                  textTransform: "uppercase",
+                  padding: "0.35rem 0.85rem",
+                  borderRadius: "999px",
+                  border: "none",
+                  cursor: "pointer",
+                  background: viewMode === "reveal" ? "var(--text)" : "transparent",
+                  color: viewMode === "reveal" ? "var(--bg)" : "var(--text)",
+                  transition: "all 0.2s ease",
+                }}
+              >
+                HOVER REVEAL
+              </button>
+              <button
+                type="button"
+                onClick={() => setViewMode("grid")}
+                style={{
+                  fontFamily: "var(--font-body)",
+                  fontSize: "0.6875rem",
+                  fontWeight: 700,
+                  letterSpacing: "0.08em",
+                  textTransform: "uppercase",
+                  padding: "0.35rem 0.85rem",
+                  borderRadius: "999px",
+                  border: "none",
+                  cursor: "pointer",
+                  background: viewMode === "grid" ? "var(--text)" : "transparent",
+                  color: viewMode === "grid" ? "var(--bg)" : "var(--text)",
+                  transition: "all 0.2s ease",
+                }}
+              >
+                GRID
+              </button>
+            </div>
+          </div>
         </div>
 
         {/* ── Elegant Interactive Filter Pills ── */}
@@ -150,179 +220,209 @@ export default function WorksPage() {
         </div>
       </section>
 
-      {/* ── 2. Pure Editorial Gallery Grid ── */}
-      <section style={{ borderBottom: "1px solid var(--border)" }}>
-        <motion.div
-          layout
-          style={{
-            display: "grid",
-            gridTemplateColumns: "repeat(auto-fill, minmax(min(100%, 380px), 1fr))",
-            gap: 0,
-            width: "100%",
-          }}
-        >
-          <AnimatePresence mode="popLayout">
-            {filteredProjects.map((project, i) => {
-              const slug = project.id || project.title.toLowerCase().replace(/\s+/g, "-");
+      {/* ── 2. Showcase Area ── */}
+      {viewMode === "reveal" ? (
+        /* Originkit Hover Image Reveal View */
+        <section style={{ borderBottom: "1px solid var(--border)", width: "100%" }}>
+          <HoverImageReveal
+            key={`reveal-${activeFilter}`}
+            items={hoverItems}
+            layout="rows"
+            textColor="var(--text)"
+            dimColor="rgba(26, 26, 26, 0.22)"
+            borderColor="var(--border)"
+            imageWidth={440}
+            imageHeight={280}
+            rounded={8}
+            offsetX={180}
+            offsetY={-30}
+            followStrength={5}
+            font={{
+              fontFamily: "var(--font-display)",
+              fontWeight: 900,
+              fontSize: "clamp(1.6rem, 3.8vw, 3.8rem)",
+              lineHeight: 1.05,
+              letterSpacing: "-0.02em",
+              textTransform: "uppercase",
+            }}
+          />
+        </section>
+      ) : (
+        /* Editorial Gallery Grid View */
+        <section style={{ borderBottom: "1px solid var(--border)" }}>
+          <motion.div
+            layout
+            style={{
+              display: "grid",
+              gridTemplateColumns: "repeat(auto-fill, minmax(min(100%, 380px), 1fr))",
+              gap: 0,
+              width: "100%",
+            }}
+          >
+            <AnimatePresence mode="popLayout">
+              {filteredProjects.map((project, i) => {
+                const slug = project.id || project.title.toLowerCase().replace(/\s+/g, "-");
 
-              return (
-                <motion.div
-                  layout
-                  key={slug}
-                  initial={{ opacity: 0, y: 20 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  exit={{ opacity: 0, scale: 0.95 }}
-                  transition={{
-                    duration: 0.45,
-                    delay: i * 0.03,
-                    ease: [0.19, 1, 0.22, 1],
-                  }}
-                  style={{
-                    borderRight: "1px solid var(--border)",
-                    borderBottom: "1px solid var(--border)",
-                    padding: "clamp(1.8rem, 3.5vw, 2.8rem)",
-                    background: "var(--bg)",
-                    display: "flex",
-                    flexDirection: "column",
-                    justifyContent: "space-between",
-                    transition: "transform 0.3s cubic-bezier(0.19, 1, 0.22, 1), box-shadow 0.3s ease",
-                  }}
-                >
-                  <Link
-                    href={`/projects/${slug}`}
-                    style={{ textDecoration: "none", color: "inherit", display: "block" }}
+                return (
+                  <motion.div
+                    layout
+                    key={slug}
+                    initial={{ opacity: 0, y: 20 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    exit={{ opacity: 0, scale: 0.95 }}
+                    transition={{
+                      duration: 0.45,
+                      delay: i * 0.03,
+                      ease: [0.19, 1, 0.22, 1],
+                    }}
+                    style={{
+                      borderRight: "1px solid var(--border)",
+                      borderBottom: "1px solid var(--border)",
+                      padding: "clamp(1.8rem, 3.5vw, 2.8rem)",
+                      background: "var(--bg)",
+                      display: "flex",
+                      flexDirection: "column",
+                      justifyContent: "space-between",
+                      transition: "transform 0.3s cubic-bezier(0.19, 1, 0.22, 1), box-shadow 0.3s ease",
+                    }}
                   >
-                    {/* Top Metadata Header */}
-                    <div
-                      style={{
-                        display: "flex",
-                        alignItems: "center",
-                        justifyContent: "space-between",
-                        marginBottom: "1rem",
-                      }}
+                    <Link
+                      href={`/projects/${slug}`}
+                      data-transition-dir="right"
+                      style={{ textDecoration: "none", color: "inherit", display: "block" }}
                     >
-                      <div style={{ display: "flex", alignItems: "center", gap: "0.5rem" }}>
+                      {/* Top Metadata Header */}
+                      <div
+                        style={{
+                          display: "flex",
+                          alignItems: "center",
+                          justifyContent: "space-between",
+                          marginBottom: "1rem",
+                        }}
+                      >
+                        <div style={{ display: "flex", alignItems: "center", gap: "0.5rem" }}>
+                          <span
+                            style={{
+                              fontFamily: "var(--font-display)",
+                              fontWeight: 900,
+                              fontSize: "1rem",
+                              color: "var(--text-muted)",
+                            }}
+                          >
+                            {String(i + 1).padStart(2, "0")}
+                          </span>
+                          <span
+                            className="label"
+                            style={{
+                              background: "rgba(26,26,26,0.06)",
+                              padding: "0.2rem 0.5rem",
+                              borderRadius: "2px",
+                              fontWeight: 700,
+                              color: "var(--text)",
+                            }}
+                          >
+                            {project.field || "ENGINEERING"}
+                          </span>
+                        </div>
+
                         <span
                           style={{
                             fontFamily: "var(--font-display)",
                             fontWeight: 900,
-                            fontSize: "1rem",
-                            color: "var(--text-muted)",
-                          }}
-                        >
-                          {String(i + 1).padStart(2, "0")}
-                        </span>
-                        <span
-                          className="label"
-                          style={{
-                            background: "rgba(26,26,26,0.06)",
-                            padding: "0.2rem 0.5rem",
-                            borderRadius: "2px",
-                            fontWeight: 700,
+                            fontSize: "1.1rem",
                             color: "var(--text)",
                           }}
                         >
-                          {project.field || "ENGINEERING"}
+                          ↗
                         </span>
                       </div>
 
-                      <span
+                      {/* Framed Image Showcase */}
+                      <div
+                        style={{
+                          position: "relative",
+                          width: "100%",
+                          aspectRatio: "16/10",
+                          background: "#161616",
+                          borderRadius: "4px",
+                          overflow: "hidden",
+                          border: "1px solid var(--border)",
+                          marginBottom: "1.4rem",
+                        }}
+                      >
+                        <img
+                          src={project.image}
+                          alt={project.title}
+                          style={{
+                            width: "100%",
+                            height: "100%",
+                            objectFit: "cover",
+                            display: "block",
+                            transition: "transform 0.6s cubic-bezier(0.19, 1, 0.22, 1)",
+                          }}
+                          loading="lazy"
+                        />
+                      </div>
+
+                      {/* Title */}
+                      <h3
                         style={{
                           fontFamily: "var(--font-display)",
                           fontWeight: 900,
-                          fontSize: "1.1rem",
+                          fontSize: "clamp(1.6rem, 2.6vw, 2.2rem)",
+                          textTransform: "uppercase",
+                          letterSpacing: "-0.015em",
+                          lineHeight: 0.95,
                           color: "var(--text)",
+                          marginBottom: "0.5rem",
                         }}
                       >
-                        ↗
-                      </span>
-                    </div>
+                        {project.title}
+                      </h3>
 
-                    {/* Framed Image Showcase */}
-                    <div
-                      style={{
-                        position: "relative",
-                        width: "100%",
-                        aspectRatio: "16/10",
-                        background: "#161616",
-                        borderRadius: "4px",
-                        overflow: "hidden",
-                        border: "1px solid var(--border)",
-                        marginBottom: "1.4rem",
-                      }}
-                    >
-                      <img
-                        src={project.image}
-                        alt={project.title}
+                      {/* Narrative Description */}
+                      <p
                         style={{
-                          width: "100%",
-                          height: "100%",
-                          objectFit: "cover",
-                          display: "block",
-                          transition: "transform 0.6s cubic-bezier(0.19, 1, 0.22, 1)",
+                          fontFamily: "var(--font-body)",
+                          fontSize: "0.875rem",
+                          lineHeight: 1.5,
+                          color: "var(--text)",
+                          opacity: 0.85,
+                          marginBottom: "1.2rem",
                         }}
-                        loading="lazy"
-                      />
-                    </div>
+                      >
+                        {project.description}
+                      </p>
 
-                    {/* Title */}
-                    <h3
-                      style={{
-                        fontFamily: "var(--font-display)",
-                        fontWeight: 900,
-                        fontSize: "clamp(1.6rem, 2.6vw, 2.2rem)",
-                        textTransform: "uppercase",
-                        letterSpacing: "-0.015em",
-                        lineHeight: 0.95,
-                        color: "var(--text)",
-                        marginBottom: "0.5rem",
-                      }}
-                    >
-                      {project.title}
-                    </h3>
-
-                    {/* Narrative Description */}
-                    <p
-                      style={{
-                        fontFamily: "var(--font-body)",
-                        fontSize: "0.875rem",
-                        lineHeight: 1.5,
-                        color: "var(--text)",
-                        opacity: 0.85,
-                        marginBottom: "1.2rem",
-                      }}
-                    >
-                      {project.description}
-                    </p>
-
-                    {/* Minimalist Tech Tags */}
-                    {project.tech && (
-                      <div style={{ display: "flex", flexWrap: "wrap", gap: "0.3rem" }}>
-                        {project.tech.slice(0, 4).map((t) => (
-                          <span
-                            key={t}
-                            className="label"
-                            style={{
-                              border: "1px solid var(--border)",
-                              padding: "0.15rem 0.45rem",
-                              borderRadius: "2px",
-                              color: "var(--text)",
-                              fontSize: "0.6rem",
-                              fontWeight: 600,
-                            }}
-                          >
-                            {t}
-                          </span>
-                        ))}
-                      </div>
-                    )}
-                  </Link>
-                </motion.div>
-              );
-            })}
-          </AnimatePresence>
-        </motion.div>
-      </section>
+                      {/* Minimalist Tech Tags */}
+                      {project.tech && (
+                        <div style={{ display: "flex", flexWrap: "wrap", gap: "0.3rem" }}>
+                          {project.tech.slice(0, 4).map((t) => (
+                            <span
+                              key={t}
+                              className="label"
+                              style={{
+                                border: "1px solid var(--border)",
+                                padding: "0.15rem 0.45rem",
+                                borderRadius: "2px",
+                                color: "var(--text)",
+                                fontSize: "0.6rem",
+                                fontWeight: 600,
+                              }}
+                            >
+                              {t}
+                            </span>
+                          ))}
+                        </div>
+                      )}
+                    </Link>
+                  </motion.div>
+                );
+              })}
+            </AnimatePresence>
+          </motion.div>
+        </section>
+      )}
     </div>
   );
 }

@@ -102,13 +102,13 @@ export default function HeroSection() {
 
   const smoothProgress = useSpring(scrollYProgress, {
     stiffness: 120,
-    damping: 24,
+    damping: 40,
     restDelta: 0.001,
   });
 
   // 1. Text Animation
-  const leftX = useTransform(smoothProgress, [0, 0.75], ["-14vw", "0vw"]);
-  const rightX = useTransform(smoothProgress, [0, 0.75], ["14vw", "0vw"]);
+  const leftX = useTransform(smoothProgress, [0, 0.75], ["-15vw", "0vw"]);
+  const rightX = useTransform(smoothProgress, [0, 0.75], ["15vw", "0vw"]);
 
   // 2. Top Label Animation
   const labelLeftX = useTransform(smoothProgress, [0, 0.75], ["-7vw", "0vw"]);
@@ -126,7 +126,7 @@ export default function HeroSection() {
         id="home"
         style={{
           width: "100%",
-          paddingTop: "40vh",
+          paddingTop: "35vh",
           paddingBottom: "clamp(2rem, 4vh, 3.5rem)",
           paddingLeft: "0.5rem",
           paddingRight: "0.5rem",
@@ -285,7 +285,7 @@ export default function HeroSection() {
                   }}
                 >
                   <img
-                    src="/DSC03737.JPG"
+                    src="/my_pics/DSC03737.JPG"
                     alt="Portfolio Visual Showcase"
                     style={{
                       width: "100%",

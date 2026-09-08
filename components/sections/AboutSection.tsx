@@ -304,7 +304,7 @@ export default function AboutSection() {
                 }}
               >
                 <img
-                  src="/DSC02945.JPG"
+                  src="/my_pics/DSC02945.JPG"
                   alt="Sanidhya Vats"
                   style={{
                     width: "100%",

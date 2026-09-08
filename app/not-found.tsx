@@ -13,7 +13,7 @@ export default function NotFound() {
         minHeight: "80vh",
         textAlign: "center",
         padding: "2rem",
-        background: "var(--bg)",
+        background: "transparent",
       }}
     >
       <h1

@@ -130,7 +130,7 @@ export default function HeroSection() {
           paddingBottom: "clamp(2rem, 4vh, 3.5rem)",
           paddingLeft: "0.5rem",
           paddingRight: "0.5rem",
-          background: "var(--bg)",
+          background: "transparent",
           overflow: "hidden",
         }}
       >
@@ -146,7 +146,7 @@ export default function HeroSection() {
           position: "relative",
           height: "auto",
           minHeight: "220vh",
-          background: "var(--bg)",
+          background: "transparent",
         }}
       >
         <section
@@ -155,7 +155,7 @@ export default function HeroSection() {
             top: 0,
             height: "auto",
             minHeight: "128vh",
-            background: "var(--bg)",
+            background: "transparent",
             overflow: "hidden",
             display: "flex",
             flexDirection: "column",

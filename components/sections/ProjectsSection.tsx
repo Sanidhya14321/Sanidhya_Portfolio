@@ -22,7 +22,7 @@ export default function ProjectsSection() {
   });
 
   return (
-    <section id="projects" style={{ background: "var(--bg)", width: "100%", position: "relative" }}>
+    <section id="projects" style={{ background: "transparent", width: "100%", position: "relative" }}>
       {/* ── Giant Header Banner ── */}
       <div
         style={{

@@ -40,6 +40,10 @@
 html {
   scroll-behavior: smooth;
   font-size: 16px;
+  background-color: var(--bg);
+  background-image: url("/paper-texture.svg");
+  background-repeat: repeat;
+  background-size: 300px 300px;
 }
 
 @media (prefers-reduced-motion: reduce) {
@@ -55,10 +59,20 @@ body {
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   background-color: var(--bg);
+  background-image: url("/paper-texture.svg");
+  background-repeat: repeat;
+  background-size: 320px 320px;
   color: var(--text);
   font-family: var(--font-body);
   overflow-x: hidden;
   line-height: 1.5;
+}
+
+.bg-paper {
+  background-color: var(--bg);
+  background-image: url("/paper-texture.svg");
+  background-repeat: repeat;
+  background-size: 320px 320px;
 }
 
 /* ── Scrollbar ───────────────────────────────────────────────────────── */

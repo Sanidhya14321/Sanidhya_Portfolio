@@ -47,7 +47,7 @@ export default async function ProjectDetailPage({
   const imagesList = project.images && project.images.length > 0 ? project.images : [project.image];
 
   return (
-    <div style={{ background: "var(--bg)", minHeight: "100svh", paddingTop: "clamp(4rem, 7vh, 6.5rem)" }}>
+    <div style={{ background: "transparent", minHeight: "100svh", paddingTop: "clamp(4rem, 7vh, 6.5rem)" }}>
       {/* ── 1. Header & Title Section ── */}
       <section
         style={{

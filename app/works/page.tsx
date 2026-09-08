@@ -45,7 +45,7 @@ export default function WorksPage() {
   return (
     <div
       style={{
-        background: "var(--bg)",
+        background: "transparent",
         minHeight: "100svh",
         paddingTop: "clamp(4.5rem, 8vh, 7rem)",
         position: "relative",
@@ -279,7 +279,7 @@ export default function WorksPage() {
                       borderRight: "1px solid var(--border)",
                       borderBottom: "1px solid var(--border)",
                       padding: "clamp(1.8rem, 3.5vw, 2.8rem)",
-                      background: "var(--bg)",
+                      background: "transparent",
                       display: "flex",
                       flexDirection: "column",
                       justifyContent: "space-between",

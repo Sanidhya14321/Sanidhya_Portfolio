@@ -104,7 +104,7 @@ export default function AboutPage() {
   ];
 
   return (
-    <div style={{ background: "var(--bg)", minHeight: "100svh", paddingTop: "clamp(4rem, 7vh, 6rem)" }}>
+    <div style={{ background: "transparent", minHeight: "100svh", paddingTop: "clamp(4rem, 7vh, 6rem)" }}>
       {/* ── 1. Dossier Header Section ── */}
       <section
         style={{
@@ -590,14 +590,14 @@ export default function AboutPage() {
                 display: "flex",
                 flexDirection: "column",
                 justifyContent: "space-between",
-                background: "var(--bg)",
+                background: "transparent",
                 transition: "background 0.25s ease",
               }}
               onMouseEnter={(e) => {
                 e.currentTarget.style.background = "rgba(26, 26, 26, 0.03)";
               }}
               onMouseLeave={(e) => {
-                e.currentTarget.style.background = "var(--bg)";
+                e.currentTarget.style.background = "transparent";
               }}
             >
               <div>
@@ -805,7 +805,7 @@ export default function AboutPage() {
           alignItems: "center",
           textAlign: "center",
           gap: "1.8rem",
-          background: "var(--bg)",
+          background: "transparent",
         }}
       >
         <span className="label" style={{ letterSpacing: "0.14em" }}>NEXT STEPS</span>

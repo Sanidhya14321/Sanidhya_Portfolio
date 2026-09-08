@@ -48,7 +48,7 @@ export default function SkillsSection() {
   const headerX = useTransform(scrollYProgress, [0, 1], ["-2vw", "2vw"]);
 
   return (
-    <section ref={sectionRef} id="skills" style={{ background: "var(--bg)", width: "100%" }}>
+    <section ref={sectionRef} id="skills" style={{ background: "transparent", width: "100%" }}>
       {/* ── Giant SKILLS Section Banner ── */}
       <div
         style={{

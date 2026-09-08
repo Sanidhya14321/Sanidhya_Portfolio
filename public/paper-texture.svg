@@ -1,0 +1,24 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="300" height="300" viewBox="0 0 300 300">
+  <filter id="paper" x="0%" y="0%" width="100%" height="100%">
+    <!-- High frequency fine grain (fine archival paper tooth) -->
+    <feTurbulence type="fractalNoise" baseFrequency="0.9" numOctaves="4" stitchTiles="stitch" result="fineGrain" />
+    <!-- Delicate organic paper fiber modulation -->
+    <feTurbulence type="turbulence" baseFrequency="0.05" numOctaves="3" stitchTiles="stitch" result="fiberTexture" />
+    <!-- Blend grain and fiber into organic pulp -->
+    <feBlend in="fineGrain" in2="fiberTexture" mode="multiply" result="pulpTooth" />
+    <!-- Gentle 3D diffuse lighting for subtle tactile tooth -->
+    <feDiffuseLighting in="pulpTooth" lighting-color="#FFFDF8" surfaceScale="0.75" result="diffuse">
+      <feDistantLight azimuth="55" elevation="62" />
+    </feDiffuseLighting>
+    <!-- Map lighting to warm cream editorial tone -->
+    <feComponentTransfer in="diffuse" result="tonedTooth">
+      <feFuncR type="linear" slope="0.94" intercept="0.03" />
+      <feFuncG type="linear" slope="0.92" intercept="0.03" />
+      <feFuncB type="linear" slope="0.89" intercept="0.02" />
+    </feComponentTransfer>
+  </filter>
+  <!-- Warm archival base paper color -->
+  <rect width="100%" height="100%" fill="#E8E4DC" />
+  <!-- Tactile paper tooth overlay -->
+  <rect width="100%" height="100%" filter="url(#paper)" opacity="0.55" />
+</svg>

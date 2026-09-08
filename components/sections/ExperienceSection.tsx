@@ -64,7 +64,7 @@ export default function ExperienceSection() {
   wavePath += ` L ${lastPt.x + 600} ${lastPt.y}`;
 
   return (
-    <section id="experience" style={{ background: "var(--bg)", width: "100%", position: "relative" }}>
+    <section id="experience" style={{ background: "transparent", width: "100%", position: "relative" }}>
       {/* ── Giant Header Banner ── */}
       <div
         style={{
@@ -165,7 +165,7 @@ export default function ExperienceSection() {
             position: "relative",
             height: `${totalItems * 85 + 100}vh`,
             minHeight: "340vh",
-            background: "var(--bg)",
+            background: "transparent",
           }}
         >
           <div

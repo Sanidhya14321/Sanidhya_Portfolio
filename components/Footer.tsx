@@ -29,7 +29,7 @@ export default function Footer() {
   return (
     <footer
       style={{
-        background: "var(--bg)",
+        background: "transparent",
         borderTop: "1px solid var(--border)",
         width: "100%",
       }}

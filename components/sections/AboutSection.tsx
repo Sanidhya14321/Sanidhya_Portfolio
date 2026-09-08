@@ -163,7 +163,7 @@ export default function AboutSection() {
       ref={sectionRef}
       id="about"
       style={{
-        background: "var(--bg)",
+        background: "transparent",
         width: "100%",
         position: "relative",
       }}

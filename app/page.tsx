@@ -6,6 +6,7 @@ import ProjectsSection from "@/components/sections/ProjectsSection";
 import ExperienceSection from "@/components/sections/ExperienceSection";
 import SkillsSection from "@/components/sections/SkillsSection";
 import AboutSection from "@/components/sections/AboutSection";
+import EventsSection from "@/components/sections/EventsSection";
 import Marquee from "@/components/ui/Marquee";
 
 const marqueeItems = [
@@ -55,6 +56,9 @@ export default function Home() {
 
       {/* 4. Featured Works Section */}
       <ProjectsSection />
+
+      {/* 5. Events & Keynotes Section */}
+      <EventsSection />
 
       {/* 6. Experience Timeline */}
       <ExperienceSection />

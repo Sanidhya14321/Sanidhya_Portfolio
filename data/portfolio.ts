@@ -147,6 +147,97 @@ export const allProjects: PortfolioProject[] = [
   },
 ];
 
+/* ═══════════════════════════════════════════════════════════════════════════
+   3. EVENTS & TALKS (Community Archives / Keynotes / Hackathons)
+   ───────────────────────────────────────────────────────────────────────────
+   Used by: 
+   - components/sections/EventsSection.tsx
+   - components/ui/connoisseur-stack-interactor.tsx
+   
+   Properties:
+   - num: "01", "02", ... (Index label shown in the list & archive card)
+   - name: Event name (Uppercase title)
+   - clipId: Architectural GSAP SVG mask pattern. Available geometric presets:
+       • "clip-bento"    (Bento architectural matrix)
+       • "clip-quadrant" (Quadrant matrix with accent pillars)
+       • "clip-matrix"   (3x3 high-visibility grid)
+       • "clip-portal"   (Architectural triptych with panoramic hero)
+       • "clip-prisms"   (Modernist 4-column slices)
+   - image: Image path from public directory (e.g. "/my_pics/...")
+   - role: Role badge (e.g. "ORGANIZER & HOST", "HEAD OF TECH & JURY", etc.)
+   - date: Year / Timeline (e.g. "2024", "2023")
+   - location: Venue or City (e.g. "NEW DELHI", "MSIT CAMPUS")
+   - description: Editorial archive summary of the event
+   ═══════════════════════════════════════════════════════════════════════════ */
+export type PortfolioEvent = {
+  num: string;
+  name: string;
+  clipId: "clip-bento" | "clip-quadrant" | "clip-matrix" | "clip-portal" | "clip-prisms" | string;
+  image: string;
+  role: string;
+  date: string;
+  location: string;
+  description: string;
+};
+
+export const eventsData: PortfolioEvent[] = [
+  {
+    num: "01",
+    name: "BUILD-UP IDEATHON",
+    clipId: "clip-bento",
+    image: "/my_pics/Build-Up_Ideathon.jpeg",
+    role: "ORGANIZER & HOST",
+    date: "2025",
+    location: "MSIT, DELHI",
+    description: "Flagship ideation and product pitch event empowering 500+ student founders to architect real-world solutions."
+  },
+  {
+    num: "02",
+    name: "GEEK ROOM 3.0",
+    clipId: "clip-quadrant",
+    image: "/my_pics/GR-Meetup-3.0.jpeg",
+    role: "ORGANIZER",
+    date: "2026",
+    location: "NAGARRO, NOIDA",
+    description: "Large-scale developer community summit bringing together 800+ builders for deep dives into modern AI and systems architecture."
+  },
+  {
+    num: "03",
+    name: "KAGGLE DAYS",
+    clipId: "clip-matrix",
+    image: "/my_pics/Kaggle-days_Meetup.jpeg",
+    role: "ORGANIZER",
+    date: "2025",
+    location: "GTBIT, DELHI",
+    description: "Hands-on machine learning masterclass covering competitive Kaggle pipelines, feature engineering, and model evaluation."
+  },
+  {
+    num: "04",
+    name: "HACKSMART 2026",
+    clipId: "clip-portal",
+    image: "/my_pics/hacksmart.jpeg",
+    role: "ORGANIZER & MENTOR",
+    date: "2026",
+    location: "BATTERY SMART OFFICE, GURUGRAM",
+    description: "36-hour hackathon sprint driving technical evaluation, architecture mentorship, and live judging for 100+ submitted projects."
+  },
+  {
+    num: "05",
+    name: "GEEK ROOM 2.0",
+    clipId: "clip-prisms",
+    image: "/my_pics/GR-Meetup-2.0.jpeg",
+    role: "ORGANIZER",
+    date: "2025",
+    location: "MICROSOFT OFFICE, GURUGRAM",
+    description: "Community summit fostering open-source collaboration, full-stack workshops, and tech networking across university campuses."
+  }
+];
+
+/* ═══════════════════════════════════════════════════════════════════════════
+   4. CORE PROFILE & BIO
+   ───────────────────────────────────────────────────────────────────────────
+   Used across Hero, About, Experience, Navigation, and Footer sections.
+   ═══════════════════════════════════════════════════════════════════════════ */
 export const portfolioData = {
   name: "Sanidhya Vats",
   title: "Full Stack Developer & ML Engineer",
@@ -280,6 +371,7 @@ export const portfolioData = {
   featuredProjects,
   allprojects: allProjects,
   allProjects,
+  events: eventsData,
 
   achievements: [
     "Head of Development @ GDG-MSIT and Deputy Head @ Geek Room",

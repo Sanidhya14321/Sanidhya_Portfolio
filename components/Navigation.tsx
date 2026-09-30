@@ -37,6 +37,7 @@ const navLinks = [
   { href: "/", label: "HOME", dir: "down" },
   { href: "/works", label: "WORKS", dir: "up" },
   { href: "/about", label: "ABOUT", dir: "left" },
+  { href: "/resume", label: "RESUME", dir: "right" },
 ];
 
 export default function Navigation() {
@@ -95,7 +96,7 @@ export default function Navigation() {
             />
             {city}
           </Link>
-          <span style={{ color: "#ffffff", whiteSpace: "nowrap" }}>
+          <span className="hidden sm:inline" style={{ color: "#ffffff", whiteSpace: "nowrap" }}>
             <LiveClock />
           </span>
           <span className="hidden md:inline" style={{ color: "#ffffff", opacity: 0.85, whiteSpace: "nowrap" }}>
@@ -115,6 +116,7 @@ export default function Navigation() {
                 <li key={link.href}>
                   <Link
                     href={link.href}
+                    aria-current={isActive ? "page" : undefined}
                     data-transition-dir={link.dir}
                     className="nav-link"
                     style={{

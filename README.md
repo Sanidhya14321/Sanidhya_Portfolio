@@ -14,7 +14,7 @@ npm start
 npm run verify
 ```
 
-`verify` checks the running production server at http://localhost:3000. Set `VERIFY_ORIGIN` to test another server. GitHub Actions runs lint, production build, type checking, and route checks on pushes to main and pull requests.
+`verify` checks the running production server at http://localhost:3000. Set `VERIFY_ORIGIN` to test another server. GitHub Actions runs a production dependency audit, lint, production build, type checking, and route checks on pushes to main and pull requests.
 
 ## Content and routes
 

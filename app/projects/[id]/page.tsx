@@ -1,9 +1,14 @@
+import { pageMetadata } from "@/lib/seo";
+import Image from "next/image";
 import { featuredProjects, allProjects, PortfolioProject } from "@/data/portfolio";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import { Metadata } from "next";
 
 const combinedProjects: PortfolioProject[] = [...featuredProjects, ...allProjects];
+
+// Unknown project URLs should return a real 404 before streaming begins.
+export const dynamicParams = false;
 
 // Pre-generate static params for static site optimization
 export function generateStaticParams() {
@@ -17,11 +22,8 @@ export function generateMetadata({ params }: { params: Promise<{ id: string }> }
     const project = combinedProjects.find(
       (p) => (p.id || p.title.toLowerCase().replace(/\s+/g, "-")) === id
     );
-    if (!project) return { title: "Project Not Found" };
-    return {
-      title: `${project.title} — Sanidhya Vats`,
-      description: project.description,
-    };
+    if (!project) return { title: "Project Not Found", robots: { index: false } };
+    return pageMetadata(`${project.title} — Sanidhya Vats`, project.description, `/projects/${id}`);
   });
 }
 
@@ -227,12 +229,15 @@ export default async function ProjectDetailPage({
         }}
       >
         <div style={{ maxWidth: "1600px", margin: "0 auto" }}>
-          <img
+          <Image
             src={project.image}
+            width={project.imageWidth || 1200} height={project.imageHeight || 750}
+            sizes="100vw" quality={85} priority
             alt={project.title}
             style={{
               width: "100%",
               maxHeight: "80vh",
+              height: "auto",
               objectFit: "contain",
               display: "block",
             }}
@@ -371,6 +376,7 @@ export default async function ProjectDetailPage({
                 <div
                   key={idx}
                   style={{
+                    position: "relative",
                     background: "#161616",
                     border: "1px solid var(--border)",
                     borderRadius: "4px",
@@ -378,8 +384,9 @@ export default async function ProjectDetailPage({
                     aspectRatio: "16/10",
                   }}
                 >
-                  <img
+                  <Image
                     src={imgSrc}
+                    fill sizes="(max-width: 767px) 90vw, 45vw" quality={85}
                     alt={`${project.title} screenshot ${idx + 1}`}
                     style={{
                       width: "100%",

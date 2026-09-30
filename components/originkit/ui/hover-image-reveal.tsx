@@ -1,6 +1,9 @@
 "use client";
 
-import { useEffect, useRef, useState, type CSSProperties } from "react";
+import Image from "next/image";
+import { useMediaQuery } from "@/lib/use-media-query";
+
+import { useRef, useState, type CSSProperties } from "react";
 import Link from "next/link";
 import {
   motion,
@@ -161,11 +164,7 @@ export default function HoverImageReveal({
   const [hovered, setHovered] = useState<number | null>(null);
   const [isPositioned, setIsPositioned] = useState(false);
   const hasPositioned = useRef(false);
-  const [hasFinePointer, setHasFinePointer] = useState(false);
-
-  useEffect(() => {
-    setHasFinePointer(window.matchMedia("(pointer: fine)").matches);
-  }, []);
+  const hasFinePointer = useMediaQuery("(pointer: fine)");
 
   const rawX = useMotionValue(-1000);
   const rawY = useMotionValue(-1000);
@@ -314,8 +313,9 @@ export default function HoverImageReveal({
                 }}
               >
                 {src ? (
-                  <img
+                  <Image
                     src={src}
+                    fill sizes={`${imageWidth}px`} quality={85}
                     alt={item.image?.alt || item.text || `Project ${i + 1}`}
                     style={{
                       width: "100%",

@@ -1,5 +1,7 @@
 "use client";
 
+import Image from "next/image";
+
 import { useState } from "react";
 import { featuredProjects, allProjects } from "@/data/portfolio";
 import Link from "next/link";
@@ -350,8 +352,9 @@ export default function WorksPage() {
                           marginBottom: "1.4rem",
                         }}
                       >
-                        <img
+                        <Image
                           src={project.image}
+                          fill sizes="(max-width: 767px) 90vw, (max-width: 1200px) 45vw, 600px" quality={85}
                           alt={project.title}
                           style={{
                             width: "100%",

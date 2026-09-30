@@ -45,11 +45,7 @@ export const LazyComponent: React.FC<LazyComponentProps> = ({
       observer.observe(ref.current);
     }
 
-    return () => {
-      if (ref.current) {
-        observer.unobserve(ref.current);
-      }
-    };
+    return () => observer.disconnect();
   }, [rootMargin, threshold]);
 
   return (

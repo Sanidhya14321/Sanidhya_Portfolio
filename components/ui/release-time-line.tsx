@@ -1,7 +1,8 @@
 "use client";
 
+import Image from "next/image";
 import React, { useEffect, useRef, useState } from "react";
-import { ArrowUpRight, Package, Sparkles } from "lucide-react";
+import { ArrowUpRight } from "lucide-react";
 import { Button } from "@/components/ui/button";
 
 export type TimeLine_01Entry = {
@@ -42,7 +43,7 @@ export default function TimeLine_01({
 
     let frame = 0;
     const updateActiveByProximity = () => {
-      frame = requestAnimationFrame(updateActiveByProximity);
+      frame = 0;
       const centerY = window.innerHeight / 3;
       let bestIndex = 0;
       let bestDist = Infinity;
@@ -56,16 +57,19 @@ export default function TimeLine_01({
           bestIndex = i;
         }
       });
-      if (bestIndex !== activeIndex) setActiveIndex(bestIndex);
+      setActiveIndex(current => current === bestIndex ? current : bestIndex);
     };
 
-    frame = requestAnimationFrame(updateActiveByProximity);
-    return () => cancelAnimationFrame(frame);
-  }, [activeIndex]);
-
-  useEffect(() => {
-    setActiveIndex(0);
-  }, []);
+    const schedule = () => { if (!frame) frame = requestAnimationFrame(updateActiveByProximity); };
+    schedule();
+    window.addEventListener("scroll", schedule, { passive: true });
+    window.addEventListener("resize", schedule, { passive: true });
+    return () => {
+      cancelAnimationFrame(frame);
+      window.removeEventListener("scroll", schedule);
+      window.removeEventListener("resize", schedule);
+    };
+  }, [entries]);
 
   return (
     <section className={"py-8 " + (className || "")}>
@@ -119,8 +123,9 @@ export default function TimeLine_01({
                   }`}
                 >
                   {entry.image && (
-                    <img
+                    <Image
                       src={entry.image}
+                      width={1200} height={675} sizes="(max-width: 767px) 90vw, 600px"
                       alt={`${entry.title} visual`}
                       className="mb-4 h-56 w-full rounded-xl object-cover grayscale contrast-125 border border-white/10"
                       loading="lazy"

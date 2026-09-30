@@ -4,6 +4,8 @@ export type PortfolioProject = {
   description: string;
   field?: string;
   image: string;
+  imageWidth?: number;
+  imageHeight?: number;
   images?: string[];
   tech: string[];
   status?: string;
@@ -24,6 +26,8 @@ export const featuredProjects: PortfolioProject[] = [
     tech: ["Next.js", "Socket.IO", "MongoDB", "Redis", "TensorFlow"],
     status: "Deployed",
     image: "/Debate-App/main.png",
+    imageWidth: 1915,
+    imageHeight: 950,
     images: ["/Debate-App/main.png"],
     github: "https://github.com/Sanidhya14321/Debate-App-1",
     demo: "https://debate-app-1.vercel.app/",
@@ -42,6 +46,8 @@ export const featuredProjects: PortfolioProject[] = [
     tech: ["React", "FastAPI", "PyTorch", "PostgreSQL", "Docker"],
     status: "Live",
     image: "/CareerCompass/1.png",
+    imageWidth: 1904,
+    imageHeight: 960,
     images: ["/project9.png"],
     github: "https://github.com/Sanidhya14321/CareerCompass",
     demo: "https://careercompass-xi.vercel.app/",
@@ -60,6 +66,8 @@ export const featuredProjects: PortfolioProject[] = [
     tech: ["Next.js", "LangChain", "LangGraph", "Groq API", "Prisma ORM", "PostgreSQL"],
     status: "In Development",
     image: "/QuestionFLow/main.png",
+    imageWidth: 1904,
+    imageHeight: 951,
     images: ["/QuestionFLow/main.png", "/QuestionFLow/1.png", "/QuestionFLow/2.png", "/QuestionFLow/3.png"],
     github: "https://github.com/Sanidhya14321/Assessment-3.0",
     demo: "https://assessment-3-0.vercel.app/",
@@ -90,29 +98,78 @@ export const featuredProjects: PortfolioProject[] = [
     ],
     status: "In Development",
     image: "/data-pipeline/1.png",
+    imageWidth: 1901,
+    imageHeight: 963,
     images: [
       "/data-pipeline/1.png",
       "/data-pipeline/2.png",
       "/data-pipeline/3.png",
       "/data-pipeline/4.png"
     ],
-    github: "https://github.com/Sanidhya14321/RAG-Project",
+    github: "https://github.com/Sanidhya14321/data-pipeline",
     demo: "https://data-pipeline-one.vercel.app/",
     highlights: [
       "Real-time ingestion from RSS, SEC EDGAR, News APIs, and other web sources into a Kafka-based streaming pipeline",
       "LLM-powered normalization pipeline for quality gating, classification, entity extraction, and summarization",
-      "Semantic search via Qdrant with resilient Groq + web-scraping fallback when vector search is unavailable"
+      "Semantic search via Qdrant with resilient Groq + web-scraping fallback when vector search is unavailable",
+      "Ingested data from 3+ external sources and increased processing throughput by 40% with automated Groq API summarization"
     ],
   },
 ];
 
 export const allProjects: PortfolioProject[] = [
   {
+    id: "harvest",
+    title: "Harvest",
+    field: "Agentic AI",
+    description: "An autonomous coding agent harness with deterministic verification, context compaction, and native fuzzy patch application.",
+    image: "/projects/harvest.svg",
+    tech: [
+      "TypeScript",
+      "Rust",
+      "Bun",
+      "N-API",
+      "Git"
+    ],
+    github: "",
+    demo: "",
+    detailedDescription: "Harvest grounds coding-agent execution in verified file mutations and Git progression. A BM25 symbol index retains relevant code context during compaction, while entropy-gated routing asks for clarification when intent is ambiguous.",
+    highlights: [
+      "Pre-read mutation shields enforce test execution against modified files and validate physical Git HEAD progression.",
+      "Context compaction preserves active diffs, verification records, and AST symbols using an in-memory BM25 index without external embeddings.",
+      "Shannon entropy-gated intent routing and a native Rust N-API engine support interactive clarification and streaming fuzzy patch application."
+    ]
+  },
+  {
+    id: "oasis",
+    title: "Oasis",
+    field: "Systems",
+    description: "An open-source mutation testing framework that evaluates the semantic quality of Terraform and OpenTofu test assertions.",
+    image: "/projects/oasis.svg",
+    tech: [
+      "Python",
+      "Terraform",
+      "OpenTofu",
+      "Docker",
+      "GitHub Actions"
+    ],
+    github: "https://github.com/DegenerateUSER/Oasis",
+    demo: "",
+    detailedDescription: "Oasis injects synthetic faults into infrastructure configurations to test whether assertions detect meaningful changes. Its AST parsing engine and specialized mutation operators simulate infrastructure drift and state anomalies, with Git restoration after each run.",
+    highlights: [
+      "AST parsing with 12 specialized mutation operators for Terraform and OpenTofu configurations.",
+      "Semantic faults reveal weaknesses in infrastructure test assertions.",
+      "Zero-drift Git state restoration and self-updating native CLI wrappers."
+    ]
+  },
+  {
     id: "cs-assessment",
     title: "CS-ASSESSMENT",
     field: "Web Development",
     description: "An online assessment platform for computer science students",
     image: "/project7.png",
+    imageWidth: 1889,
+    imageHeight: 947,
     images: ["/project7.png"],
     tech: ["Next", "Nextauth", "MongoDB", "Tailwind CSS", "Typescript", "Bcrypt.js", "Framer Motion"],
     detailedDescription: "CS-ASSESSMENT is an online assessment platform designed for computer science students...",
@@ -132,6 +189,8 @@ export const allProjects: PortfolioProject[] = [
     field: "Web Development",
     description: "Event management and community engagement platform designed for technical communities. Handles registrations, speaker management, and post-event analytics.",
     image: "/project8.png",
+    imageWidth: 1889,
+    imageHeight: 949,
     images: ["/project8.png"],
     tech: ["Next.js", "Node.js", "MongoDB", "AWS S3", "Vercel", "JWT", "Tailwind", "Redux.js", "RTK-Query"],
     detailedDescription: "",
@@ -187,9 +246,9 @@ export const eventsData: PortfolioEvent[] = [
     clipId: "clip-bento",
     image: "/my_pics/Build-Up_Ideathon.jpeg",
     role: "ORGANIZER & HOST",
-    date: "2025",
+    date: "2026",
     location: "MSIT, DELHI",
-    description: "Flagship ideation and product pitch event empowering 500+ student founders to architect real-world solutions."
+    description: "Organized an Ideathon featuring a Microsoft guest speaker with 100+ participants."
   },
   {
     num: "02",
@@ -246,7 +305,7 @@ export const portfolioData = {
   linkedin: "https://www.linkedin.com/in/sanidhya-vats-9344522b7/",
 
   about: {
-    narrative: `A Computer Science student at Maharaja Surajmal Institute of Technology with a strong foundation in full-stack development and machine learning engineering. My journey spans from architecting scalable web applications with modern frameworks to implementing sophisticated AI solutions. As the Deputy Head of Geek Room and Head of Development for GDG-MSIT, I've driven technical communities forward, organizing major hackathons like Codeक्षेत्र 2.0 and Code Cubicle 5.0 that have reached over 15,000 participants and fostered innovation across the developer ecosystem.`,
+    narrative: `A Computer Science student at Maharaja Surajmal Institute of Technology with a strong foundation in full-stack development and machine learning engineering. My journey spans from architecting scalable web applications with modern frameworks to implementing sophisticated AI solutions. My work includes an LLM career recommendation engine at Square Educations, an autonomous coding agent harness, and infrastructure mutation testing. Through Geek Room, Google Developer Groups, and ISTE MSIT, I've mentored 50+ students, moderated 5+ hackathons, and helped onboard 250+ members.`,
     highlights: [
       "Full-stack architecture with modern JavaScript/TypeScript ecosystem",
       "Machine learning systems using TensorFlow, PyTorch, and LLM integrations",
@@ -257,13 +316,20 @@ export const portfolioData = {
 
   experience: [
     {
-      title: "Head of Development",
+      title: "Growth & Operations Engineer",
       company: "Geek Room",
-      period: "2023 - Present",
-      description:
-        "Leading a technical community focusing on modern development practices. Architecting and delivering workshops on full-stack development, ML/AI, and DevOps.",
-      impact: "Helped drive 15,000+ community registrations across major technical events and hackathons",
-      tech: ["Next.js", "React", "Node.js", "MongoDB", "AWS"],
+      period: "Aug. 2026 - Present",
+      description: "Managed community network expansion across regional groups and built event websites and registration flows that converted outreach into signups.",
+      impact: "Coordinated regional community growth and maintained event registration infrastructure",
+      tech: ["Web Development", "Community Operations", "Registration Flows"],
+    },
+    {
+      title: "AI Engineer",
+      company: "Square Educations",
+      period: "Jan. 2026 - Mar. 2026",
+      description: "Built an LLM recommendation engine using NLP classifiers on aptitude and reasoning data to generate tailored career trajectories.",
+      impact: "Raised Pytest coverage from 65% to 85% and reduced deployment time by 20% through automated CI/CD",
+      tech: ["LLMs", "NLP", "Python", "Pytest", "CI/CD"],
     },
     {
       title: "Head of Development",
@@ -336,6 +402,9 @@ export const portfolioData = {
       { name: "MySQL", level: 85 },
       { name: "Redis", level: 80 },
       { name: "Supabase", level: 80 },
+      { name: "Apache Kafka" },
+      { name: "Qdrant" },
+      { name: "Prisma ORM" },
     ],
     "Machine Learning & AI Engineering": [
       { name: "NumPy", level: 90 },
@@ -348,6 +417,12 @@ export const portfolioData = {
       { name: "LangGraph", level: 75 },
       { name: "Google Gemini API", level: 85 },
       { name: "OpenAI API", level: 85 },
+      { name: "Transformers" },
+      { name: "LLMs" },
+      { name: "RAG" },
+      { name: "Prompt Engineering" },
+      { name: "Vector Databases" },
+      { name: "Ensemble Learning" },
     ],
     "DevOps & Developer Productivity": [
       { name: "Git", level: 95 },
@@ -358,6 +433,8 @@ export const portfolioData = {
       { name: "Vercel", level: 90 },
       { name: "Heroku", level: 80 },
       { name: "Postman", level: 90 },
+      { name: "Kubernetes" },
+      { name: "CI/CD" },
     ],
     "Systems & Low-Level Languages": [
       { name: "C", level: 85 },
@@ -374,10 +451,10 @@ export const portfolioData = {
   events: eventsData,
 
   achievements: [
-    "Head of Development @ GDG-MSIT and Deputy Head @ Geek Room",
-    "Organized major hackathons including Codeक्षेत्र 2.0 (15,000+ registrations), Code Cubicle 5.0, and HackAvensis 2024",
-    "Developed a production-grade Invoice Manager application during internship at Suntora Industries",
-    "Built production applications serving thousands of users",
+    "Mentored 50+ students in AI and full-stack development, moderated 5+ hackathons, and interviewed and onboarded 250+ society members",
+    "Mentored HackAvensis 2026, Innovortex 3.0 2025, Innerve Hackathon 2026, and SIH 2026 Internal Round",
+    "Organized AI Oriented BatterySmart Hackathon 2026, Hack GeekRoom 2026, CodeKshetra 2.0, and Trackshift Hackathon 2026",
+    "Organized Build-UP Ideathon 2026 with a Microsoft guest speaker and 100+ participants, the Code-Cubicle Hackathon Series, and Kaggle-Days Meetup 2025",
   ],
 
   social: {

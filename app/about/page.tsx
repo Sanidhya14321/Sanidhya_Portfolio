@@ -1,6 +1,8 @@
 "use client";
 
-import { portfolioData } from "@/data/portfolio";
+import Image from "next/image";
+
+import { portfolioData, featuredProjects, allProjects } from "@/data/portfolio";
 import Link from "next/link";
 import { motion } from "framer-motion";
 import SkillsSection from "@/components/sections/SkillsSection";
@@ -222,7 +224,7 @@ export default function AboutPage() {
           >
             {[...Array(2)].map((_, i) => (
               <span key={i} style={{ paddingRight: "2rem" }}>
-                ✦ FULL-STACK ARCHITECTURE ✦ AGENTIC AI PIPELINES ✦ 15,000+ DEVS REACHED ✦ DISTRIBUTED SYSTEMS ✦ MSIT COMPUTER SCIENCE '27 ✦ PRODUCTION-GRADE CODE ✦
+                ✦ FULL-STACK ARCHITECTURE ✦ AGENTIC AI PIPELINES ✦ 15,000+ DEVS REACHED ✦ DISTRIBUTED SYSTEMS ✦ MSIT COMPUTER SCIENCE &apos;27 ✦ PRODUCTION-GRADE CODE ✦
               </span>
             ))}
           </div>
@@ -265,8 +267,9 @@ export default function AboutPage() {
                 boxShadow: "0 10px 25px rgba(0,0,0,0.06)",
               }}
             >
-              <img
+              <Image
                 src="/my_pics/DSC02945.JPG"
+                  fill sizes="(max-width: 767px) 90vw, 340px" quality={85}
                 alt="Sanidhya Vats"
                 style={{
                   width: "100%",
@@ -489,7 +492,7 @@ export default function AboutPage() {
                   margin: 0,
                 }}
               >
-                "Dedicated to transforming cutting-edge artificial intelligence and robust full-stack architecture into intuitive, high-performance digital reality."
+                &quot;Dedicated to transforming cutting-edge artificial intelligence and robust full-stack architecture into intuitive, high-performance digital reality.&quot;
               </p>
             </div>
           </div>
@@ -854,7 +857,7 @@ export default function AboutPage() {
               e.currentTarget.style.transform = "scale(1)";
             }}
           >
-            <span>VIEW ALL WORKS (6)</span>
+            <span>VIEW ALL WORKS ({featuredProjects.length + allProjects.length})</span>
             <span>→</span>
           </Link>
 

@@ -74,6 +74,7 @@ export function StaggeredColorTransitionProvider({
         return;
       }
 
+      router.prefetch(url);
       const direction = customDirection || getDirectionForRoute(url);
       const validLayers = layerRefs.current.filter(Boolean) as HTMLDivElement[];
       if (validLayers.length === 0 || !containerRef.current) {
@@ -182,7 +183,8 @@ export function StaggeredColorTransitionProvider({
   // Global click interception for internal links
   useEffect(() => {
     const handleClick = (e: MouseEvent) => {
-      const target = (e.target as HTMLElement).closest("a");
+      if (e.defaultPrevented || e.button !== 0 || e.metaKey || e.ctrlKey || e.shiftKey || e.altKey) return;
+      const target = (e.target as Element | null)?.closest("a");
       if (!target) return;
 
       const href = target.getAttribute("href");

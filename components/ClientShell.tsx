@@ -20,8 +20,9 @@ export default function ClientShell({ children }: { children: ReactNode }) {
     <StaggeredColorTransitionProvider>
       <Loader done={loaded} />
       <CustomCursor />
+      <a href="#main-content" className="sr-only focus:not-sr-only focus:fixed focus:top-4 focus:left-4 focus:z-[100000]" style={{ background: "var(--bg)", color: "var(--text)", padding: "0.75rem 1rem" }}>Skip to content</a>
       <Navigation />
-      <main className="min-h-screen">
+      <main id="main-content" tabIndex={-1} className="min-h-screen">
         <Suspense fallback={<div className="min-h-screen" />}>
           {children}
         </Suspense>

@@ -26,15 +26,18 @@ const InteractiveSelector = ({
   onActiveChange,
 }: InteractiveSelectorProps) => {
   const [activeIndex, setActiveIndex] = useState(0);
-  const [animatedOptions, setAnimatedOptions] = useState<number[]>([]);
+  const [animation, setAnimation] = useState<{ options: InteractiveSelectorOption[]; indices: number[] }>({ options, indices: [] });
+  const animatedOptions = animation.options === options ? animation.indices : [];
 
   useEffect(() => {
-    setAnimatedOptions([]);
     const timers: ReturnType<typeof setTimeout>[] = [];
 
     options.forEach((_, i) => {
       const timer = setTimeout(() => {
-        setAnimatedOptions((prev) => (prev.includes(i) ? prev : [...prev, i]));
+        setAnimation(prev => {
+          const indices = prev.options === options ? prev.indices : [];
+          return { options, indices: indices.includes(i) ? indices : [...indices, i] };
+        });
       }, 100 * i);
       timers.push(timer);
     });

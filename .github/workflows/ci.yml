@@ -1,0 +1,25 @@
+name: Production checks
+on:
+  push:
+    branches: [main]
+  pull_request:
+permissions:
+  contents: read
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+      - run: npm ci
+      - run: npm run lint
+      - run: npm run build
+      - run: npm run typecheck
+      - name: Verify production routes
+        run: |
+          npm start > /tmp/portfolio-server.log 2>&1 &
+          trap 'kill $!' EXIT
+          node scripts/verify-production.mjs

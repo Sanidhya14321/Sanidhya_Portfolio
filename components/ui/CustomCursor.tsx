@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useRef } from "react";
 
 export default function CustomCursor() {
   const cursorRef = useRef<HTMLDivElement>(null);
@@ -31,6 +31,7 @@ export default function CustomCursor() {
         s.cy = e.clientY;
         s.visible = true;
       }
+      if (rafRef.current === null) rafRef.current = requestAnimationFrame(render);
       s.tx = e.clientX;
       s.ty = e.clientY;
 
@@ -49,6 +50,7 @@ export default function CustomCursor() {
 
     const onMouseLeave = () => {
       stateRef.current.visible = false;
+      if (rafRef.current === null) rafRef.current = requestAnimationFrame(render);
     };
 
     const render = () => {
@@ -90,7 +92,10 @@ export default function CustomCursor() {
         }
       }
 
-      rafRef.current = requestAnimationFrame(render);
+      rafRef.current = null;
+      if (s.visible && (Math.abs(s.tx - s.cx) > 0.01 || Math.abs(s.ty - s.cy) > 0.01)) {
+        rafRef.current = requestAnimationFrame(render);
+      }
     };
 
     window.addEventListener("pointermove", onPointerMove, { passive: true });

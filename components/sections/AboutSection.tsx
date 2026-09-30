@@ -1,5 +1,7 @@
 "use client";
 
+import Image from "next/image";
+
 import { portfolioData } from "@/data/portfolio";
 import { useState, useRef } from "react";
 import Link from "next/link";
@@ -9,51 +11,6 @@ import {
   useScroll,
   useTransform,
 } from "framer-motion";
-
-// ── 2D Kinetic Word Reveal ───────────────────────────────────────────────────
-function KineticWords({
-  text,
-  className = "",
-  style = {},
-  delay = 0,
-}: {
-  text: string;
-  className?: string;
-  style?: React.CSSProperties;
-  delay?: number;
-}) {
-  const words = text.split(" ");
-
-  return (
-    <span style={{ display: "inline", ...style }} className={className}>
-      {words.map((word, i) => (
-        <span
-          key={i}
-          style={{
-            display: "inline-block",
-            overflow: "hidden",
-            verticalAlign: "top",
-            marginRight: "0.26em",
-          }}
-        >
-          <motion.span
-            initial={{ y: "115%", opacity: 0 }}
-            whileInView={{ y: "0%", opacity: 1 }}
-            viewport={{ once: true, margin: "-20px" }}
-            transition={{
-              duration: 0.55,
-              delay: delay + i * 0.025,
-              ease: [0.19, 1, 0.22, 1],
-            }}
-            style={{ display: "inline-block" }}
-          >
-            {word}
-          </motion.span>
-        </span>
-      ))}
-    </span>
-  );
-}
 
 // ── 2D Rotating Architectural Stamp ──────────────────────────────────────────
 function RotatingStamp() {
@@ -303,8 +260,9 @@ export default function AboutSection() {
                   y: imageY,
                 }}
               >
-                <img
+                <Image
                   src="/my_pics/DSC02945.JPG"
+                  fill sizes="(max-width: 767px) 90vw, 340px" quality={85}
                   alt="Sanidhya Vats"
                   style={{
                     width: "100%",
@@ -505,7 +463,7 @@ export default function AboutSection() {
                 return (
                   <button
                     key={tab.id}
-                    onClick={() => setActiveTab(tab.id as any)}
+                    onClick={() => setActiveTab(tab.id as "narrative" | "pillars" | "leadership")}
                     style={{
                       position: "relative",
                       border: "none",
@@ -598,7 +556,7 @@ export default function AboutSection() {
                         margin: 0,
                       }}
                     >
-                      "Dedicated to transforming cutting-edge artificial intelligence and robust full-stack architecture into intuitive, high-performance digital reality."
+                      &quot;Dedicated to transforming cutting-edge artificial intelligence and robust full-stack architecture into intuitive, high-performance digital reality.&quot;
                     </p>
                   </div>
                 </motion.div>

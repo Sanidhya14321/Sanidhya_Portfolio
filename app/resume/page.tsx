@@ -1,12 +1,10 @@
+import { pageMetadata } from "@/lib/seo";
 import type { Metadata } from "next";
 import Image from "next/image";
 import Link from "next/link";
 import styles from "./resume.module.css";
 
-export const metadata: Metadata = {
-  title: "Resume — Sanidhya Vats",
-  description: "View or download Sanidhya Vats's original AI/ML resume.",
-};
+export const metadata: Metadata = pageMetadata("Resume — Sanidhya Vats", "View and download Sanidhya Vats's original AI/ML resume, including experience, projects, technical skills, and community leadership.", "/resume");
 
 const pdf = "/resume/Sanidhya_Vats_Resume-AIML.pdf";
 

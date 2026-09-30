@@ -1,5 +1,7 @@
 "use client";
 
+import Image from "next/image";
+
 import { portfolioData } from "@/data/portfolio";
 import { useEffect, useState, useRef } from "react";
 import { motion, useScroll, useTransform, useSpring, useAnimationControls } from "framer-motion";
@@ -284,8 +286,9 @@ export default function HeroSection() {
                     border: "none",
                   }}
                 >
-                  <img
+                  <Image
                     src="/my_pics/DSC03737.JPG"
+                    fill sizes="(max-width: 767px) 100vw, 70vw" quality={85}
                     alt="Portfolio Visual Showcase"
                     style={{
                       width: "100%",

@@ -1,7 +1,8 @@
 "use client";
 
+import { getImageProps } from "next/image";
 import { cn } from "@/lib/utils";
-import { useEffect, useRef, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import gsap from "gsap";
 
 import { eventsData, PortfolioEvent } from "@/data/portfolio";
@@ -18,10 +19,11 @@ export const Component = ({
   const mainGroupRef = useRef<SVGGElement>(null);
   const masterTl = useRef<gsap.core.Timeline | null>(null);
 
-  const createTransition = (index: number) => {
+  const createTransition = useCallback((index: number) => {
     const item = items[index];
     if (!item) return;
-    const selector = `#${item.clipId} .path`;
+    const selector = containerRef.current?.querySelectorAll(`#${item.clipId} .path`);
+    if (!selector) return;
 
     // Kill any active timeline immediately to avoid lag
     if (masterTl.current) {
@@ -29,10 +31,15 @@ export const Component = ({
     }
 
     if (imageRef.current) {
-      imageRef.current.setAttribute("href", item.image);
+      imageRef.current.setAttribute("href", getImageProps({ src: item.image, alt: item.name, width: 460, height: 460, quality: 85 }).props.src);
     }
     if (mainGroupRef.current) {
       mainGroupRef.current.setAttribute("clip-path", `url(#${item.clipId})`);
+    }
+
+    if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
+      gsap.set(selector, { scale: 1, opacity: 1 });
+      return;
     }
 
     // Hardware accelerated initial state
@@ -66,17 +73,30 @@ export const Component = ({
     });
 
     masterTl.current = tl;
-  };
+  }, [items]);
 
   useEffect(() => {
     const ctx = gsap.context(() => {
       createTransition(0);
     }, containerRef);
+    let inView = false;
+    const updatePlayback = () => {
+      if (inView && !document.hidden) masterTl.current?.resume();
+      else masterTl.current?.pause();
+    };
+    const observer = new IntersectionObserver(([entry]) => {
+      inView = entry.isIntersecting;
+      updatePlayback();
+    });
+    if (containerRef.current) observer.observe(containerRef.current);
+    document.addEventListener("visibilitychange", updatePlayback);
     return () => {
+      observer.disconnect();
+      document.removeEventListener("visibilitychange", updatePlayback);
       if (masterTl.current) masterTl.current.kill();
       ctx.revert();
     };
-  }, []);
+  }, [createTransition]);
 
   const handleItemHover = (index: number) => {
     if (index === activeIndex) return;
@@ -275,7 +295,7 @@ export const Component = ({
             <g ref={mainGroupRef} clipPath={`url(#${activeItem.clipId})`}>
               <image
                 ref={imageRef}
-                href={activeItem.image}
+                href={getImageProps({ src: activeItem.image, alt: activeItem.name, width: 460, height: 460, quality: 85 }).props.src}
                 width="500"
                 height="500"
                 preserveAspectRatio="xMidYMid slice"

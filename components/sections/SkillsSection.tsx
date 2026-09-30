@@ -49,7 +49,7 @@ export default function SkillsSection() {
 
   return (
     <section ref={sectionRef} id="skills" style={{ background: "transparent", width: "100%" }}>
-      {/* ── Giant SKILLS Section Banner ── */}
+      {/* â”€â”€ Giant SKILLS Section Banner â”€â”€ */}
       <div
         style={{
           borderTop: "1px solid var(--border)",
@@ -77,7 +77,7 @@ export default function SkillsSection() {
         </motion.h2>
       </div>
 
-      {/* ── Subheader Bar ── */}
+      {/* â”€â”€ Subheader Bar â”€â”€ */}
       <div
         style={{
           borderTop: "1px solid var(--border)",
@@ -125,7 +125,7 @@ export default function SkillsSection() {
         </div>
       </div>
 
-      {/* ── Categorized Skills Grid (Zero metrics / No bars) ── */}
+      {/* â”€â”€ Categorized Skills Grid (Zero metrics / No bars) â”€â”€ */}
       <div
         style={{
           display: "grid",
@@ -134,7 +134,7 @@ export default function SkillsSection() {
         }}
       >
         {categories.map((cat, ci) => {
-          const items = (skills as Record<string, { name: string; level: number }[]>)[cat];
+          const items = (skills as Record<string, { name: string }[]>)[cat];
           const catNum = String(ci + 1).padStart(2, "0");
 
           return (

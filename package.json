@@ -6,7 +6,9 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "next lint"
+    "lint": "eslint .",
+    "typecheck": "tsc --noEmit",
+    "verify": "node scripts/verify-production.mjs"
   },
   "keywords": [],
   "author": "Sanidhya Vats",

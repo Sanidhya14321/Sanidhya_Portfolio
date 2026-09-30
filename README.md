@@ -1,159 +1,43 @@
-# Professional Portfolio - Sanidhya Vats
+# Sanidhya Vats Portfolio
 
-A modern, high-performance portfolio showcasing full-stack development and machine learning engineering expertise. Built with Next.js 15, TypeScript, Tailwind CSS, and Framer Motion.
+Next.js 16, React 19, TypeScript, and Tailwind CSS portfolio deployed at https://sanidhyavats.me.
 
-## Features
+## Develop and verify
 
-- **Multi-Theme System**: Four distinct themes (Aurora Glow, Industrial Bento, Glassmorphism, Dark Horse) with user-controlled theme switching
-- **Responsive Design**: Fully responsive across all devices
-- **Smooth Animations**: Framer Motion animations throughout
-- **Accessibility**: WCAG compliant with skip-to-content links and keyboard navigation
-- **Performance**: Optimized for Core Web Vitals
-- **SEO Optimized**: Comprehensive meta tags and semantic HTML
-
-## Tech Stack
-
-- **Framework**: Next.js 15 (App Router)
-- **Language**: TypeScript
-- **Styling**: Tailwind CSS
-- **Animation**: Framer Motion
-- **Deployment**: Vercel (recommended)
-
-## Getting Started
-
-### Prerequisites
-
-- Node.js 18.17 or later
-- npm or yarn
-
-### Installation
-
-1. Clone the repository
-```bash
-git clone <repository-url>
-cd Sanidhya_Portfolio
-```
-
-2. Install dependencies
-```bash
-npm install
-```
-
-3. Run the development server
-```bash
+```sh
+npm ci
 npm run dev
-```
-
-4. Open [http://localhost:3000](http://localhost:3000) in your browser
-
-### Build for Production
-
-```bash
+npm run lint
 npm run build
+npm run typecheck
 npm start
+npm run verify
 ```
 
-## Project Structure
+`verify` checks the running production server at http://localhost:3000. Set `VERIFY_ORIGIN` to test another server. GitHub Actions runs lint, production build, type checking, and route checks on pushes to main and pull requests.
 
-```
-├── app/                    # Next.js App Router pages
-│   ├── layout.tsx         # Root layout
-│   ├── page.tsx           # Home page
-│   ├── projects/          # Projects archive
-│   └── globals.css        # Global styles
-├── components/            # React components
-│   ├── Navigation.tsx
-│   ├── Hero.tsx
-│   ├── About.tsx
-│   ├── Experience.tsx
-│   ├── Projects.tsx
-│   ├── Skills.tsx
-│   ├── Contact.tsx
-│   ├── Footer.tsx
-│   └── ThemeSwitcher.tsx
-├── contexts/              # React contexts
-│   └── ThemeContext.tsx
-├── data/                  # Portfolio data
-│   └── portfolio.ts
-└── public/                # Static assets
-```
+## Content and routes
 
-## Customization
+Update projects, experience, skills, and achievements in `data/portfolio.ts`. Projects automatically appear in the works archive, receive detail pages, and enter the sitemap. Preserve existing project IDs so published URLs keep working.
 
-### Update Portfolio Content
-
-Edit the content in `data/portfolio.ts`:
-- Personal information
-- Experience and education
-- Projects
-- Skills
-- Social links
-
-### Add Projects
-
-Add your projects to the `featuredProjects` or `otherProjects` arrays in `data/portfolio.ts`:
-
-```typescript
-{
-  id: "project-id",
-  title: "Project Title",
-  description: "Description",
-  tech: ["Next.js", "TypeScript"],
-  status: "Live",
-  github: "https://github.com/...",
-  demo: "https://...",
-  highlights: ["Feature 1", "Feature 2"]
-}
-```
-
-### Modify Themes
-
-Theme styles are defined in:
-- `tailwind.config.ts` - Color palette
-- `app/globals.css` - Theme-specific CSS
-- `contexts/ThemeContext.tsx` - Theme logic
+- `/`: portfolio homepage
+- `/works`: filterable projects and grid/reveal views
+- `/about`: profile, experience, skills, and achievements
+- `/projects/[id]`: individual project details
+- `/resume`: original resume preview and PDF links
+- `/resume/download`: PDF attachment download
+- `/sitemap.xml`, `/robots.txt`, `/opengraph-image`: search and sharing metadata
 
 ## Deployment
 
-### Vercel (Recommended)
+Build command: `npm run build`. Use Next.js hosting (such as Vercel), rather than a static-only export, to retain image optimization, the feedback API, and download headers/rewrites. Connect the custom domain in the hosting provider and keep `lib/seo.ts` aligned with the canonical production domain.
 
-1. Push your code to GitHub
-2. Import the repository in Vercel
-3. Deploy automatically
+Barlow fonts are self-hosted with their SIL Open Font License files under `public/fonts`. Font files use immutable caching: use a new filename if replacing a font. Images are served through Next.js with responsive sizes; original photos and layout are retained.
 
-### Other Platforms
+## Feedback configuration
 
-Build the production bundle:
-```bash
-npm run build
-```
+Set the SMTP variables listed in `.env.example` in the hosting provider to enable email delivery. Keep credentials out of source control. The API validates content, size, origin, and rating, escapes HTML, and uses bounded SMTP timeouts. CI checks invalid requests without sending email. Actual email delivery requires configured credentials and a separate authorized delivery check. Use your hosting provider's firewall/rate limiting if exposing the feedback endpoint to significant traffic; application validation does not replace distributed abuse protection.
 
-Deploy the `.next` folder to your hosting provider.
+## Operational checks
 
-## Performance
-
-- Lighthouse Score: 95+
-- First Contentful Paint: < 1s
-- Time to Interactive: < 2s
-
-## Browser Support
-
-- Chrome (latest)
-- Firefox (latest)
-- Safari (latest)
-- Edge (latest)
-
-## License
-
-MIT License - feel free to use this template for your own portfolio.
-
-## Contact
-
-Sanidhya Vats
-- GitHub: [github.com/sanidhyavats](https://github.com/sanidhyavats)
-- LinkedIn: [linkedin.com/in/sanidhyavats](https://linkedin.com/in/sanidhyavats)
-- Email: sanidhya@example.com
-
----
-
-Built with Next.js, TypeScript, and Framer Motion
+After deployment, verify the canonical domain, resume download, sitemap, and social preview. Submit the sitemap in your own search-console account when ready. Search indexing and rankings are controlled by search engines; metadata does not guarantee placement. No analytics, tracking, or cookie collection has been added.

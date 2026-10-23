@@ -1,5 +1,7 @@
 "use client";
 
+import { useAnimationPlayback } from "@/lib/use-animation-playback";
+import { useMediaQuery } from "@/lib/use-media-query";
 import Image from "next/image";
 
 import { portfolioData } from "@/data/portfolio";
@@ -14,10 +16,9 @@ import {
 
 // ── 2D Rotating Architectural Stamp ──────────────────────────────────────────
 function RotatingStamp() {
+  const playbackRef = useAnimationPlayback<HTMLDivElement>();
   return (
-    <motion.div
-      animate={{ rotate: 360 }}
-      transition={{ repeat: Infinity, duration: 22, ease: "linear" }}
+    <div ref={playbackRef} className="rotating-stamp" data-paused="true"
       style={{
         width: "clamp(62px, 12vw, 78px)",
         height: "clamp(62px, 12vw, 78px)",
@@ -64,11 +65,12 @@ function RotatingStamp() {
           SV
         </text>
       </svg>
-    </motion.div>
+    </div>
   );
 }
 
 export default function AboutSection() {
+  const reducedMotion = useMediaQuery("(prefers-reduced-motion: reduce)");
   const sectionRef = useRef<HTMLElement>(null);
   const data = portfolioData;
   const [activeTab, setActiveTab] = useState<"narrative" | "pillars" | "leadership">("narrative");
@@ -136,7 +138,7 @@ export default function AboutSection() {
       >
         <motion.h2
           style={{
-            x: headerX,
+            x: reducedMotion ? 0 : headerX,
             fontFamily: "var(--font-display)",
             fontWeight: 900,
             fontSize: "clamp(3.8rem, 10vw, 11rem)",
@@ -257,7 +259,7 @@ export default function AboutSection() {
                   left: 0,
                   width: "100%",
                   height: "110%",
-                  y: imageY,
+                  y: reducedMotion ? 0 : imageY,
                 }}
               >
                 <Image
@@ -396,7 +398,6 @@ export default function AboutSection() {
                   display: "flex",
                   flexDirection: "column",
                   justifyContent: "center",
-                  transition: "background 0.2s ease, transform 0.2s ease",
                 }}
               >
                 <span

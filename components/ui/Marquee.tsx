@@ -1,5 +1,7 @@
 "use client";
 
+import { useAnimationPlayback } from "@/lib/use-animation-playback";
+
 
 
 interface MarqueeProps {
@@ -17,6 +19,7 @@ export default function Marquee({
   className = "",
   style = {},
 }: MarqueeProps) {
+  const playbackRef = useAnimationPlayback<HTMLDivElement>();
   // Duplicate items for seamless loop
   const doubled = [...items, ...items];
 
@@ -27,6 +30,8 @@ export default function Marquee({
       style={style}
     >
       <div
+        ref={playbackRef}
+        data-paused="true"
         className={`marquee-inner ${reverse ? "reverse" : ""}`}
         style={{ "--marquee-speed": `${speed}s` } as React.CSSProperties}
       >

@@ -6,6 +6,7 @@ import {
   useRef,
   useCallback,
   useEffect,
+  useState,
   ReactNode,
 } from "react";
 import { useRouter, usePathname } from "next/navigation";
@@ -15,10 +16,12 @@ export type TransitionDirection = "up" | "down" | "left" | "right";
 
 interface TransitionContextType {
   navigateWithTransition: (url: string, direction?: TransitionDirection) => void;
+  isTransitioning: boolean;
 }
 
 const TransitionContext = createContext<TransitionContextType>({
   navigateWithTransition: () => {},
+  isTransitioning: false,
 });
 
 export const usePageTransition = () => useContext(TransitionContext);
@@ -41,7 +44,42 @@ export function StaggeredColorTransitionProvider({
   const layerRefs = useRef<(HTMLDivElement | null)[]>([]);
   const containerRef = useRef<HTMLDivElement>(null);
   const watermarkRef = useRef<HTMLDivElement>(null);
-  const isTransitioning = useRef(false);
+  const transitionActive = useRef(false);
+  const [isTransitioning, setIsTransitioning] = useState(false);
+  const timelineRef = useRef<gsap.core.Timeline | null>(null);
+  const pendingRoute = useRef<string | null>(null);
+  const timeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+
+  const finishTransition = useCallback(() => {
+    if (timeoutRef.current) clearTimeout(timeoutRef.current);
+    timeoutRef.current = null;
+    pendingRoute.current = null;
+    if (containerRef.current) {
+      containerRef.current.style.pointerEvents = "none";
+      containerRef.current.style.visibility = "hidden";
+    }
+    transitionActive.current = false;
+    setIsTransitioning(false);
+  }, []);
+
+  // Resume the reveal only after React has committed the destination route.
+  useEffect(() => {
+    if (pendingRoute.current !== pathname) return;
+    let secondFrame = 0;
+    const firstFrame = requestAnimationFrame(() => {
+      window.scrollTo({ top: 0, behavior: "instant" });
+      secondFrame = requestAnimationFrame(() => timelineRef.current?.play());
+    });
+    return () => {
+      cancelAnimationFrame(firstFrame);
+      cancelAnimationFrame(secondFrame);
+    };
+  }, [pathname]);
+
+  useEffect(() => () => {
+    timelineRef.current?.kill();
+    if (timeoutRef.current) clearTimeout(timeoutRef.current);
+  }, []);
 
   // Direction assignment helper based on route intent
   const getDirectionForRoute = useCallback(
@@ -61,9 +99,11 @@ export function StaggeredColorTransitionProvider({
 
   const navigateWithTransition = useCallback(
     (url: string, customDirection?: TransitionDirection) => {
-      if (isTransitioning.current) return;
-      if (url === pathname) {
-        window.scrollTo({ top: 0, behavior: "smooth" });
+      if (transitionActive.current) return;
+      const targetUrl = new URL(url, window.location.origin);
+      if (targetUrl.origin !== window.location.origin) return;
+      if (url === `${pathname}${window.location.search}`) {
+        window.scrollTo({ top: 0, behavior: window.matchMedia("(prefers-reduced-motion: reduce)").matches ? "instant" : "smooth" });
         return;
       }
 
@@ -82,7 +122,9 @@ export function StaggeredColorTransitionProvider({
         return;
       }
 
-      isTransitioning.current = true;
+      transitionActive.current = true;
+      setIsTransitioning(true);
+      pendingRoute.current = targetUrl.pathname;
       containerRef.current.style.pointerEvents = "auto";
       containerRef.current.style.visibility = "visible";
 
@@ -107,15 +149,14 @@ export function StaggeredColorTransitionProvider({
         gsap.set(watermarkRef.current, { opacity: 0, scale: 0.94 });
       }
 
-      const tl = gsap.timeline({
-        onComplete: () => {
-          if (containerRef.current) {
-            containerRef.current.style.pointerEvents = "none";
-            containerRef.current.style.visibility = "hidden";
-          }
-          isTransitioning.current = false;
-        },
-      });
+      timelineRef.current?.kill();
+      const tl = gsap.timeline({ onComplete: finishTransition });
+      timelineRef.current = tl;
+      // Release the veil even if a navigation is interrupted or fails.
+      timeoutRef.current = setTimeout(() => {
+        tl.kill();
+        finishTransition();
+      }, 10_000);
 
       // ── Step 1: Cascading Enter Sweep ──
       tl.to(validLayers, {
@@ -142,13 +183,15 @@ export function StaggeredColorTransitionProvider({
       }
 
       // ── Step 3: The Swap (Execute Route Change & Scroll Reset Behind Veil) ──
-      tl.add(() => {
-        router.push(url);
-        window.scrollTo(0, 0);
+      tl.addPause("route-ready", () => {
+        // Query-only navigation keeps the same pathname, so it has no pathname effect.
+        if (targetUrl.pathname === pathname) {
+          router.push(url);
+          tl.play();
+        } else {
+          router.push(url);
+        }
       });
-
-      // Subtle hold for React DOM commit
-      tl.to({}, { duration: 0.1 });
 
       // Fade out watermark
       if (watermarkRef.current) {
@@ -177,7 +220,7 @@ export function StaggeredColorTransitionProvider({
         "-=0.06"
       );
     },
-    [pathname, router, getDirectionForRoute]
+    [pathname, router, getDirectionForRoute, finishTransition]
   );
 
   // Global click interception for internal links
@@ -192,17 +235,16 @@ export function StaggeredColorTransitionProvider({
         href &&
         href.startsWith("/") &&
         !href.startsWith("//") &&
-        !href.startsWith("/#") &&
+        !href.includes("#") &&
         !target.hasAttribute("download") &&
-        target.getAttribute("target") !== "_blank"
+        !target.hasAttribute("data-no-transition") &&
+        !/\.(pdf|zip|png|jpe?g|webp|svg)(?:[?#]|$)/i.test(href) &&
+        href.split(/[?#]/)[0] !== "/resume/download" &&
+        (!target.getAttribute("target") || target.getAttribute("target") === "_self")
       ) {
-        if (href.includes("#") && href.split("#")[0] === pathname) {
-          return;
-        }
-
         e.preventDefault();
         const customDir = target.getAttribute("data-transition-dir") as TransitionDirection | null;
-        navigateWithTransition(href, customDir || undefined);
+        navigateWithTransition(href, customDir && ["up", "down", "left", "right"].includes(customDir) ? customDir : undefined);
       }
     };
 
@@ -211,12 +253,13 @@ export function StaggeredColorTransitionProvider({
   }, [pathname, navigateWithTransition]);
 
   return (
-    <TransitionContext.Provider value={{ navigateWithTransition }}>
+    <TransitionContext.Provider value={{ navigateWithTransition, isTransitioning }}>
       {children}
 
       {/* ── Multi-Layer Staggered Overlay Stack ── */}
       <div
         ref={containerRef}
+        data-page-transition
         aria-hidden="true"
         style={{
           position: "fixed",

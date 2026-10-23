@@ -8,7 +8,8 @@
     "start": "next start",
     "lint": "eslint .",
     "typecheck": "tsc --noEmit",
-    "verify": "node scripts/verify-production.mjs"
+    "verify": "node scripts/verify-production.mjs",
+    "test:animations": "playwright test"
   },
   "keywords": [],
   "author": "Sanidhya Vats",
@@ -32,6 +33,7 @@
     "vaul": "^1.1.2"
   },
   "devDependencies": {
+    "@playwright/test": "^1.64.1",
     "@tailwindcss/postcss": "^4.2.1",
     "@types/node": "^25.3.2",
     "@types/nodemailer": "^8.0.2",

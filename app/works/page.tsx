@@ -253,8 +253,10 @@ export default function WorksPage() {
         /* Editorial Gallery Grid View */
         <section style={{ borderBottom: "1px solid var(--border)" }}>
           <motion.div
+            data-project-grid
             layout
             style={{
+              position: "relative",
               display: "grid",
               gridTemplateColumns: "repeat(auto-fill, minmax(min(100%, 380px), 1fr))",
               gap: 0,
@@ -267,13 +269,15 @@ export default function WorksPage() {
 
                 return (
                   <motion.div
+                    data-project-card
                     layout
                     key={slug}
                     initial={{ opacity: 0, y: 20 }}
                     animate={{ opacity: 1, y: 0 }}
-                    exit={{ opacity: 0, scale: 0.95 }}
+                    exit={{ opacity: 0, scale: 0.95, transition: { duration: 0.2, delay: 0 } }}
                     transition={{
                       duration: 0.45,
+                      layout: { duration: 0.35, delay: 0 },
                       delay: i * 0.03,
                       ease: [0.19, 1, 0.22, 1],
                     }}
@@ -285,7 +289,7 @@ export default function WorksPage() {
                       display: "flex",
                       flexDirection: "column",
                       justifyContent: "space-between",
-                      transition: "transform 0.3s cubic-bezier(0.19, 1, 0.22, 1), box-shadow 0.3s ease",
+                      transition: "box-shadow 0.3s ease",
                     }}
                   >
                     <Link

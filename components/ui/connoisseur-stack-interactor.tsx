@@ -17,7 +17,11 @@ export const Component = ({
   const containerRef = useRef<HTMLDivElement>(null);
   const imageRef = useRef<SVGImageElement>(null);
   const mainGroupRef = useRef<SVGGElement>(null);
+  const inViewRef = useRef(false);
+  const selectionVersion = useRef(0);
   const masterTl = useRef<gsap.core.Timeline | null>(null);
+
+  const cancelPendingSelection = useCallback(() => { selectionVersion.current++; }, []);
 
   const createTransition = useCallback((index: number) => {
     const item = items[index];
@@ -43,11 +47,11 @@ export const Component = ({
     }
 
     // Hardware accelerated initial state
-    gsap.set(selector, { 
-      scale: 0.90, 
+    gsap.set(selector, {
+      scale: 0.90,
       opacity: 0,
-      transformOrigin: "center center", 
-      force3D: true 
+      transformOrigin: "center center",
+      force3D: false
     });
 
     const tl = gsap.timeline();
@@ -59,47 +63,45 @@ export const Component = ({
       duration: 0.32,
       stagger: { amount: 0.14, from: "center" },
       ease: "power2.out",
-      force3D: true,
-    })
-    // Subtle breathing pulse (image is always 100% visible & recognizable)
-    .to(selector, {
-      scale: 1.012,
-      duration: 2.8,
-      repeat: -1,
-      yoyo: true,
-      ease: "sine.inOut",
-      stagger: { amount: 0.08, from: "center" },
-      force3D: true,
+      force3D: false,
     });
 
     masterTl.current = tl;
+    if (!inViewRef.current || document.hidden) tl.pause();
   }, [items]);
 
   useEffect(() => {
     const ctx = gsap.context(() => {
       createTransition(0);
     }, containerRef);
-    let inView = false;
+
     const updatePlayback = () => {
-      if (inView && !document.hidden) masterTl.current?.resume();
+      if (inViewRef.current && !document.hidden) masterTl.current?.resume();
       else masterTl.current?.pause();
     };
     const observer = new IntersectionObserver(([entry]) => {
-      inView = entry.isIntersecting;
+      inViewRef.current = entry.isIntersecting;
       updatePlayback();
     });
     if (containerRef.current) observer.observe(containerRef.current);
     document.addEventListener("visibilitychange", updatePlayback);
     return () => {
+      cancelPendingSelection();
       observer.disconnect();
       document.removeEventListener("visibilitychange", updatePlayback);
       if (masterTl.current) masterTl.current.kill();
       ctx.revert();
     };
-  }, [createTransition]);
+  }, [createTransition, cancelPendingSelection]);
 
-  const handleItemHover = (index: number) => {
-    if (index === activeIndex) return;
+  const handleItemHover = async (index: number) => {
+    // Cancel stale image loads when moving quickly between rows.
+    const version = ++selectionVersion.current;
+    if (index === activeIndex || !items[index]) return;
+    const preview = new window.Image();
+    preview.src = getImageProps({ src: items[index].image, alt: items[index].name, width: 460, height: 460, quality: 85 }).props.src;
+    try { await preview.decode(); } catch { return; }
+    if (version !== selectionVersion.current) return;
     setActiveIndex(index);
     createTransition(index);
   };
@@ -107,8 +109,8 @@ export const Component = ({
   const activeItem = items[activeIndex] || items[0];
 
   return (
-    <div 
-      ref={containerRef} 
+    <div
+      ref={containerRef}
       style={{
         padding: "clamp(2rem, 4vw, 3.5rem) clamp(1rem, 3vw, 2.5rem)",
         width: "100%",
@@ -116,7 +118,7 @@ export const Component = ({
       }}
       className={cn(
         "flex flex-col lg:flex-row items-center justify-between gap-10 lg:gap-14",
-        "bg-transparent", 
+        "bg-transparent",
         className
       )}
     >
@@ -131,7 +133,17 @@ export const Component = ({
                 <li
                   key={item.num}
                   onMouseEnter={() => handleItemHover(index)}
-                  onTouchStart={() => handleItemHover(index)}
+                  onFocus={() => handleItemHover(index)}
+                  onClick={() => handleItemHover(index)}
+                  onKeyDown={(event) => {
+                    if (event.key === "Enter" || event.key === " ") {
+                      event.preventDefault();
+                      void handleItemHover(index);
+                    }
+                  }}
+                  tabIndex={0}
+                  role="button"
+                  aria-pressed={isSelected}
                   style={{
                     padding: "clamp(1.2rem, 2.4vw, 2.2rem) 0",
                     borderBottom: "1px solid var(--border)",
@@ -143,8 +155,8 @@ export const Component = ({
                     {/* Left: Index + Giant Title matching Projects Section */}
                     <div className="flex items-center gap-[clamp(0.8rem,2.5vw,2.5rem)] min-w-0">
                       {/* Index Number - Exact match to Projects Section */}
-                      <span 
-                        style={{ 
+                      <span
+                        style={{
                           fontFamily: "var(--font-display)",
                           fontWeight: 900,
                           fontSize: "clamp(1rem, 1.8vw, 1.5rem)",
@@ -157,10 +169,10 @@ export const Component = ({
                       >
                         {item.num}
                       </span>
-                      
+
                       {/* Event Title - Exactly matching Projects clamp(2rem, 4.5vw, 4.8rem) font tokens */}
-                      <h3 
-                        style={{ 
+                      <h3
+                        style={{
                           fontFamily: "var(--font-display)",
                           fontWeight: 900,
                           fontSize: "clamp(1.9rem, 3.8vw, 4.2rem)",
@@ -231,16 +243,18 @@ export const Component = ({
       {/* RIGHT SIDE: HIGH-VISIBILITY ARCHITECTURAL GEOMETRIC SHOWCASE (>96% VISIBLE SURFACE) */}
       <div className="relative w-full lg:w-5/12 flex flex-col items-center">
         {/* Crisp Image Container with Modern Shadow */}
-        <div 
+        <div
           className="relative w-full max-w-[380px] sm:max-w-[420px] lg:max-w-[460px] aspect-square rounded-xl p-1 transition-transform duration-500"
-          style={{ 
+          style={{
             boxShadow: "0 25px 50px -12px rgba(26, 26, 26, 0.18), 0 0 0 1px rgba(26, 26, 26, 0.08)",
             background: "rgba(255, 255, 255, 0.35)",
             backdropFilter: "blur(6px)",
           }}
         >
-          <svg 
-            viewBox="0 0 500 500" 
+          <svg
+            role="img"
+            aria-label={activeItem?.name || "Event preview"}
+            viewBox="0 0 500 500"
             className="w-full h-full rounded-lg overflow-hidden"
           >
             <defs>
@@ -305,7 +319,7 @@ export const Component = ({
         </div>
 
         {/* Integrated Contextual Dossier Card Underneath Visual Frame */}
-        <div 
+        <div
           className="w-full max-w-[380px] sm:max-w-[420px] lg:max-w-[460px] mt-4 rounded-xl transition-all duration-300"
           style={{
             background: "rgba(255, 255, 255, 0.45)",

@@ -264,15 +264,17 @@ export default function HeroSection() {
                 width: "100%",
                 marginTop: "1rem",
                 zIndex: 2,
+                // Fill whatever scene height the text block leaves, so the
+                // enlarged image runs flush to the bottom of the viewport.
+                flex: 1,
+                minHeight: 0,
               }}
             >
               <motion.div
                 data-hero-media
                 style={{
-                  // Slim side margins are baked into the box, so the clip reveal
-                  // can expand fully while the final frame keeps breathing room.
-                  width: "calc(100% - 4vw)",
-                  height: "calc(100svh - 16rem)",
+                  width: "100%",
+                  height: "100%",
                   clipPath: reducedMotion ? "none" : mediaClip,
                   overflow: "hidden",
                   border: "none",

@@ -195,7 +195,6 @@ export default function HeroSection() {
               flexDirection: "column",
               alignItems: "center",
               justifyContent: "center",
-              zIndex: 2,
             }}
           >
             {/* 2A: Top Labels ("FULL STACK & ML" and "AI Engineer") */}

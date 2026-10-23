@@ -89,7 +89,7 @@ test("reduced motion removes sticky choreography and continuous decoration", asy
   await expect(page.locator(".loader-overlay")).toHaveCount(0);
   await expect(page.locator("[data-hero-scene]")).toHaveCSS("position", "relative");
   await expect(page.locator("[data-hero-media]")).toHaveCSS("clip-path", "none");
-  await expect(page.locator("[data-experience-track]")).toBeVisible();
+  await expect(page.locator("[data-experience-track]")).toBeHidden();
   await expect(page.locator(".rotating-stamp")).toHaveCSS("animation-name", "none");
   await expect(page.locator(".marquee-inner").first()).toHaveCSS("animation-name", "none");
   await page.locator('header a[href="/works"]').click();

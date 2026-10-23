@@ -9,9 +9,7 @@ import { motion, useScroll, useTransform, useSpring } from "framer-motion";
 export default function ExperienceSection() {
   const reducedMotion = useMediaQuery("(prefers-reduced-motion: reduce)");
   const hasTallViewport = useMediaQuery("(min-height: 760px)");
-  // The horizontal track is part of the fixed design; reduced motion only drops the
-  // spring smoothing (motion follows scroll instantly) instead of swapping layouts.
-  const useHorizontalTrack = hasTallViewport;
+  const useHorizontalTrack = !reducedMotion && hasTallViewport;
   const data = portfolioData;
   const containerRef = useRef<HTMLDivElement>(null);
   const items = data.experience;
@@ -28,8 +26,6 @@ export default function ExperienceSection() {
     restDelta: 0.001,
   });
 
-  const trackProgress = reducedMotion ? scrollYProgress : smoothProgress;
-
   const colWidth = 540;
   const cardWidth = 440;
   const svgWidth = totalItems * colWidth + 800;
@@ -38,7 +34,7 @@ export default function ExperienceSection() {
 
   // Horizontal translation for desktop track: centers on first card at start, centers on last card at end
   const x = useTransform(
-    trackProgress,
+    smoothProgress,
     [0, 1],
     ["0px", `-${(totalItems - 1) * colWidth}px`]
   );
@@ -207,7 +203,7 @@ export default function ExperienceSection() {
                 style={{
                   height: "100%",
                   background: "var(--text)",
-                  scaleX: trackProgress,
+                  scaleX: smoothProgress,
                   transformOrigin: "left",
                 }}
               />
@@ -255,7 +251,7 @@ export default function ExperienceSection() {
                   strokeWidth="3.5"
                   strokeLinecap="round"
                   fill="none"
-                  style={{ pathLength: trackProgress }}
+                  style={{ pathLength: smoothProgress }}
                 />
 
                 {/* Milestone Nodes & Vertical Connector Pins */}

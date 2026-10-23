@@ -124,16 +124,17 @@ export default function HeroSection() {
   // where the headline sits on top of the photograph. It is driven by raw scroll
   // progress (not the text spring) so the reveal completes the instant the user
   // reaches the sticky release point, with no slow spring residual border.
-  const mediaClip = useTransform(scrollYProgress, [0, 0.98], ["inset(28% 40% 30% 40%)", "inset(0% 0% 0% 0%)"]);
+  // The media is an absolute layer covering the whole scene. The clip starts collapsed
+  // to a point at the scene's center (nothing visible on first load — no ugly photo
+  // sliver at the fold) and expands outward to the full viewport edge-to-edge, driven
+  // by raw scroll progress so the reveal completes instantly at the sticky release.
+  const mediaClip = useTransform(scrollYProgress, [0, 0.98], ["inset(100% 50% 100% 50%)", "inset(0% 0% 0% 0%)"]);
 
-  // Auto-invert the text as the photograph takes over the scene: dark ink while
-  // the image is only a card under the headline, cream over the scrimmed photo
-  // once it covers the viewport. Held at the old value until the flip window so
-  // parked mid-scroll states stay readable.
-  const headlineTone = useTransform(scrollYProgress, [0.6, 0.82, 0.9], ["#1A1A1A", "#1A1A1A", "#E8E4DC"]);
+  // The headline uses mix-blend-mode: difference so its color is the background's
+  // inverse every frame — dark ink on cream while the image is hidden, inverted
+  // contrast over the photograph wherever it covers. The label row uses a simple
+  // tone swap so it keeps its muted-editorial character.
   const labelTone = useTransform(scrollYProgress, [0.6, 0.82, 0.9], ["#6B6B6B", "#6B6B6B", "#E8E4DC"]);
-  // With reduced motion the photo covers the scene from the start, so text is cream outright.
-  const headlineColor = reducedMotion ? "#E8E4DC" : headlineTone;
   const labelColorValue = reducedMotion ? "#E8E4DC" : labelTone;
 
   return (
@@ -173,7 +174,9 @@ export default function HeroSection() {
             position: reducedMotion ? "relative" : "sticky",
             top: 0,
             height: "100svh",
-            background: "transparent",
+            // Opaque cream backdrop: gives the difference-blended headline a
+            // guaranteed backdrop of the page color wherever the photo is not.
+            background: "var(--bg)",
             overflow: "hidden",
             display: "flex",
             flexDirection: "column",
@@ -231,6 +234,9 @@ export default function HeroSection() {
                 width: "100%",
                 zIndex: 6,
                 pointerEvents: "none",
+                // White source color + difference blending renders the headline
+                // as the per-pixel inverse of whatever is behind it.
+                mixBlendMode: "difference",
               }}
             >
               <motion.span
@@ -242,7 +248,7 @@ export default function HeroSection() {
                   textTransform: "uppercase",
                   letterSpacing: "-0.02em",
                   lineHeight: 0.9,
-                  color: headlineColor,
+                  color: "#FFFFFF",
                   whiteSpace: "nowrap",
                   display: "inline-block",
                   willChange: "transform",
@@ -260,7 +266,7 @@ export default function HeroSection() {
                   textTransform: "uppercase",
                   letterSpacing: "-0.02em",
                   lineHeight: 0.9,
-                  color: headlineColor,
+                  color: "#FFFFFF",
                   whiteSpace: "nowrap",
                   display: "inline-block",
                   willChange: "transform",

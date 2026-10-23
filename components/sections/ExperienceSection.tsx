@@ -3,13 +3,12 @@
 import { useMediaQuery } from "@/lib/use-media-query";
 
 import { portfolioData } from "@/data/portfolio";
-import { useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 import { motion, useScroll, useTransform, useSpring } from "framer-motion";
 
 export default function ExperienceSection() {
   const reducedMotion = useMediaQuery("(prefers-reduced-motion: reduce)");
-  const hasTallViewport = useMediaQuery("(min-height: 760px)");
-  const useHorizontalTrack = !reducedMotion && hasTallViewport;
+  const useHorizontalTrack = !reducedMotion;
   const data = portfolioData;
   const containerRef = useRef<HTMLDivElement>(null);
   const items = data.experience;
@@ -25,6 +24,15 @@ export default function ExperienceSection() {
     damping: 22,
     restDelta: 0.001,
   });
+
+  const [sceneScale, setSceneScale] = useState(1);
+  useEffect(() => {
+    const update = () =>
+      setSceneScale(Math.max(0.5, Math.min(1, Math.min(window.innerHeight, 960) / 660)));
+    update();
+    window.addEventListener("resize", update);
+    return () => window.removeEventListener("resize", update);
+  }, []);
 
   const colWidth = 540;
   const cardWidth = 440;
@@ -177,8 +185,7 @@ export default function ExperienceSection() {
             style={{
               position: "sticky",
               top: 0,
-              height: "100vh",
-              minHeight: "720px",
+              height: "100svh",
               maxHeight: "960px",
               overflow: "hidden",
               display: "flex",
@@ -210,6 +217,13 @@ export default function ExperienceSection() {
             </div>
 
             {/* Horizontal Track with Centered Viewport Start */}
+            <div
+              style={{
+                transform: `scale(${sceneScale})`,
+                transformOrigin: "center center",
+                flexShrink: 0,
+              }}
+            >
             <motion.div
               style={{
                 x,
@@ -467,6 +481,7 @@ export default function ExperienceSection() {
                 })}
               </div>
             </motion.div>
+            </div>
           </div>
         </div>
       </div>

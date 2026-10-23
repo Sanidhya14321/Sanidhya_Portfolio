@@ -1,10 +1,13 @@
 "use client";
 
+import { useMediaQuery } from "@/lib/use-media-query";
+
 import { useRef, useEffect, useState } from "react";
 import { portfolioData } from "@/data/portfolio";
 import { motion, useScroll, useTransform } from "framer-motion";
 
 export default function ManifestoSection() {
+  const reducedMotion = useMediaQuery("(prefers-reduced-motion: reduce)");
   const sectionRef = useRef<HTMLDivElement>(null);
   const [inView, setInView] = useState(false);
 
@@ -81,7 +84,7 @@ export default function ManifestoSection() {
         {/* Main Display Statement */}
         <motion.div
           style={{
-            y: statementY,
+            y: reducedMotion ? 0 : statementY,
             opacity: inView ? 1 : 0,
             transition: "opacity 0.8s cubic-bezier(0.19, 1, 0.22, 1)",
           }}

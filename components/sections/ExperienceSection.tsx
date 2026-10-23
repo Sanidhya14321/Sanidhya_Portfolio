@@ -1,10 +1,17 @@
 "use client";
 
+import { useMediaQuery } from "@/lib/use-media-query";
+
 import { portfolioData } from "@/data/portfolio";
 import { useRef } from "react";
 import { motion, useScroll, useTransform, useSpring } from "framer-motion";
 
 export default function ExperienceSection() {
+  const reducedMotion = useMediaQuery("(prefers-reduced-motion: reduce)");
+  const hasTallViewport = useMediaQuery("(min-height: 760px)");
+  // The horizontal track is part of the fixed design; reduced motion only drops the
+  // spring smoothing (motion follows scroll instantly) instead of swapping layouts.
+  const useHorizontalTrack = hasTallViewport;
   const data = portfolioData;
   const containerRef = useRef<HTMLDivElement>(null);
   const items = data.experience;
@@ -21,6 +28,8 @@ export default function ExperienceSection() {
     restDelta: 0.001,
   });
 
+  const trackProgress = reducedMotion ? scrollYProgress : smoothProgress;
+
   const colWidth = 540;
   const cardWidth = 440;
   const svgWidth = totalItems * colWidth + 800;
@@ -29,7 +38,7 @@ export default function ExperienceSection() {
 
   // Horizontal translation for desktop track: centers on first card at start, centers on last card at end
   const x = useTransform(
-    smoothProgress,
+    trackProgress,
     [0, 1],
     ["0px", `-${(totalItems - 1) * colWidth}px`]
   );
@@ -158,7 +167,7 @@ export default function ExperienceSection() {
       </div>
 
       {/* ── Desktop & Tablet View (Sticky Horizontal Wavy Scroll) ── */}
-      <div className="hidden md:block">
+      <div data-experience-track className={useHorizontalTrack ? "hidden md:block" : "hidden"}>
         <div
           ref={containerRef}
           style={{
@@ -198,7 +207,7 @@ export default function ExperienceSection() {
                 style={{
                   height: "100%",
                   background: "var(--text)",
-                  scaleX: smoothProgress,
+                  scaleX: trackProgress,
                   transformOrigin: "left",
                 }}
               />
@@ -246,7 +255,7 @@ export default function ExperienceSection() {
                   strokeWidth="3.5"
                   strokeLinecap="round"
                   fill="none"
-                  style={{ pathLength: smoothProgress }}
+                  style={{ pathLength: trackProgress }}
                 />
 
                 {/* Milestone Nodes & Vertical Connector Pins */}
@@ -467,7 +476,7 @@ export default function ExperienceSection() {
       </div>
 
       {/* ── Mobile View: Vertical Timeline with Wavy Left Guide (100% Fluid & Clean) ── */}
-      <div className="block md:hidden" style={{ padding: "2rem clamp(1rem, 3vw, 1.5rem)" }}>
+      <div className={useHorizontalTrack ? "block md:hidden" : "block"} style={{ padding: "2rem clamp(1rem, 3vw, 1.5rem)" }}>
         <div style={{ display: "flex", flexDirection: "column", gap: "1.5rem" }}>
           {items.map((exp, i) => (
             <div

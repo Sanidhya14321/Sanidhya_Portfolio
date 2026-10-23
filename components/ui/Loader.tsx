@@ -1,14 +1,17 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useState, useRef } from "react";
 
 interface LoaderProps {
   done: boolean;
+  onComplete: () => void;
 }
 
-export default function Loader({ done }: LoaderProps) {
+export default function Loader({ done, onComplete }: LoaderProps) {
   const [count, setCount] = useState(0);
   const [hidden, setHidden] = useState(false);
+  const onCompleteRef = useRef(onComplete);
+  useEffect(() => { onCompleteRef.current = onComplete; }, [onComplete]);
 
   useEffect(() => {
     // Fast snappy counter 0 -> 100 over ~450ms
@@ -31,7 +34,7 @@ export default function Loader({ done }: LoaderProps) {
 
   useEffect(() => {
     if (done) {
-      const timer = setTimeout(() => setHidden(true), 400);
+      const timer = setTimeout(() => { setHidden(true); onCompleteRef.current(); }, window.matchMedia("(prefers-reduced-motion: reduce)").matches ? 0 : 400);
       return () => clearTimeout(timer);
     }
   }, [done]);

@@ -2,8 +2,11 @@
 
 import Image from "next/image";
 
+import { useIntroReady } from "@/lib/intro-ready";
+import { usePageTransition } from "@/components/ui/StaggeredColorTransition";
+import { useMediaQuery } from "@/lib/use-media-query";
 import { portfolioData } from "@/data/portfolio";
-import { useEffect, useState, useRef } from "react";
+import { useRef } from "react";
 import { motion, useScroll, useTransform, useSpring, useAnimationControls } from "framer-motion";
 
 function HeroChar({
@@ -17,9 +20,10 @@ function HeroChar({
 }) {
   const controls = useAnimationControls();
   const isFlipping = useRef(false);
+  const reducedMotion = useMediaQuery("(prefers-reduced-motion: reduce)");
 
   const handleMouseEnter = async () => {
-    if (isFlipping.current || char === " ") return;
+    if (reducedMotion || isFlipping.current || char === " ") return;
     isFlipping.current = true;
     await controls.start({
       rotateY: 360,
@@ -88,13 +92,11 @@ function HeroName({ name, visible }: { name: string; visible: boolean }) {
 
 export default function HeroSection() {
   const data = portfolioData;
-  const [visible, setVisible] = useState(false);
+  const introReady = useIntroReady();
+  const { isTransitioning } = usePageTransition();
+  const visible = introReady && !isTransitioning;
+  const reducedMotion = useMediaQuery("(prefers-reduced-motion: reduce)");
   const containerRef = useRef<HTMLDivElement>(null);
-
-  useEffect(() => {
-    const t = setTimeout(() => setVisible(true), 250);
-    return () => clearTimeout(t);
-  }, []);
 
   // Track scroll progress inside the hero container
   const { scrollYProgress } = useScroll({
@@ -117,9 +119,8 @@ export default function HeroSection() {
   const labelRightX = useTransform(smoothProgress, [0, 0.75], ["7vw", "0vw"]);
 
   // 3. Central Media Animation
-  const mediaWidth = useTransform(smoothProgress, [0, 1], ["20vw", "100vw"]);
-  const mediaHeight = useTransform(smoothProgress, [0, 1], ["24vh", "100vh"]);
-  const mediaY = useTransform(smoothProgress, [0, 1], ["1rem", "7rem"]);
+  // Reveal a fixed-size image instead of laying out the entire sticky scene every frame.
+  const mediaClip = useTransform(smoothProgress, [0, 1], ["inset(38% 40% 38% 40%)", "inset(0% 0% 0% 0%)"]);
 
   return (
     <>
@@ -144,25 +145,28 @@ export default function HeroSection() {
       {/* ── SECTION 2: Center Interactive Showcase Section (Text + Media) ── */}
       <div
         ref={containerRef}
+        data-hero-scroll
         style={{
           position: "relative",
           height: "auto",
-          minHeight: "220vh",
+          minHeight: reducedMotion ? "auto" : "220svh",
           background: "transparent",
         }}
       >
         <section
+          data-hero-scene
           style={{
-            position: "sticky",
+            position: reducedMotion ? "relative" : "sticky",
             top: 0,
-            height: "auto",
-            minHeight: "128vh",
+            height: "100svh",
             background: "transparent",
             overflow: "hidden",
             display: "flex",
             flexDirection: "column",
             alignItems: "center",
             justifyContent: "center",
+            // Clear the fixed navigation so the converged headline never sits under it.
+            paddingTop: "4.5rem",
           }}
         >
           {/* Center Stage (Labels + Text + Media) */}
@@ -194,10 +198,10 @@ export default function HeroSection() {
                 pointerEvents: "none",
               }}
             >
-              <motion.span style={{ x: labelLeftX, display: "inline-block" }}>
+              <motion.span style={{ x: reducedMotion ? 0 : labelLeftX, display: "inline-block" }}>
                 FULL STACK &amp;&nbsp;
               </motion.span>
-              <motion.span style={{ x: labelRightX, display: "inline-block" }}>
+              <motion.span style={{ x: reducedMotion ? 0 : labelRightX, display: "inline-block" }}>
                 AI Engineer
               </motion.span>
             </div>
@@ -216,7 +220,7 @@ export default function HeroSection() {
             >
               <motion.span
                 style={{
-                  x: leftX,
+                  x: reducedMotion ? 0 : leftX,
                   fontFamily: "var(--font-display)",
                   fontWeight: 900,
                   fontSize: "clamp(1.8rem, 4.4vw, 5.5rem)",
@@ -234,7 +238,7 @@ export default function HeroSection() {
 
               <motion.span
                 style={{
-                  x: rightX,
+                  x: reducedMotion ? 0 : rightX,
                   fontFamily: "var(--font-display)",
                   fontWeight: 900,
                   fontSize: "clamp(1.8rem, 4.4vw, 5.5rem)",
@@ -258,15 +262,18 @@ export default function HeroSection() {
                 display: "flex",
                 justifyContent: "center",
                 width: "100%",
-                marginTop: "-3rem",
+                marginTop: "1rem",
                 zIndex: 2,
               }}
             >
               <motion.div
+                data-hero-media
                 style={{
-                  width: mediaWidth,
-                  height: mediaHeight,
-                  y: mediaY,
+                  // Slim side margins are baked into the box, so the clip reveal
+                  // can expand fully while the final frame keeps breathing room.
+                  width: "calc(100% - 4vw)",
+                  height: "calc(100svh - 16rem)",
+                  clipPath: reducedMotion ? "none" : mediaClip,
                   overflow: "hidden",
                   border: "none",
                   boxShadow: "none",
@@ -274,7 +281,7 @@ export default function HeroSection() {
                   alignItems: "center",
                   justifyContent: "center",
                   flexShrink: 0,
-                  willChange: "width, height, transform",
+                  willChange: reducedMotion ? "auto" : "clip-path",
                 }}
               >
                 <div
@@ -288,7 +295,7 @@ export default function HeroSection() {
                 >
                   <Image
                     src="/my_pics/DSC03737.JPG"
-                    fill sizes="(max-width: 767px) 100vw, 70vw" quality={85}
+                    fill sizes="100vw" quality={85} priority
                     alt="Portfolio Visual Showcase"
                     style={{
                       width: "100%",

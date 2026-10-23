@@ -24,3 +24,7 @@ jobs:
           npm start > /tmp/portfolio-server.log 2>&1 &
           trap 'kill $!' EXIT
           node scripts/verify-production.mjs
+      - name: Install browser for animation checks
+        run: npx playwright install --with-deps chromium
+      - name: Verify animation interactions
+        run: npm run test:animations

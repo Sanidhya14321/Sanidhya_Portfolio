@@ -52,6 +52,7 @@ html {
     animation-duration: 0.01ms !important;
     animation-iteration-count: 1 !important;
     transition-duration: 0.01ms !important;
+    transition-delay: 0ms !important;
   }
 }
 
@@ -64,7 +65,7 @@ body {
   background-size: 320px 320px;
   color: var(--text);
   font-family: var(--font-body);
-  overflow-x: hidden;
+  overflow-x: clip;
   line-height: 1.5;
 }
 
@@ -308,4 +309,16 @@ html.has-custom-cursor *::after {
   html.has-custom-cursor *::after {
     cursor: auto !important;
   }
+}
+
+/* Pause continuous decoration when it is outside the viewport or the tab is hidden. */
+.marquee-inner[data-paused="true"] { animation-play-state: paused; }
+
+@keyframes stamp-spin {
+  to { transform: rotate(360deg); }
+}
+.rotating-stamp { animation: stamp-spin 22s linear infinite; }
+.rotating-stamp[data-paused="true"] { animation-play-state: paused; }
+@media (prefers-reduced-motion: reduce) {
+  .rotating-stamp { animation: none; }
 }

@@ -164,6 +164,7 @@ export default function HoverImageReveal({
   const [hovered, setHovered] = useState<number | null>(null);
   const [isPositioned, setIsPositioned] = useState(false);
   const hasPositioned = useRef(false);
+  const reducedMotion = useMediaQuery("(prefers-reduced-motion: reduce)");
   const hasFinePointer = useMediaQuery("(pointer: fine)");
 
   const rawX = useMotionValue(-1000);
@@ -196,7 +197,7 @@ export default function HoverImageReveal({
   }
 
   const anyActive =
-    hovered !== null && hovered < list.length && isPositioned && hasFinePointer;
+    hovered !== null && hovered < list.length && isPositioned && hasFinePointer && !reducedMotion;
 
   const onMove = (e: React.MouseEvent) => {
     const rect = containerRef.current?.getBoundingClientRect();
@@ -205,9 +206,9 @@ export default function HoverImageReveal({
     const relY = e.clientY - rect.top;
 
     // Responsive preview width check
-    const effectiveWidth = Math.min(imageWidth, Math.max(200, rect.width - 32));
+    const effectiveWidth = Math.min(imageWidth, Math.max(0, rect.width - 32));
     const halfImgW = effectiveWidth / 2;
-    const halfImgH = imageHeight / 2;
+    const halfImgH = Math.min(imageHeight, Math.max(0, rect.height - 24)) / 2;
 
     // Horizontal placement with flip and clamp
     let targetX = relX + offsetX;
@@ -218,9 +219,7 @@ export default function HoverImageReveal({
 
     // Vertical placement strictly clamped to container boundaries to prevent clipping
     let targetY = relY + offsetY;
-    if (rect.height > imageHeight + 24) {
-      targetY = Math.max(halfImgH + 12, Math.min(rect.height - halfImgH - 12, targetY));
-    }
+    targetY = Math.max(halfImgH + 12, Math.min(rect.height - halfImgH - 12, targetY));
 
     if (!hasPositioned.current) {
       rawX.jump(targetX);
@@ -258,7 +257,7 @@ export default function HoverImageReveal({
       }}
     >
       {/* ── Floating Cursor-Following Image Container ── */}
-      {hasFinePointer && (
+      {hasFinePointer && !reducedMotion && (
         <motion.div
           style={{
             position: "absolute",
@@ -268,9 +267,9 @@ export default function HoverImageReveal({
             y,
             translateX: "-50%",
             translateY: "-50%",
-            width: imageWidth,
+            width: `min(${imageWidth}px, calc(100% - 32px))`,
             height: imageHeight,
-            maxWidth: "calc(100vw - 32px)",
+            maxHeight: "calc(100% - 24px)",
             borderRadius: rounded,
             overflow: "hidden",
             pointerEvents: "none",

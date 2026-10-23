@@ -1,8 +1,11 @@
 "use client";
 
+import { useMediaQuery } from "@/lib/use-media-query";
 import { useEffect, useRef } from "react";
 
 export default function CustomCursor() {
+  const finePointer = useMediaQuery("(pointer: fine)");
+  const reducedMotion = useMediaQuery("(prefers-reduced-motion: reduce)");
   const cursorRef = useRef<HTMLDivElement>(null);
   const textRef = useRef<HTMLSpanElement>(null);
   const rafRef = useRef<number | null>(null);
@@ -18,10 +21,11 @@ export default function CustomCursor() {
 
   useEffect(() => {
     // Disable on touch devices or reduced motion
-    if (!window.matchMedia("(pointer: fine)").matches) return;
-    if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
+    if (!finePointer || reducedMotion) return;
 
     document.documentElement.classList.add("has-custom-cursor");
+    const cursorElement = cursorRef.current;
+    const cursorState = stateRef.current;
 
     const onPointerMove = (e: PointerEvent) => {
       if (e.pointerType === "touch") return;
@@ -100,15 +104,20 @@ export default function CustomCursor() {
 
     window.addEventListener("pointermove", onPointerMove, { passive: true });
     document.addEventListener("mouseleave", onMouseLeave);
+    window.addEventListener("blur", onMouseLeave);
     rafRef.current = requestAnimationFrame(render);
 
     return () => {
       window.removeEventListener("pointermove", onPointerMove);
       document.removeEventListener("mouseleave", onMouseLeave);
-      if (rafRef.current) cancelAnimationFrame(rafRef.current);
+      window.removeEventListener("blur", onMouseLeave);
+      cursorState.visible = false;
+      if (rafRef.current !== null) cancelAnimationFrame(rafRef.current);
+      rafRef.current = null;
+      if (cursorElement) cursorElement.style.opacity = "0";
       document.documentElement.classList.remove("has-custom-cursor");
     };
-  }, []);
+  }, [finePointer, reducedMotion]);
 
   return (
     <div

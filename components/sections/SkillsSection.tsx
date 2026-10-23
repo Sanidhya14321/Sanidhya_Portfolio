@@ -1,5 +1,7 @@
 "use client";
 
+import { useMediaQuery } from "@/lib/use-media-query";
+
 import { portfolioData } from "@/data/portfolio";
 import { useEffect, useRef, useState } from "react";
 import { motion, useScroll, useTransform } from "framer-motion";
@@ -35,6 +37,7 @@ function RevealBlock({ children, delay = 0 }: { children: React.ReactNode; delay
 }
 
 export default function SkillsSection() {
+  const reducedMotion = useMediaQuery("(prefers-reduced-motion: reduce)");
   const sectionRef = useRef<HTMLElement>(null);
   const skills = portfolioData.skills;
   const categories = Object.keys(skills);
@@ -48,7 +51,7 @@ export default function SkillsSection() {
   const headerX = useTransform(scrollYProgress, [0, 1], ["-2vw", "2vw"]);
 
   return (
-    <section ref={sectionRef} id="skills" style={{ background: "transparent", width: "100%" }}>
+    <section ref={sectionRef} id="skills" style={{ background: "transparent", width: "100%", position: "relative" }}>
       {/* â”€â”€ Giant SKILLS Section Banner â”€â”€ */}
       <div
         style={{
@@ -60,7 +63,7 @@ export default function SkillsSection() {
       >
         <motion.h2
           style={{
-            x: headerX,
+            x: reducedMotion ? 0 : headerX,
             fontFamily: "var(--font-display)",
             fontWeight: 900,
             fontSize: "clamp(4.5rem, 15vw, 18rem)",

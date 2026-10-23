@@ -41,3 +41,7 @@ Set the SMTP variables listed in `.env.example` in the hosting provider to enabl
 ## Operational checks
 
 After deployment, verify the canonical domain, resume download, sitemap, and social preview. Submit the sitemap in your own search-console account when ready. Search indexing and rankings are controlled by search engines; metadata does not guarantee placement. No analytics, tracking, or cookie collection has been added.
+
+## Animation verification
+
+After `npm run build`, install Chromium with `npx playwright install chromium` and run `npm run test:animations`. The suite starts a dedicated production server on port 3100 and checks the loader/hero sequence, completed sticky reveal, delayed route transitions, rapid event selection, keyboard access, offscreen playback, mobile layout, reduced motion, and rapid project-grid filtering. To use an existing Chromium binary, set `PLAYWRIGHT_EXECUTABLE_PATH` to its path.

@@ -119,8 +119,12 @@ export default function HeroSection() {
   const labelRightX = useTransform(smoothProgress, [0, 0.75], ["7vw", "0vw"]);
 
   // 3. Central Media Animation
-  // Reveal a fixed-size image instead of laying out the entire sticky scene every frame.
-  const mediaClip = useTransform(smoothProgress, [0, 1], ["inset(38% 40% 38% 40%)", "inset(0% 0% 0% 0%)"]);
+  // The media is an absolute layer covering the whole scene. The clip starts below
+  // the headline block and expands to the full viewport edge-to-edge at the end,
+  // where the headline sits on top of the photograph. It is driven by raw scroll
+  // progress (not the text spring) so the reveal completes the instant the user
+  // reaches the sticky release point, with no slow spring residual border.
+  const mediaClip = useTransform(scrollYProgress, [0, 0.98], ["inset(28% 40% 30% 40%)", "inset(0% 0% 0% 0%)"]);
 
   return (
     <>
@@ -169,7 +173,7 @@ export default function HeroSection() {
             paddingTop: "4.5rem",
           }}
         >
-          {/* Center Stage (Labels + Text + Media) */}
+          {/* Center Stage (Labels + Text, layered above the media layer) */}
           <div
             style={{
               position: "relative",
@@ -178,10 +182,7 @@ export default function HeroSection() {
               flexDirection: "column",
               alignItems: "center",
               justifyContent: "center",
-              // Own the leftover scene height so the media flex child below
-              // has a definite parent to stretch into.
-              flex: 1,
-              minHeight: 0,
+              zIndex: 2,
             }}
           >
             {/* 2A: Top Labels ("FULL STACK & ML" and "AI Engineer") */}
@@ -259,61 +260,61 @@ export default function HeroSection() {
               </motion.span>
             </div>
 
-            {/* 2C: Center Image / Video Slot */}
-            <div
+          </div>
+
+          {/* 2C: Media Layer — absolute full-scene cover, revealed by clip; text sits on top */}
+          <div
+            style={{
+              position: "absolute",
+              top: 0,
+              right: 0,
+              bottom: 0,
+              left: 0,
+              display: "flex",
+              justifyContent: "center",
+              zIndex: 1,
+              pointerEvents: "none",
+            }}
+          >
+            <motion.div
+              data-hero-media
               style={{
-                position: "relative",
-                display: "flex",
-                justifyContent: "center",
                 width: "100%",
-                marginTop: "1rem",
-                zIndex: 2,
-                // Fill whatever scene height the text block leaves, so the
-                // enlarged image runs flush to the bottom of the viewport.
-                flex: 1,
-                minHeight: 0,
+                height: "100%",
+                clipPath: reducedMotion ? "none" : mediaClip,
+                overflow: "hidden",
+                border: "none",
+                boxShadow: "none",
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "center",
+                flexShrink: 0,
+                willChange: reducedMotion ? "auto" : "clip-path",
               }}
             >
-              <motion.div
-                data-hero-media
+              <div
                 style={{
+                  position: "relative",
                   width: "100%",
                   height: "100%",
-                  clipPath: reducedMotion ? "none" : mediaClip,
                   overflow: "hidden",
                   border: "none",
-                  boxShadow: "none",
-                  display: "flex",
-                  alignItems: "center",
-                  justifyContent: "center",
-                  flexShrink: 0,
-                  willChange: reducedMotion ? "auto" : "clip-path",
                 }}
               >
-                <div
+                <Image
+                  src="/my_pics/DSC03737.JPG"
+                  fill sizes="100vw" quality={85} priority
+                  alt="Portfolio Visual Showcase"
                   style={{
-                    position: "relative",
                     width: "100%",
                     height: "100%",
-                    overflow: "hidden",
+                    objectFit: "cover",
+                    display: "block",
                     border: "none",
                   }}
-                >
-                  <Image
-                    src="/my_pics/DSC03737.JPG"
-                    fill sizes="100vw" quality={85} priority
-                    alt="Portfolio Visual Showcase"
-                    style={{
-                      width: "100%",
-                      height: "100%",
-                      objectFit: "cover",
-                      display: "block",
-                      border: "none",
-                    }}
-                  />
-                </div>
-              </motion.div>
-            </div>
+                />
+              </div>
+            </motion.div>
           </div>
         </section>
       </div>

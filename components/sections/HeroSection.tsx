@@ -178,6 +178,10 @@ export default function HeroSection() {
               flexDirection: "column",
               alignItems: "center",
               justifyContent: "center",
+              // Own the leftover scene height so the media flex child below
+              // has a definite parent to stretch into.
+              flex: 1,
+              minHeight: 0,
             }}
           >
             {/* 2A: Top Labels ("FULL STACK & ML" and "AI Engineer") */}

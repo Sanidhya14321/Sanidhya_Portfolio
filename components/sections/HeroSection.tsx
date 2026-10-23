@@ -126,6 +126,16 @@ export default function HeroSection() {
   // reaches the sticky release point, with no slow spring residual border.
   const mediaClip = useTransform(scrollYProgress, [0, 0.98], ["inset(28% 40% 30% 40%)", "inset(0% 0% 0% 0%)"]);
 
+  // Auto-invert the text as the photograph takes over the scene: dark ink while
+  // the image is only a card under the headline, cream over the scrimmed photo
+  // once it covers the viewport. Held at the old value until the flip window so
+  // parked mid-scroll states stay readable.
+  const headlineTone = useTransform(scrollYProgress, [0.6, 0.82, 0.9], ["#1A1A1A", "#1A1A1A", "#E8E4DC"]);
+  const labelTone = useTransform(scrollYProgress, [0.6, 0.82, 0.9], ["#6B6B6B", "#6B6B6B", "#E8E4DC"]);
+  // With reduced motion the photo covers the scene from the start, so text is cream outright.
+  const headlineColor = reducedMotion ? "#E8E4DC" : headlineTone;
+  const labelColorValue = reducedMotion ? "#E8E4DC" : labelTone;
+
   return (
     <>
       {/* ── SECTION 1: Top Name Section ── */}
@@ -203,10 +213,10 @@ export default function HeroSection() {
                 pointerEvents: "none",
               }}
             >
-              <motion.span style={{ x: reducedMotion ? 0 : labelLeftX, display: "inline-block" }}>
+              <motion.span style={{ x: reducedMotion ? 0 : labelLeftX, display: "inline-block", color: labelColorValue }}>
                 FULL STACK &amp;&nbsp;
               </motion.span>
-              <motion.span style={{ x: reducedMotion ? 0 : labelRightX, display: "inline-block" }}>
+              <motion.span style={{ x: reducedMotion ? 0 : labelRightX, display: "inline-block", color: labelColorValue }}>
                 AI Engineer
               </motion.span>
             </div>
@@ -232,7 +242,7 @@ export default function HeroSection() {
                   textTransform: "uppercase",
                   letterSpacing: "-0.02em",
                   lineHeight: 0.9,
-                  color: "var(--text)",
+                  color: headlineColor,
                   whiteSpace: "nowrap",
                   display: "inline-block",
                   willChange: "transform",
@@ -250,7 +260,7 @@ export default function HeroSection() {
                   textTransform: "uppercase",
                   letterSpacing: "-0.02em",
                   lineHeight: 0.9,
-                  color: "var(--text)",
+                  color: headlineColor,
                   whiteSpace: "nowrap",
                   display: "inline-block",
                   willChange: "transform",
@@ -311,6 +321,20 @@ export default function HeroSection() {
                     objectFit: "cover",
                     display: "block",
                     border: "none",
+                  }}
+                />
+                {/* Scrim so the inverted (cream) headline stays readable over the photo */}
+                <div
+                  aria-hidden="true"
+                  style={{
+                    position: "absolute",
+                    top: 0,
+                    right: 0,
+                    bottom: 0,
+                    left: 0,
+                    pointerEvents: "none",
+                    background:
+                      "linear-gradient(180deg, rgba(26,26,26,0.62) 0%, rgba(26,26,26,0.26) 20%, rgba(26,26,26,0.30) 55%, rgba(26,26,26,0.58) 100%)",
                   }}
                 />
               </div>
